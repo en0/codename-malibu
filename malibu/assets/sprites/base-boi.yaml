@@ -1,0 +1,112 @@
+# The base boi exemplar sprite description
+---
+# This is mostly for humans to read
+# Helps us keep track of what we are working on
+name: base-boi
+desc: An example sprite
+
+# These are the defaults for every frame
+# described in this file
+defaults:
+  # Delay is the amount of time a frame is visible for (in milliseconds)
+  delay: 500
+  # Mirror indicates if the image for the frame is mirrored
+  mirror: false
+  # Flip indicates if the image for the frame is up-side-down
+  flip: false
+  # Opacity sets what percent of the pixel is see-through
+  opacity: 1
+  # Sheet identifies the image in which the index frame is retrieved from
+  sheet: base-boi.png
+
+# These describe each animation.
+animations:
+    # This describe the run-left animation
+  - name: run-left
+    # This animation will repeat until stopped
+    type: repeat
+    # This overrides the default mirror and causes each frame to be mirrored
+    mirror: true
+    # This is a list of all the frames inside the animation
+    frames:
+        # This is the first frame
+      - index: 0
+        # This is the second frame
+      - index: 1
+        # This is the third frame
+      - index: 1
+        # This is the forth frame
+      - index: 2
+        # This override the frame delay for the forth frame only
+        delay: 200
+        # This is the last frame
+      - index: 3
+
+    # This describe the run-right animation
+  - name: run-right
+    type: repeat
+    frames:
+      - index: 0
+      - index: 2
+      - index: 3
+        delay: 200
+      - index: 4
+
+    # Some of these are incomplete due to lack of sprite-sheet data
+  - name: run-up
+    type: repeat
+    frames:
+      - index: 0
+
+  - name: run-down
+    type: repeat
+    frames:
+      - index: 0
+
+  - name: breath
+    type: repeat
+    frames:
+        # Notice you don't have to pick sequential frames
+      - index: 0
+      - index: 2
+
+  - name: sword-attack-right
+    # Return means run the animation until the end and return to the base animation (run-*, breath)
+    type: return
+    frames:
+      - index: 0
+
+  - name: sword-attack-left
+    type: return
+    mirror: true
+    frames:
+      - index: 0
+
+  - name: sword-attack-up
+    type: return
+    frames:
+      - index: 0
+
+  - name: sword-attack-down
+    type: return
+    frames:
+      - index: 0
+
+  - name: bored
+    type: return
+    frames:
+      - index: 0
+
+  - name: die
+    # Immediate will interrupt the current animation and run to completion. It will stop on the last
+    # frame until a new animation is started.  This might only apply to death, not sure.
+    type: immediate
+    # The animation plays 3 times before it is considered complete.
+    repeat: 3
+    frames:
+      - index: 0
+        delay: 200
+      - index: 0
+        delay: 200
+        # Notice how we override flip just for this frame
+        flip: true
