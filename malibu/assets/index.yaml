@@ -1,0 +1,9 @@
+sprite-sheets:
+  - name: base-boi-walk
+    path: assets/sprites/sheets/base-boi.png
+    tile-width: 32
+    tile-height: 32
+
+sprite-specs:
+  - name: base-boi
+    path: assets/sprites/base-boi.yaml

@@ -17,7 +17,7 @@ defaults:
   # Opacity sets what percent of the pixel is see-through
   opacity: 1
   # Sheet identifies the image in which the index frame is retrieved from
-  sheet: base-boi.png
+  sheet: base-boi-walk
 
 # These describe each animation.
 animations:
