@@ -1,4 +1,4 @@
-from typing import Dict, List, IO, Tuple
+from typing import Dict, List, IO, Tuple, Set
 from dataclasses import dataclass
 
 
@@ -9,7 +9,10 @@ class AnimationFrameSpec:
     delay: int = 500
     mirror: bool = False
     flip: bool = False
-    opacity: float = 1.0
+    opacity: int = 255
+    rotation: int = 0
+    scale_height: float = 1.0
+    scale_width: float = 1.0
 
     @staticmethod
     def load(dat: dict, **defaults) -> "AnimationFrameSpec":
@@ -17,29 +20,38 @@ class AnimationFrameSpec:
         defaults.setdefault("mirror", False)
         defaults.setdefault("flip", False)
         defaults.setdefault("opacity", 1.0)
+        defaults.setdefault("rotation", 0)
+        defaults.setdefault("scale-width", 1)
+        defaults.setdefault("scale-height", 1)
         return AnimationFrameSpec(
             index=int(dat["index"]),
             sheet=dat.get("sheet", defaults["sheet"]),
             delay=dat.get("delay", defaults["delay"]),
             mirror=dat.get("mirror", defaults["mirror"]),
             flip=dat.get("flip", defaults["flip"]),
-            opacity=float(dat.get("opacity", defaults["opacity"])),
+            opacity=int(dat.get("opacity", defaults["opacity"])),
+            rotation=int(dat.get("rotation", defaults["rotation"])),
+            scale_width=float(dat.get("scale-width", defaults["scale-width"])),
+            scale_height=float(dat.get("scale-height", defaults["scale-height"])),
         )
 
 
 @dataclass
 class AnimationSpec:
+
     name: str
-    type: str
+    repeat: int
     frames: List[AnimationFrameSpec]
+    flags: Set[str]
 
     @staticmethod
     def load(dat: dict, **defaults) -> "AnimationSpec":
         defaults.update(dat)
         return AnimationSpec(
             name=dat["name"],
-            type=dat["type"],
-            frames=[AnimationFrameSpec.load(x, **defaults) for x in dat["frames"]]
+            repeat=dat.get("repeat", -1),
+            frames=[AnimationFrameSpec.load(x, **defaults) for x in dat["frames"]],
+            flags={x for x in dat.get("flags",[])}
         )
 
 

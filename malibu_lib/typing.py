@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import List
-
 from pygame import Surface
+from typing import List
 
 from .model import SpriteSpec
 
@@ -28,3 +27,40 @@ class IAssetManager(ABC):
     def clear(self) -> None:
         """Clear all loaded assets"""
         ...
+
+class IAnimation(ABC):
+    """Manages animation tiles"""
+
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Gets the name of the animation"""
+        ...
+
+    @property
+    @abstractmethod
+    def complete(self) -> bool:
+        """Gets a bool indicating if the animation is complete."""
+        ...
+
+    @property
+    @abstractmethod
+    def image(self) -> Surface:
+        """Gets the current frame as a surface"""
+        ...
+
+    @abstractmethod
+    def has_flag(self, flag_name: str) -> bool:
+        """Check if the animation has the given flag."""
+        ...
+
+    @abstractmethod
+    def update(self, frame_delta: float) -> None:
+        """Update the animation"""
+        ...
+
+    @abstractmethod
+    def reset(self) -> None:
+        """Reset the animation frames."""
+        ...
+

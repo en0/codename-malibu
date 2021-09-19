@@ -8,23 +8,30 @@ desc: An example sprite
 # These are the defaults for every frame
 # described in this file
 defaults:
-  # Delay is the amount of time a frame is visible for (in milliseconds)
-  delay: 500
-  # Mirror indicates if the image for the frame is mirrored
+  # Delay is the amount of time a frame is visible for (in milliseconds).
+  delay: 200
+  # Mirror indicates if the image for the frame is mirrored.
   mirror: false
-  # Flip indicates if the image for the frame is up-side-down
+  # Flip indicates if the image for the frame is up-side-down.
   flip: false
-  # Opacity sets what percent of the pixel is see-through
-  opacity: 1
-  # Sheet identifies the image in which the index frame is retrieved from
+  # Sets the default opacify. 0..255 w/ 0 is completely transparent.
+  opacity: 255
+  # Sets the default rotation. -360..360.
+  rotation: 0
+  # Sheet identifies the image in which the index frame is retrieved from.
   sheet: base-boi-walk
+  # Set the default scale width. 0..inf
+  #  1.0 means no scale.
+  #  0.1 would reduce the image to 10% of original size.
+  #  2.0 would double the image size
+  scale-height: 1
+  scale-width: 1
 
 # These describe each animation.
 animations:
     # This describe the run-left animation
   - name: run-left
-    # This animation will repeat until stopped
-    type: repeat
+    repeat: 3
     # This overrides the default mirror and causes each frame to be mirrored
     mirror: true
     # This is a list of all the frames inside the animation
@@ -34,23 +41,17 @@ animations:
         # This is the second frame
       - index: 1
         # This is the third frame
-      - index: 1
-        # This is the forth frame
       - index: 2
-        # This override the frame delay for the forth frame only
-        delay: 200
         # This is the last frame
       - index: 3
 
     # This describe the run-right animation
   - name: run-right
-    type: repeat
     frames:
       - index: 0
+      - index: 1
       - index: 2
       - index: 3
-        delay: 200
-      - index: 4
 
     # Some of these are incomplete due to lack of sprite-sheet data
   - name: run-up
@@ -105,8 +106,6 @@ animations:
     repeat: 3
     frames:
       - index: 0
-        delay: 200
       - index: 0
-        delay: 200
         # Notice how we override flip just for this frame
         flip: true
