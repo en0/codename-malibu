@@ -223,25 +223,21 @@ class SpriteViewUI(_HandlingUIManager):
         self.lbl_zoom = pygame_gui.elements.UILabel(
             _below(self.lbl_speed, 5, w=230),
             f"Animation Zoom: ...",
-            visible=False,
             manager=self)
 
         self.btn_zoom_out = pygame_gui.elements.UIButton(
             _left_of(self.lbl_zoom, 5, w=30),
             "-",
-            visible=False,
             manager=self)
 
         self.btn_zoom_in = pygame_gui.elements.UIButton(
             _left_of(self.btn_zoom_out, 5, w=30),
             "+",
-            visible=False,
             manager=self)
 
         self.btn_zoom_reset = pygame_gui.elements.UIButton(
             _left_of(self.btn_zoom_in, 5, w=80),
             "Reset",
-            visible=False,
             manager=self)
 
         self.lbl_anim_details = pygame_gui.elements.UITextBox(

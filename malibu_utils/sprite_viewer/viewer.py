@@ -57,9 +57,7 @@ class SpriteViewer:
             rect.center = self.frame_rect.width // 2, self.frame_rect.height // 2
             self.frame.blit(self.current_animation.image, rect)
 
-        # TODO: I think we can implement zoom here.
         _frame = pygame.transform.scale(self.frame, self.ui.frame_area_rect.size)
-        #self.frame_rect.center = self.ui.frame_area_rect.center
         self.display.blit(_frame, self.ui.frame_area_rect.topleft)
         self.ui.draw_ui(self.display)
 
@@ -92,8 +90,23 @@ class SpriteViewer:
             self.speed_adjust = -1
         self.ui.show_speed(f"{int((self.speed_adjust + 1) * 100)}%")
 
+    def reset_zoom(self):
+        self._scale_factor = 0.1
+        self.ui.show_zoom(f"{100 + (100 - int((self._scale_factor - 0.1) / 0.9 * 100))}%")
+
     def adjust_zoom(self, delta):
-        raise NotImplementedError()
+        self._scale_factor += delta
+        if self._scale_factor > 1:
+            self._scale_factor = 1.0
+        elif self._scale_factor < 0.1:
+            self._scale_factor = 0.1
+        self.ui.show_zoom(f"{100 + (100 - int((self._scale_factor - 0.1) / 0.9 * 100))}%")
+        w, h = self.ui.frame_area_rect.size
+        w = int(w * self._scale_factor)
+        h = int(h * self._scale_factor)
+        print(self._scale_factor, w, h)
+        self.frame_rect = pygame.Rect(0, 0, w, h)
+        self.frame = pygame.Surface(self.frame_rect.size)
 
     def set_pause(self, state):
         self.freeze = state
@@ -139,8 +152,7 @@ class SpriteViewer:
         self.display_rect = self.display.get_rect()
         self.ui = SpriteViewUI(display_size)
         self.watcher = FileWatcher(self.am.get_sprite_spec_path(sprite_name))
-        # I am scaling up by 4
-        self.frame = pygame.Surface((self.ui.frame_area_rect.width // 4, self.ui.frame_area_rect.height // 4))
+        self.frame = pygame.Surface((self.ui.frame_area_rect.width, self.ui.frame_area_rect.height))
         self.frame_rect = self.frame.get_rect()
 
         self.base_animation = None
@@ -148,6 +160,7 @@ class SpriteViewer:
         self.trigger_animation = None
         self.trigger_animation_spec = None
         self.speed_adjust = 0
+        self._scale_factor = 0
         self.freeze = False
         self.target_animation = "base"
 
@@ -156,7 +169,7 @@ class SpriteViewer:
             self.ui.add_base_animation_name(spec)
             self.ui.add_trigger_animation_name(spec)
 
-        # Wireup event handlers
+        # Wire-up event handlers
         self.ui.on_reset(self.reset_base_animation)
         self.ui.on_trigger(self.trigger_overlay_animation)
         self.ui.on_base_animation_changed(self.load_base_animation)
@@ -165,9 +178,10 @@ class SpriteViewer:
         self.ui.on_speed_decrease(lambda: self.adjust_speed(-0.1))
         self.ui.on_pause(lambda: self.set_pause(True))
         self.ui.on_resume(lambda: self.set_pause(False))
-        self.ui.on_zoom_in(lambda: self.adjust_zoom(0.5))
-        self.ui.on_zoom_out(lambda: self.adjust_zoom(-0.5))
+        self.ui.on_zoom_in(lambda: self.adjust_zoom(-0.1))
+        self.ui.on_zoom_out(lambda: self.adjust_zoom(0.1))
+        self.ui.on_zoom_reset(lambda: self.adjust_zoom(-100))
 
         # Set default UI elements
-        self.ui.show_speed("100%")
-        self.ui.show_zoom("100%")
+        self.adjust_speed(0)
+        self.adjust_zoom(-100)
