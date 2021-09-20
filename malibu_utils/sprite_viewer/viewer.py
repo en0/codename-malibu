@@ -90,21 +90,16 @@ class SpriteViewer:
             self.speed_adjust = -1
         self.ui.show_speed(f"{int((self.speed_adjust + 1) * 100)}%")
 
-    def reset_zoom(self):
-        self._scale_factor = 0.1
-        self.ui.show_zoom(f"{100 + (100 - int((self._scale_factor - 0.1) / 0.9 * 100))}%")
-
     def adjust_zoom(self, delta):
         self._scale_factor += delta
         if self._scale_factor > 1:
             self._scale_factor = 1.0
         elif self._scale_factor < 0.1:
             self._scale_factor = 0.1
-        self.ui.show_zoom(f"{100 + (100 - int((self._scale_factor - 0.1) / 0.9 * 100))}%")
+        self.ui.show_zoom(f"{100 - int((self._scale_factor - 0.1) / 0.9 * 100)}%")
         w, h = self.ui.frame_area_rect.size
         w = int(w * self._scale_factor)
         h = int(h * self._scale_factor)
-        print(self._scale_factor, w, h)
         self.frame_rect = pygame.Rect(0, 0, w, h)
         self.frame = pygame.Surface(self.frame_rect.size)
 
