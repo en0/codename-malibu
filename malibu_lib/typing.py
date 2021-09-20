@@ -9,6 +9,11 @@ class IAssetManager(ABC):
     """Manages the loading of assets"""
 
     @abstractmethod
+    def list_sprite_specs(self) -> List[SpriteSpec]:
+        """List all sprite Secifications"""
+        ...
+
+    @abstractmethod
     def get_sprite_spec(self, name: str) -> SpriteSpec:
         """Load a sprite spec of the given name"""
         ...
@@ -49,13 +54,19 @@ class IAnimation(ABC):
         """Gets the current frame as a surface"""
         ...
 
+    @property
+    @abstractmethod
+    def current_frame_index(self):
+        """Get the current frame index."""
+        ...
+
     @abstractmethod
     def has_flag(self, flag_name: str) -> bool:
         """Check if the animation has the given flag."""
         ...
 
     @abstractmethod
-    def update(self, frame_delta: float) -> None:
+    def update(self, frame_delta: int) -> None:
         """Update the animation"""
         ...
 

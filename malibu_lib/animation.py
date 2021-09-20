@@ -24,6 +24,10 @@ class BasicAnimation(IAnimation):
     def image(self) -> Surface:
         return self._tiles[self._frame_index]
 
+    @property
+    def current_frame_index(self):
+        return self._frame_index
+
     def reset(self) -> None:
         _log.debug(f"Reseting animation: %s", self.name)
         self._complete = False
@@ -32,8 +36,8 @@ class BasicAnimation(IAnimation):
         self._frame_duration = 0
         self._frame_index = 0
 
-    def update(self, frame_delta: float) -> None:
-        self._update_method(frame_delta)
+    def update(self, frame_delta: int) -> None:
+        self._update_method(frame_delta / 1000.0)
 
     def has_flag(self, flag_name: str) -> bool:
         return flag_name in self._flags;
@@ -81,6 +85,7 @@ class BasicAnimation(IAnimation):
 
         _log.info(f"Loading animation: %s", spec.name)
 
+        self._spec = spec
         self._name = spec.name
         self._tiles: List[Surface] = []
         self._deltas: List[float] = []

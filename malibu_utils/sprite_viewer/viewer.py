@@ -1,0 +1,149 @@
+import pygame
+from malibu_lib import BasicAnimation
+from malibu_lib.typing import IAssetManager
+
+from .gui import SpriteViewUI
+import pygame_gui
+
+
+
+class SpriteViewer:
+
+    @property
+    def current_animation(self):
+        if self.trigger_animation and self.trigger_animation.complete:
+            self.target_animation = "base"
+        if self.target_animation == "base":
+            return self.base_animation
+        else:
+            return self.trigger_animation
+
+    @property
+    def current_animation_spec(self):
+        if self.trigger_animation and self.trigger_animation.complete:
+            self.target_animation = "base"
+        if self.target_animation == "base":
+            return self.base_animation_spec
+        else:
+            return self.trigger_animation_spec
+
+    def update(self, frame_delta: float):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            self.ui.process_events(event)
+
+        if self.current_animation and not self.freeze:
+            adj = frame_delta * self.speed_adjust
+            self.current_animation.update(frame_delta + adj)
+
+        if self.current_animation_spec:
+            self.ui.update_animation_details(
+                self.current_animation_spec,
+                self.current_animation.current_frame_index)
+        self.ui.update(frame_delta)
+
+    def render(self):
+        # Render frame and ui
+        if self.current_animation:
+            rect = self.current_animation.image.get_rect()
+            rect.center = self.frame_rect.width // 2, self.frame_rect.height // 2
+            self.frame.blit(self.current_animation.image, rect)
+
+        # TODO: I think we can implement zoom here.
+        _frame = pygame.transform.scale(self.frame, self.ui.frame_area_rect.size)
+        #self.frame_rect.center = self.ui.frame_area_rect.center
+        self.display.blit(_frame, self.ui.frame_area_rect.topleft)
+        self.ui.draw_ui(self.display)
+
+        # present the buffer
+        pygame.display.flip()
+
+    def run(self):
+        self.running = True
+        while self.running:
+            self.display.fill(self.bg_color)
+            self.frame.fill(self.bg_color)
+            frame_delta = self.clock.tick(60)
+            self.update(frame_delta)
+            self.render()
+
+    def reset_base_animation(self):
+        if self.base_animation:
+            self.base_animation.reset()
+
+    def trigger_overlay_animation(self):
+        if self.trigger_animation:
+            self.target_animation = "trigger"
+            self.trigger_animation.reset()
+
+    def adjust_speed(self, delta):
+        self.speed_adjust += delta
+        if self.speed_adjust > 1:
+            self.speed_adjust = 1
+        elif self.speed_adjust < -1:
+            self.speed_adjust = -1
+        self.ui.show_speed(f"{int((self.speed_adjust + 1) * 100)}%")
+
+    def adjust_zoom(self, delta):
+        raise NotImplementedError()
+
+    def set_pause(self, state):
+        self.freeze = state
+
+    def load_base_animation(self, name: str):
+        if name not in self.spec.animations: return
+        self.base_animation_spec = self.spec.animations[name]
+        self.base_animation = BasicAnimation(self.base_animation_spec, self.am)
+
+    def load_trigger_animation(self, name: str):
+        if name not in self.spec.animations: return
+        self.trigger_animation_spec = self.spec.animations[name]
+        self.trigger_animation = BasicAnimation(self.trigger_animation_spec, self.am)
+
+    def __init__(self, asset_manager: IAssetManager, display_size=(1024, 768), disp_opts=None):
+        disp_opts = disp_opts or (
+            pygame.HWACCEL |
+            pygame.DOUBLEBUF
+        )
+        self.am = asset_manager
+        self.spec = asset_manager.get_sprite_spec("base-boi")
+        self.bg_color = pygame.Color("#000000")
+        self.clock_divider = 1.0
+        self.running = False
+        self.clock = pygame.time.Clock()
+        self.display = pygame.display.set_mode(display_size, disp_opts)
+        self.display_rect = self.display.get_rect()
+        self.ui = SpriteViewUI(display_size)
+        # I am scaling up by 4
+        self.frame = pygame.Surface((self.ui.frame_area_rect.width // 4, self.ui.frame_area_rect.height // 4))
+        self.frame_rect = self.frame.get_rect()
+
+        self.base_animation = None
+        self.base_animation_spec = None
+        self.trigger_animation = None
+        self.trigger_animation_spec = None
+        self.speed_adjust = 0
+        self.freeze = False
+        self.target_animation = "base"
+
+        # Load all the animations by name
+        for spec in self.spec.animations:
+            self.ui.add_base_animation_name(spec)
+            self.ui.add_trigger_animation_name(spec)
+
+        # Wireup event handlers
+        self.ui.on_reset(self.reset_base_animation)
+        self.ui.on_trigger(self.trigger_overlay_animation)
+        self.ui.on_base_animation_changed(self.load_base_animation)
+        self.ui.on_trigger_animation_changed(self.load_trigger_animation)
+        self.ui.on_speed_increase(lambda: self.adjust_speed(0.1))
+        self.ui.on_speed_decrease(lambda: self.adjust_speed(-0.1))
+        self.ui.on_pause(lambda: self.set_pause(True))
+        self.ui.on_resume(lambda: self.set_pause(False))
+        self.ui.on_zoom_in(lambda: self.adjust_zoom(0.5))
+        self.ui.on_zoom_out(lambda: self.adjust_zoom(-0.5))
+
+        # Set default UI elements
+        self.ui.show_speed("100%")
+        self.ui.show_zoom("100%")

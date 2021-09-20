@@ -16,6 +16,9 @@ SpriteSpecEntry = Tuple[str, Optional[SpriteSpec]]
 
 class StructuredAssetManager(IAssetManager):
 
+    def list_sprite_specs(self) -> List[SpriteSpec]:
+        return list(self._sprite_specs.keys())
+
     def get_sprite_spec(self, sprite_name: str) -> SpriteSpec:
         path, spec = self._sprite_specs[sprite_name]
         if spec is None:
