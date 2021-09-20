@@ -137,6 +137,16 @@ class SpriteViewUI(_HandlingUIManager):
     def on_trigger_animation_changed(self, cb):
         self._on_trigger_animation_changed = cb
 
+    def alert(self, message):
+        rect = pygame.Rect(0, 0, 700, 300)
+        rect.center = self.rect.center
+        win = pygame_gui.windows.UIMessageWindow(
+            rect,
+            message.replace("\n", "<br />"),
+            self
+        )
+        win.set_display_title("Alert")
+
     def _dispatch(self, handler, *args):
         if handler is not None:
             handler(*args)

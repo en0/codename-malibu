@@ -29,7 +29,7 @@ class BasicAnimation(IAnimation):
         return self._frame_index
 
     def reset(self) -> None:
-        _log.debug(f"Reseting animation: %s", self.name)
+        _log.debug(f"Resetting animation: %s", self.name)
         self._complete = False
         self._update_method = self._init_update_method
         self._repeat_count = self._init_repeat_count
@@ -40,7 +40,7 @@ class BasicAnimation(IAnimation):
         self._update_method(frame_delta / 1000.0)
 
     def has_flag(self, flag_name: str) -> bool:
-        return flag_name in self._flags;
+        return flag_name in self._flags
 
     def _update_noop(self, frame_delay) -> None:
         pass

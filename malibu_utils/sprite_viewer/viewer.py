@@ -1,5 +1,4 @@
 import pygame
-import pkg_resources
 from malibu_lib import BasicAnimation
 from malibu_lib.typing import IAssetManager
 
@@ -123,13 +122,19 @@ class SpriteViewer:
             self.trigger_animation = None
 
     def reload_spec(self):
+        backup_spec = self.spec
         sprite_name = self.spec.name
         base_anim_name = self.base_animation_spec and self.base_animation_spec.name
         trigger_anim_name = self.trigger_animation_spec and self.trigger_animation_spec.name
         self.am.clear()
-        self.spec = self.am.get_sprite_spec(sprite_name)
-        self.load_base_animation(base_anim_name)
-        self.load_trigger_animation(trigger_anim_name)
+        try:
+            self.spec = self.am.get_sprite_spec(sprite_name)
+            self.load_base_animation(base_anim_name)
+            self.load_trigger_animation(trigger_anim_name)
+        except Exception as ex:
+            self.ui.alert(f"Failed to reload specification\n{str(ex)}")
+            self.spec = backup_spec
+
 
     def __init__(self, sprite_name: str, asset_manager: IAssetManager, display_size=(1024, 600), disp_opts=None):
         disp_opts = disp_opts or (
