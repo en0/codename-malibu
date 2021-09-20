@@ -8,6 +8,22 @@ from .model import SpriteSpec
 class IAssetManager(ABC):
     """Manages the loading of assets"""
 
+    @property
+    @abstractmethod
+    def module(self) -> str:
+        """Get the module used by the asset manaager"""
+        ...
+
+    @abstractmethod
+    def get_sprite_spec_path(self, sprite_name: str) -> str:
+        """Get the full path for a sprite spec"""
+        ...
+
+    @abstractmethod
+    def get_sprite_sheet_path(self, sheet_name: str) -> str:
+        """Get the full path for a sprite sheet"""
+        ...
+
     @abstractmethod
     def list_sprite_specs(self) -> List[SpriteSpec]:
         """List all sprite Secifications"""

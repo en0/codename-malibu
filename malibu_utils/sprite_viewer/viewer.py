@@ -1,10 +1,10 @@
 import pygame
+import pkg_resources
 from malibu_lib import BasicAnimation
 from malibu_lib.typing import IAssetManager
 
 from .gui import SpriteViewUI
-import pygame_gui
-
+from ..watcher.watch import FileWatcher
 
 
 class SpriteViewer:
@@ -12,6 +12,8 @@ class SpriteViewer:
     @property
     def current_animation(self):
         if self.trigger_animation and self.trigger_animation.complete:
+            self.target_animation = "base"
+        elif self.trigger_animation is None:
             self.target_animation = "base"
         if self.target_animation == "base":
             return self.base_animation
@@ -21,6 +23,8 @@ class SpriteViewer:
     @property
     def current_animation_spec(self):
         if self.trigger_animation and self.trigger_animation.complete:
+            self.target_animation = "base"
+        elif self.trigger_animation is None:
             self.target_animation = "base"
         if self.target_animation == "base":
             return self.base_animation_spec
@@ -37,11 +41,14 @@ class SpriteViewer:
             adj = frame_delta * self.speed_adjust
             self.current_animation.update(frame_delta + adj)
 
-        if self.current_animation_spec:
-            self.ui.update_animation_details(
-                self.current_animation_spec,
-                self.current_animation.current_frame_index)
+        self.ui.update_animation_details(
+            self.current_animation_spec,
+            self.current_animation_spec and self.current_animation.current_frame_index)
+
         self.ui.update(frame_delta)
+
+        if self.watcher.has_changed():
+            self.reload_spec()
 
     def render(self):
         # Render frame and ui
@@ -92,29 +99,46 @@ class SpriteViewer:
         self.freeze = state
 
     def load_base_animation(self, name: str):
-        if name not in self.spec.animations: return
-        self.base_animation_spec = self.spec.animations[name]
-        self.base_animation = BasicAnimation(self.base_animation_spec, self.am)
+        if name in self.spec.animations:
+            self.base_animation_spec = self.spec.animations[name]
+            self.base_animation = BasicAnimation(self.base_animation_spec, self.am)
+        else:
+            self.base_animation_spec = None
+            self.base_animation = None
 
     def load_trigger_animation(self, name: str):
-        if name not in self.spec.animations: return
-        self.trigger_animation_spec = self.spec.animations[name]
-        self.trigger_animation = BasicAnimation(self.trigger_animation_spec, self.am)
+        if name in self.spec.animations:
+            self.trigger_animation_spec = self.spec.animations[name]
+            self.trigger_animation = BasicAnimation(self.trigger_animation_spec, self.am)
+        else:
+            self.trigger_animation_spec = None
+            self.trigger_animation = None
 
-    def __init__(self, asset_manager: IAssetManager, display_size=(1024, 768), disp_opts=None):
+    def reload_spec(self):
+        sprite_name = self.spec.name
+        base_anim_name = self.base_animation_spec and self.base_animation_spec.name
+        trigger_anim_name = self.trigger_animation_spec and self.trigger_animation_spec.name
+        self.am.clear()
+        self.spec = self.am.get_sprite_spec(sprite_name)
+        self.load_base_animation(base_anim_name)
+        self.load_trigger_animation(trigger_anim_name)
+
+    def __init__(self, sprite_name: str, asset_manager: IAssetManager, display_size=(1024, 600), disp_opts=None):
         disp_opts = disp_opts or (
             pygame.HWACCEL |
             pygame.DOUBLEBUF
         )
         self.am = asset_manager
-        self.spec = asset_manager.get_sprite_spec("base-boi")
+        self.spec = asset_manager.get_sprite_spec(sprite_name)
         self.bg_color = pygame.Color("#000000")
         self.clock_divider = 1.0
         self.running = False
         self.clock = pygame.time.Clock()
         self.display = pygame.display.set_mode(display_size, disp_opts)
+        pygame.display.set_caption(f"Sprite Viewer: {sprite_name}")
         self.display_rect = self.display.get_rect()
         self.ui = SpriteViewUI(display_size)
+        self.watcher = FileWatcher(self.am.get_sprite_spec_path(sprite_name))
         # I am scaling up by 4
         self.frame = pygame.Surface((self.ui.frame_area_rect.width // 4, self.ui.frame_area_rect.height // 4))
         self.frame_rect = self.frame.get_rect()

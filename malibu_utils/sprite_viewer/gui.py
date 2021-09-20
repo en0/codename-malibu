@@ -14,6 +14,7 @@ def _below(elem, pad, w=None, h=None):
     a.top = elem.relative_rect.bottom + pad
     return a
 
+
 def _left_of(elem, pad, w=None, h=None):
     a: pygame.Rect = elem.relative_rect.copy()
     a.width = w or elem.relative_rect.width
@@ -21,12 +22,15 @@ def _left_of(elem, pad, w=None, h=None):
     a.left = elem.relative_rect.right + pad
     return a
 
+
 def _right_top_in(elem, pad, w, h):
     x = elem.rect.width - w - pad
     return pygame.Rect(x, pad, w, h)
 
+
 def _left_top_in(elem, pad, w, h):
     return pygame.Rect(pad, pad, w, h)
+
 
 def _left_bottom_in(elem, pad, w, h):
     y = elem.rect.height - h - pad
@@ -48,15 +52,30 @@ class _HandlingUIManager(pygame_gui.UIManager):
             fn = self._listeners.get(k)
             if fn: fn(event)
 
+
 class SpriteViewUI(_HandlingUIManager):
 
     def show_speed(self, speed: str):
-        self.lbl_speed.set_text(f"Animtion Speed: {speed}")
+        self.lbl_speed.set_text(f"Animation Speed: {speed}")
 
     def show_zoom(self, zoom: str):
-        self.lbl_zoom.set_text(f"Animtion zoom: {zoom}")
+        self.lbl_zoom.set_text(f"Animation zoom: {zoom}")
 
     def update_animation_details(self, spec, frame):
+        if spec is None and self.current_spec is not None:
+            self.current_spec = None
+            self.current_frame_spec = None
+            self.lbl_anim_details = pygame_gui.elements.UITextBox(
+                "<b>Animation Details</b><br><i>Select Animation</i>",
+                _left_of(self.btn_reset, 0, h=155, w=310),
+                manager=self)
+            self.lbl_frame_details = pygame_gui.elements.UITextBox(
+                "<b>Frame Details</b><br><i>Select Animation</i>",
+                _left_of(self.lbl_anim_details, 0),
+                manager=self)
+        if spec is None:
+            return
+
         if self.current_spec != spec:
             self.current_spec = spec
             self.lbl_anim_details = pygame_gui.elements.UITextBox(
@@ -78,7 +97,6 @@ class SpriteViewUI(_HandlingUIManager):
                 f"<b>Scale:</b> {f.scale_width}, {f.scale_height}<br/>",
                 _left_of(self.lbl_anim_details, 0),
                 manager=self)
-
 
     def add_base_animation_name(self, name: str):
         self._base_anims.append(name)

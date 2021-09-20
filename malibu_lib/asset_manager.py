@@ -16,6 +16,18 @@ SpriteSpecEntry = Tuple[str, Optional[SpriteSpec]]
 
 class StructuredAssetManager(IAssetManager):
 
+    @property
+    def module(self) -> str:
+        self._package
+
+    def get_sprite_spec_path(self, sprite_name: str) -> str:
+        path, _ = self._sprite_specs[sprite_name]
+        return pkg_resources.resource_filename(self._package, path)
+
+    def get_sprite_sheet_path(self, sheet_name: str) -> str:
+        spec, _ = self._sprite_sheets[sheet_name]
+        return pkg_resources.resource_filename(self._package, spec.path)
+
     def list_sprite_specs(self) -> List[SpriteSpec]:
         return list(self._sprite_specs.keys())
 
@@ -42,8 +54,8 @@ class StructuredAssetManager(IAssetManager):
 
     def clear(self) -> None:
         _log.info("Clearing loaded assets")
-        self._sprite_specs = {k: (p, None) for k, p in self._sprite_specs.items()}
-        self._sprite_sheets = {k: (p, None) for k, p in self._sprite_sheets.items()}
+        self._sprite_specs = {k: (p, None) for k, (p, _) in self._sprite_specs.items()}
+        self._sprite_sheets = {k: (p, None) for k, (p, _) in self._sprite_sheets.items()}
 
     def _load_tiles(self, spec: SpriteSheetSpec) -> List[Surface]:
 
