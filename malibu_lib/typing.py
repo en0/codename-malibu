@@ -1,8 +1,67 @@
 from abc import ABC, abstractmethod
 from pygame import Surface
-from typing import List
+from pygame.event import Event
+from typing import List, Tuple, Optional
 
-from .model import SpriteSpec
+from .model import SpriteSpec, GameSettings
+
+
+class IGameScene(ABC):
+    """A Game Scene"""
+
+    @abstractmethod
+    def render(self, screen: Surface):
+        """Render the current scene to the given display"""
+        ...
+
+    @abstractmethod
+    def reconfigure(self, settings: GameSettings):
+        """Initialize/Reinitialize the scene based on the given settings."""
+        ...
+
+    @abstractmethod
+    def process_event(self, event: Event):
+        """An optional method to process pygame events"""
+        ...
+
+    @abstractmethod
+    def update(self, frame_delta: int):
+        """Update the current game state"""
+        ...
+
+    @abstractmethod
+    def startup(self):
+        """Initialize the current scene"""
+        ...
+
+    @abstractmethod
+    def shutdown(self):
+        """Shutdown and cleanup the scene"""
+        ...
+
+
+class IGame(ABC):
+    """A Game context"""
+
+    @abstractmethod
+    def set_scene(self, next_scene: IGameScene):
+        """Set the current scene"""
+        ...
+
+    @abstractmethod
+    def play(self):
+        """Begin playing the game"""
+        ...
+
+    @abstractmethod
+    def reconfigure(self, settings: GameSettings):
+        """Initialize/Reinitialize the game based on the given settings."""
+        ...
+
+    @abstractmethod
+    def close(self):
+        """Stop playing the game"""
+        ...
 
 
 class IAssetManager(ABC):
@@ -11,7 +70,7 @@ class IAssetManager(ABC):
     @property
     @abstractmethod
     def module(self) -> str:
-        """Get the module used by the asset manaager"""
+        """Get the module used by the asset manager"""
         ...
 
     @abstractmethod
@@ -48,6 +107,7 @@ class IAssetManager(ABC):
     def clear(self) -> None:
         """Clear all loaded assets"""
         ...
+
 
 class IAnimation(ABC):
     """Manages animation tiles"""
@@ -91,3 +151,39 @@ class IAnimation(ABC):
         """Reset the animation frames."""
         ...
 
+
+class IGameInput(ABC):
+    """Track game input"""
+
+    @abstractmethod
+    def reconfigure(self, settings: GameSettings) -> None:
+        """Configure/Reconfigure inputs"""
+        ...
+
+    @abstractmethod
+    def is_pressed(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
+        """Check if a key is currently pressed (held down)"""
+        ...
+
+    @abstractmethod
+    def is_triggered(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
+        """Check if a key was just pressed."""
+        ...
+
+    @abstractmethod
+    def get_mouse_pos(self) -> Tuple[int, int]:
+        """Get the current mouse x, y position"""
+        ...
+
+    @abstractmethod
+    def process_event(self, event: Event) -> None:
+        """Process pygame events."""
+        ...
+
+    @abstractmethod
+    def update(self, frame_delta: int):
+        """Reset the trigger keys collection
+
+        This should be called after game objects have collected input states
+        """
+        ...

@@ -72,7 +72,6 @@ class SpriteSpec:
         )
 
 
-
 @dataclass
 class SpriteSheetSpec:
     name: str
@@ -86,3 +85,19 @@ class SpriteSheetSpec:
             path=dat["path"],
             tile_size=(dat["tile-width"], dat["tile-height"]),
         )
+
+
+@dataclass
+class VideoSettings:
+    frame_rate: int = 60
+    resolution: Tuple[int, int] = 800, 600
+    full_screen: bool = False
+    double_buffer: bool = True
+    hardware_accel: bool = True
+    open_gl: bool = False
+
+
+@dataclass
+class GameSettings:
+    video_settings: VideoSettings
+    input_settings: Dict[str, Tuple[str, int]]

@@ -37,21 +37,25 @@ animations:
     # This is a list of all the frames inside the animation
     frames:
         # This is the first frame
-      - index: 0
-        # This is the second frame
       - index: 1
-        # This is the third frame
+        # This is the second frame
       - index: 2
-        # This is the last frame
+        # This is the third frame
       - index: 3
+        # This is the last frame
+      - index: 0
 
     # This describe the run-right animation
   - name: run-right
     frames:
-      - index: 0
+        # This is the first frame
       - index: 1
+        # This is the second frame
       - index: 2
+        # This is the third frame
       - index: 3
+        # This is the last frame
+      - index: 0
 
     # Some of these are incomplete due to lack of sprite-sheet data
   - name: run-up

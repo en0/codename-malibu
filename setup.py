@@ -1,3 +1,6 @@
+from importlib.metadata import entry_points
+
+from pip._vendor.idna.idnadata import scripts
 from setuptools import setup
 
 
@@ -19,6 +22,12 @@ setup(
     packages=["malibu", "malibu_lib", "malibu_utils"],
     include_package_data=True,
     package_data={'malibu': ['assets/*']},
+    entry_points={
+        'console_scripts': [
+            'malibu-tools=malibu_utils.entry.main',
+            'malibu=malibu.entry.main'
+        ],
+    },
     classifiers=[
         "Programming Language :: Python :: 3.5",
         "License :: OSI Approved :: MIT License",
