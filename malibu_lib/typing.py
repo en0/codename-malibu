@@ -10,32 +10,32 @@ class IGameScene(ABC):
     """A Game Scene"""
 
     @abstractmethod
-    def render(self, screen: Surface):
+    def render(self, screen: Surface) -> None:
         """Render the current scene to the given display"""
         ...
 
     @abstractmethod
-    def reconfigure(self, settings: GameSettings):
+    def reconfigure(self, settings: GameSettings) -> None:
         """Initialize/Reinitialize the scene based on the given settings."""
         ...
 
     @abstractmethod
-    def process_event(self, event: Event):
+    def process_event(self, event: Event) -> None:
         """An optional method to process pygame events"""
         ...
 
     @abstractmethod
-    def update(self, frame_delta: int):
+    def update(self, frame_delta: int) -> None:
         """Update the current game state"""
         ...
 
     @abstractmethod
-    def startup(self):
+    def startup(self) -> None:
         """Initialize the current scene"""
         ...
 
     @abstractmethod
-    def shutdown(self):
+    def shutdown(self) -> None:
         """Shutdown and cleanup the scene"""
         ...
 
@@ -44,22 +44,22 @@ class IGame(ABC):
     """A Game context"""
 
     @abstractmethod
-    def set_scene(self, next_scene: IGameScene):
+    def set_scene(self, next_scene: IGameScene) -> None:
         """Set the current scene"""
         ...
 
     @abstractmethod
-    def play(self):
+    def play(self) -> None:
         """Begin playing the game"""
         ...
 
     @abstractmethod
-    def reconfigure(self, settings: GameSettings):
+    def reconfigure(self, settings: GameSettings) -> None:
         """Initialize/Reinitialize the game based on the given settings."""
         ...
 
     @abstractmethod
-    def close(self):
+    def close(self) -> None:
         """Stop playing the game"""
         ...
 
@@ -132,7 +132,7 @@ class IAnimation(ABC):
 
     @property
     @abstractmethod
-    def current_frame_index(self):
+    def current_frame_index(self) -> None:
         """Get the current frame index."""
         ...
 
@@ -181,9 +181,10 @@ class IGameInput(ABC):
         ...
 
     @abstractmethod
-    def update(self, frame_delta: int):
+    def update(self, frame_delta: int) -> None:
         """Reset the trigger keys collection
 
         This should be called after game objects have collected input states
         """
         ...
+
