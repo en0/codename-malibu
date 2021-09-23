@@ -6,6 +6,9 @@ from malibu_lib.typing import (
     IGame,
     IGameInput,
     IGameScene,
+    ISettingManager,
+    IPathProvider,
+    IEventBroadcaster,
 )
 
 
@@ -37,24 +40,56 @@ def _build_ioc() -> Container:
     from pygame.time import Clock
     ioc.bind(Clock, Clock)
 
+    # Path Provider
+
+    from malibu_lib import UserPathProvider
+    def activate_path_provider(p: UserPathProvider):
+        p.configure("ian.laird", "malibu")
+        return p
+
+    ioc.bind(
+        annotation=IPathProvider,
+        implementation=UserPathProvider,
+        on_activate=activate_path_provider,
+        scope=ScopeEnum.SINGLETON)
+
+    # Event Broadcaster
+
+    from malibu_lib import PygameEventBroadcaster
+
+    ioc.bind(
+        annotation=IEventBroadcaster,
+        implementation=PygameEventBroadcaster)
+
+    # Settings Manager
+
+    from malibu_lib import YamlSettingsManager
+
+    def activate_settings_manager(m: ISettingManager):
+        import pygame
+        from malibu_lib.model import GameSettings, VideoSettings
+        m.set_defaults(GameSettings(
+            video_settings=VideoSettings(),
+            input_settings={
+                "attack": ("key", pygame.K_SPACE),
+                "inventory": ("key", pygame.K_e),
+            }
+        ))
+        return m
+
+    ioc.bind(
+        annotation=ISettingManager,
+        implementation=YamlSettingsManager,
+        on_activate=activate_settings_manager,
+        scope=ScopeEnum.SINGLETON)
+
     # Bind the main game object
 
     from .game import MalibuGame
 
     def activate_game(g: IGame):
-
         g.set_scene(get_scene(SCENE_MAIN_MENU))
-
-        import pygame
-        from malibu_lib.model import GameSettings, VideoSettings
-        # TODO: This should get the settings manager
-        g.reconfigure(GameSettings(
-            video_settings=VideoSettings(),
-            input_settings={
-                "attack": ("key", pygame.K_SPACE),
-                "inventory": ("mouse", pygame.BUTTON_LEFT),
-            }
-        ))
+        g.reconfigure()
         return g
 
     ioc.bind(

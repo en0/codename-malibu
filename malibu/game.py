@@ -1,8 +1,13 @@
 import pygame
 from typing import Optional
 
-from malibu_lib.typing import IGame, IGameScene, IGameInput
 from malibu_lib.model import GameSettings
+from malibu_lib.typing import (
+    IGame,
+    IGameScene,
+    IGameInput,
+    ISettingManager,
+)
 
 
 class MalibuGame(IGame):
@@ -23,7 +28,8 @@ class MalibuGame(IGame):
     def close(self) -> None:
         self.is_playing = False
 
-    def reconfigure(self, settings: GameSettings) -> None:
+    def reconfigure(self) -> None:
+        settings = self.settings_manager.get_settings()
         video_opts = 0
         if settings.video_settings.full_screen:
             video_opts |= pygame.FULLSCREEN
@@ -57,10 +63,16 @@ class MalibuGame(IGame):
     def do_render(self) -> None:
         self.scene.render(self.screen)
 
-    def __init__(self, clock: pygame.time.Clock, game_input: IGameInput) -> None:
+    def __init__(
+        self,
+        clock: pygame.time.Clock,
+        game_input: IGameInput,
+        settings_manager: ISettingManager,
+    ) -> None:
         self.is_playing: bool = False
         self.scene: Optional[IGameScene] = None
         self.screen: Optional[pygame.Surface] = None
         self.frame_rate: int = 0
         self.clock = clock
         self.game_input = game_input
+        self.settings_manager = settings_manager

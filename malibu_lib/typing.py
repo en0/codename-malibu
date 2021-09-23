@@ -54,8 +54,8 @@ class IGame(ABC):
         ...
 
     @abstractmethod
-    def reconfigure(self, settings: GameSettings) -> None:
-        """Initialize/Reinitialize the game based on the given settings."""
+    def reconfigure(self) -> None:
+        """Initialize/Reinitialize the game."""
         ...
 
     @abstractmethod
@@ -188,3 +188,53 @@ class IGameInput(ABC):
         """
         ...
 
+class ISettingManager(ABC):
+    """Manage Game Settings"""
+
+    @abstractmethod
+    def get_settings(self) -> GameSettings:
+        """Fetch the game settings"""
+        ...
+
+    @abstractmethod
+    def set_settings(self, settings: GameSettings) -> None:
+        """Replace game settings with new ones."""
+        ...
+
+    @abstractmethod
+    def set_defaults(self, settings: GameSettings) -> None:
+        """Set the default settings"""
+        ...
+
+class IPathProvider(ABC):
+    """Provides the appropriate paths considering the operating system"""
+
+    @abstractmethod
+    def get_log_path(self, file: str, version: str=None) -> str:
+        ...
+
+    @abstractmethod
+    def get_config_path(self, file: str, version: str=None) -> str:
+        ...
+
+    @abstractmethod
+    def get_data_path(self, file: str, version: str=None) -> str:
+        ...
+
+    @abstractmethod
+    def ensure_log_dir_exists(self, version: str=None) -> None:
+        ...
+
+    @abstractmethod
+    def ensure_config_dir_exists(self, version: str=None) -> None:
+        ...
+
+    @abstractmethod
+    def ensure_data_dir_exists(self, version: str=None) -> None:
+        ...
+
+class IEventBroadcaster(ABC):
+    """Publish a message to the event system"""
+    @abstractmethod
+    def publish(self, topic, **data):
+        ...

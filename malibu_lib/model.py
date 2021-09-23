@@ -1,5 +1,5 @@
 from typing import Dict, List, IO, Tuple, Set
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -96,8 +96,21 @@ class VideoSettings:
     hardware_accel: bool = True
     open_gl: bool = False
 
+    @staticmethod
+    def load(dat: dict) -> "VideoSettings":
+        return VideoSettings(**dat)
+
 
 @dataclass
 class GameSettings:
     video_settings: VideoSettings
     input_settings: Dict[str, Tuple[str, int]]
+
+    def todict(self):
+        return asdict(self)
+
+    @staticmethod
+    def load(dat: dict) -> "GameSettings":
+        return GameSettings(
+            video_settings=VideoSettings.load(dat.get("video_settings", {})),
+            input_settings=dat.get("input_settings", {}))
