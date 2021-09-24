@@ -1,9 +1,10 @@
 from os.path import exists
 from typing import Optional
 from yaml import safe_load, safe_dump
+from .events import SETTINGS_CHANGED
 
 from .model import GameSettings
-from .typing import ISettingManager, IPathProvider, IEventBroadcaster
+from .typing import ISettingManager, IPathProvider, IEventBus
 
 
 class YamlSettingsManager(ISettingManager):
@@ -16,7 +17,7 @@ class YamlSettingsManager(ISettingManager):
     def set_settings(self, settings: GameSettings) -> None:
         self._settings = settings
         self._write_to_disk()
-        self._bcast.publish("reconfigure", settings=self._settings)
+        self._bcast.publish(SETTINGS_CHANGED, settings=self._settings)
 
     def set_defaults(self, settings: GameSettings) -> None:
         self._defaults = settings
@@ -35,7 +36,7 @@ class YamlSettingsManager(ISettingManager):
         with open(self._path, "w") as fd:
             safe_dump(self._settings.todict(), fd)
 
-    def __init__(self, path_provider: IPathProvider, bcast: IEventBroadcaster):
+    def __init__(self, path_provider: IPathProvider, bcast: IEventBus):
         self._path_provider = path_provider
         self._bcast = bcast
         self._path = path_provider.get_config_path("game-settings.yaml")

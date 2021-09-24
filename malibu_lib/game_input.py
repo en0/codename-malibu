@@ -2,7 +2,8 @@ import pygame
 from typing import Tuple, Optional
 
 from malibu_lib.model import GameSettings
-from malibu_lib.typing import IGameInput
+from malibu_lib.typing import IGameInput, ISettingManager, IEventBus
+from malibu_lib.events import *
 
 
 def _k(key: int) -> Tuple[str, int]:
@@ -15,16 +16,8 @@ def _m(button: int) -> Tuple[str, int]:
 
 class GameInput(IGameInput):
 
-    def __init__(self):
-        self.mouse_pos: Tuple[int, int] = 0, 0
-        self.pressed = set()
-        self.triggered = set()
-        self.input_map = dict()
-
-    def reconfigure(self, settings: GameSettings) -> None:
-        self.input_map = settings.input_settings.copy()
-
     def process_event(self, event: pygame.event.Event) -> None:
+        self.ebus.process_event(event)
         if event.type == pygame.KEYDOWN:
             self.pressed.add(_k(event.key))
             self.triggered.add(_k(event.key))
@@ -37,8 +30,6 @@ class GameInput(IGameInput):
             self.pressed.remove(_m(event.button))
         elif event.type == pygame.MOUSEMOTION:
             self.mouse_pos = event.pos
-        else:
-            print(event)
 
     def update(self, frame_delta: int):
         self.triggered = set()
@@ -61,3 +52,19 @@ class GameInput(IGameInput):
 
     def get_mouse_pos(self) -> Tuple[int, int]:
         return self.mouse_pos
+
+    def _reconfigure(self) -> None:
+        settings = self.settings_manager.get_settings()
+        input_settings = settings.input_settings.copy()
+        self.input_map = {a: (t, k) for a, (t, k) in input_settings.items()}
+
+    def __init__(self, settings_manager: ISettingManager, ebus: IEventBus):
+        self.settings_manager = settings_manager
+        self.ebus = ebus
+        self.mouse_pos: Tuple[int, int] = 0, 0
+        self.pressed = set()
+        self.triggered = set()
+        self.input_map = dict()
+        self._reconfigure()
+
+        self.ebus.attach(SETTINGS_CHANGED, lambda x: self._reconfigure())

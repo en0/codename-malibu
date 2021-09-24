@@ -2,10 +2,12 @@ import pygame
 from typing import Optional
 
 from malibu_lib.model import GameSettings
+from malibu_lib.events import *
 from malibu_lib.typing import (
+    IEventBus,
     IGame,
-    IGameScene,
     IGameInput,
+    IGameScene,
     ISettingManager,
 )
 
@@ -28,7 +30,7 @@ class MalibuGame(IGame):
     def close(self) -> None:
         self.is_playing = False
 
-    def reconfigure(self) -> None:
+    def _reconfigure(self) -> None:
         settings = self.settings_manager.get_settings()
         video_opts = 0
         if settings.video_settings.full_screen:
@@ -40,8 +42,6 @@ class MalibuGame(IGame):
         if settings.video_settings.double_buffer:
             video_opts |= pygame.DOUBLEBUF
 
-        self.game_input.reconfigure(settings)
-        self.scene.reconfigure(settings)
         self.frame_rate = settings.video_settings.frame_rate
         self.screen = pygame.display.set_mode(
             size=settings.video_settings.resolution,
@@ -51,6 +51,7 @@ class MalibuGame(IGame):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.close()
+            self.ebus.process_event(event)
             self.game_input.process_event(event)
             self.scene.process_event(event)
 
@@ -61,13 +62,16 @@ class MalibuGame(IGame):
         self.game_input.update(frame_delta)
 
     def do_render(self) -> None:
+        self.screen.fill((0, 0, 66))
         self.scene.render(self.screen)
+        pygame.display.flip()
 
     def __init__(
         self,
         clock: pygame.time.Clock,
         game_input: IGameInput,
         settings_manager: ISettingManager,
+        ebus: IEventBus,
     ) -> None:
         self.is_playing: bool = False
         self.scene: Optional[IGameScene] = None
@@ -76,3 +80,7 @@ class MalibuGame(IGame):
         self.clock = clock
         self.game_input = game_input
         self.settings_manager = settings_manager
+        self.ebus = ebus
+
+        self._reconfigure()
+        self.ebus.attach(SETTINGS_CHANGED, lambda x: self._reconfigure())

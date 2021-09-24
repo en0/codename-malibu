@@ -8,7 +8,7 @@ from malibu_lib.typing import (
     IGameScene,
     ISettingManager,
     IPathProvider,
-    IEventBroadcaster,
+    IEventBus,
 )
 
 
@@ -55,11 +55,12 @@ def _build_ioc() -> Container:
 
     # Event Broadcaster
 
-    from malibu_lib import PygameEventBroadcaster
+    from malibu_lib import PygameUserEventBus
 
     ioc.bind(
-        annotation=IEventBroadcaster,
-        implementation=PygameEventBroadcaster)
+        annotation=IEventBus,
+        implementation=PygameUserEventBus,
+        scope=ScopeEnum.TRANSIENT)
 
     # Settings Manager
 
@@ -89,7 +90,6 @@ def _build_ioc() -> Container:
 
     def activate_game(g: IGame):
         g.set_scene(get_scene(SCENE_MAIN_MENU))
-        g.reconfigure()
         return g
 
     ioc.bind(
@@ -109,8 +109,8 @@ def _build_ioc() -> Container:
 
     # Game Scenes
 
-    from .scene import MenuScene
-    ioc.bind(SCENE_MAIN_MENU, MenuScene)
+    from .scene import MainMenuScene
+    ioc.bind(SCENE_MAIN_MENU, MainMenuScene)
 
     return ioc.build()
 

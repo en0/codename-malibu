@@ -1,5 +1,5 @@
 from os import makedirs
-from os.path import join as join_path
+from os.path import join as join_path, exists
 from appdirs import user_log_dir, user_config_dir, user_data_dir
 
 from .typing import IPathProvider
@@ -22,15 +22,15 @@ class UserPathProvider(IPathProvider):
 
     def ensure_log_dir_exists(self, version: str=None) -> None:
         d = self._get_log_dir(version)
-        makedirs(d)
+        if not exists(d): makedirs(d)
 
     def ensure_config_dir_exists(self, version: str=None) -> None:
         d = self._get_config_dir(version)
-        makedirs(d)
+        if not exists(d): makedirs(d)
 
     def ensure_data_dir_exists(self, version: str=None) -> None:
         d = self._get_data_dir(version)
-        makedirs(d)
+        if not exists(d): makedirs(d)
 
     def configure(self, author: str, game: str):
         self._author = author

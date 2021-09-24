@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
 from pygame import Surface
 from pygame.event import Event
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Callable
 
 from .model import SpriteSpec, GameSettings
+
+
+EventCallback = Callable[[Event], None]
 
 
 class IGameScene(ABC):
@@ -12,11 +15,6 @@ class IGameScene(ABC):
     @abstractmethod
     def render(self, screen: Surface) -> None:
         """Render the current scene to the given display"""
-        ...
-
-    @abstractmethod
-    def reconfigure(self, settings: GameSettings) -> None:
-        """Initialize/Reinitialize the scene based on the given settings."""
         ...
 
     @abstractmethod
@@ -51,11 +49,6 @@ class IGame(ABC):
     @abstractmethod
     def play(self) -> None:
         """Begin playing the game"""
-        ...
-
-    @abstractmethod
-    def reconfigure(self) -> None:
-        """Initialize/Reinitialize the game."""
         ...
 
     @abstractmethod
@@ -156,11 +149,6 @@ class IGameInput(ABC):
     """Track game input"""
 
     @abstractmethod
-    def reconfigure(self, settings: GameSettings) -> None:
-        """Configure/Reconfigure inputs"""
-        ...
-
-    @abstractmethod
     def is_pressed(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
         """Check if a key is currently pressed (held down)"""
         ...
@@ -211,30 +199,49 @@ class IPathProvider(ABC):
 
     @abstractmethod
     def get_log_path(self, file: str, version: str=None) -> str:
+        """Get a file inside the log directory"""
         ...
 
     @abstractmethod
     def get_config_path(self, file: str, version: str=None) -> str:
+        """Get a file inside the config directory"""
         ...
 
     @abstractmethod
     def get_data_path(self, file: str, version: str=None) -> str:
+        """Get a file inside the data directory"""
         ...
 
     @abstractmethod
     def ensure_log_dir_exists(self, version: str=None) -> None:
+        """Create the log directory if it doesn't exist."""
         ...
 
     @abstractmethod
     def ensure_config_dir_exists(self, version: str=None) -> None:
+        """Create the config directory if it doesn't exist."""
         ...
 
     @abstractmethod
     def ensure_data_dir_exists(self, version: str=None) -> None:
+        """Create the data directory if it doesn't exist."""
         ...
 
-class IEventBroadcaster(ABC):
+class IEventBus(ABC):
     """Publish a message to the event system"""
+
     @abstractmethod
-    def publish(self, topic, **data):
+    def publish(self, topic: str, **data):
+        """Publish a new event."""
         ...
+
+    @abstractmethod
+    def attach(self, topic: str, callback: EventCallback) -> None:
+        """Attach topic to callback"""
+        ...
+
+    @abstractmethod
+    def process_event(self, event: Event) -> None:
+        """Check for event updates"""
+        ...
+
