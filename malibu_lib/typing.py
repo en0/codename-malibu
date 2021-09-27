@@ -1,41 +1,39 @@
 from abc import ABC, abstractmethod
 from pygame import Surface
 from pygame.event import Event
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Callable
 
 from .model import SpriteSpec, GameSettings
+
+
+EventCallback = Callable[[Event], None]
 
 
 class IGameScene(ABC):
     """A Game Scene"""
 
     @abstractmethod
-    def render(self, screen: Surface):
+    def render(self, screen: Surface) -> None:
         """Render the current scene to the given display"""
         ...
 
     @abstractmethod
-    def reconfigure(self, settings: GameSettings):
-        """Initialize/Reinitialize the scene based on the given settings."""
-        ...
-
-    @abstractmethod
-    def process_event(self, event: Event):
+    def process_event(self, event: Event) -> None:
         """An optional method to process pygame events"""
         ...
 
     @abstractmethod
-    def update(self, frame_delta: int):
+    def update(self, frame_delta: int) -> None:
         """Update the current game state"""
         ...
 
     @abstractmethod
-    def startup(self):
+    def startup(self) -> None:
         """Initialize the current scene"""
         ...
 
     @abstractmethod
-    def shutdown(self):
+    def shutdown(self) -> None:
         """Shutdown and cleanup the scene"""
         ...
 
@@ -44,22 +42,17 @@ class IGame(ABC):
     """A Game context"""
 
     @abstractmethod
-    def set_scene(self, next_scene: IGameScene):
+    def set_scene(self, next_scene: IGameScene) -> None:
         """Set the current scene"""
         ...
 
     @abstractmethod
-    def play(self):
+    def play(self) -> None:
         """Begin playing the game"""
         ...
 
     @abstractmethod
-    def reconfigure(self, settings: GameSettings):
-        """Initialize/Reinitialize the game based on the given settings."""
-        ...
-
-    @abstractmethod
-    def close(self):
+    def close(self) -> None:
         """Stop playing the game"""
         ...
 
@@ -132,7 +125,7 @@ class IAnimation(ABC):
 
     @property
     @abstractmethod
-    def current_frame_index(self):
+    def current_frame_index(self) -> None:
         """Get the current frame index."""
         ...
 
@@ -156,11 +149,6 @@ class IGameInput(ABC):
     """Track game input"""
 
     @abstractmethod
-    def reconfigure(self, settings: GameSettings) -> None:
-        """Configure/Reconfigure inputs"""
-        ...
-
-    @abstractmethod
     def is_pressed(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
         """Check if a key is currently pressed (held down)"""
         ...
@@ -181,9 +169,79 @@ class IGameInput(ABC):
         ...
 
     @abstractmethod
-    def update(self, frame_delta: int):
+    def update(self, frame_delta: int) -> None:
         """Reset the trigger keys collection
 
         This should be called after game objects have collected input states
         """
         ...
+
+class ISettingManager(ABC):
+    """Manage Game Settings"""
+
+    @abstractmethod
+    def get_settings(self) -> GameSettings:
+        """Fetch the game settings"""
+        ...
+
+    @abstractmethod
+    def set_settings(self, settings: GameSettings) -> None:
+        """Replace game settings with new ones."""
+        ...
+
+    @abstractmethod
+    def set_defaults(self, settings: GameSettings) -> None:
+        """Set the default settings"""
+        ...
+
+class IPathProvider(ABC):
+    """Provides the appropriate paths considering the operating system"""
+
+    @abstractmethod
+    def get_log_path(self, file: str, version: str=None) -> str:
+        """Get a file inside the log directory"""
+        ...
+
+    @abstractmethod
+    def get_config_path(self, file: str, version: str=None) -> str:
+        """Get a file inside the config directory"""
+        ...
+
+    @abstractmethod
+    def get_data_path(self, file: str, version: str=None) -> str:
+        """Get a file inside the data directory"""
+        ...
+
+    @abstractmethod
+    def ensure_log_dir_exists(self, version: str=None) -> None:
+        """Create the log directory if it doesn't exist."""
+        ...
+
+    @abstractmethod
+    def ensure_config_dir_exists(self, version: str=None) -> None:
+        """Create the config directory if it doesn't exist."""
+        ...
+
+    @abstractmethod
+    def ensure_data_dir_exists(self, version: str=None) -> None:
+        """Create the data directory if it doesn't exist."""
+        ...
+
+class IEventBus(ABC):
+    """Publish a message to the event system"""
+
+    @abstractmethod
+    def publish(self, topic: str, **data):
+        """Publish a new event."""
+        ...
+
+    @abstractmethod
+    def attach(self, topic: str, callback: EventCallback) -> None:
+        """Attach topic to callback"""
+        ...
+
+    @abstractmethod
+    def process_event(self, event: Event) -> None:
+        """Check for event updates"""
+        ...
+
