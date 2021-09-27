@@ -7,3 +7,9 @@ sprite-sheets:
 sprite-specs:
   - name: base-boi
     path: assets/sprites/base-boi.yaml
+
+world-map:
+  - name: beach
+    path: assets/world/demo.tmx
+    coord-x: 0
+    coord-y: 0

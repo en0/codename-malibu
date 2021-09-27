@@ -1,0 +1,57 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "demo.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "demo.tmx": {
+            "scale": 0.9291,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 1148.4232052523948,
+                "y": 711.441179636207
+            }
+        },
+        "sheets/farmland.tsx": {
+            "scaleInDock": 1.9225,
+            "scaleInEditor": 1.4745
+        },
+        "sheets/forest.tsx": {
+            "scaleInDock": 1.3991,
+            "scaleInEditor": 3.6488
+        },
+        "sheets/village.tsx": {
+            "scaleInDock": 2.3707,
+            "scaleInEditor": 2.21
+        }
+    },
+    "last.imagePath": "/Users/ilaird/Projects/Personal/codename-malibu/malibu/assets/world/sheets",
+    "map.height": 150,
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": null,
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 150,
+    "openFiles": [
+        "sheets/forest.tsx",
+        "sheets/farmland.tsx",
+        "sheets/village.tsx",
+        "demo.tmx"
+    ],
+    "project": "",
+    "recentFiles": [
+        "sheets/forest.tsx",
+        "sheets/farmland.tsx",
+        "sheets/village.tsx",
+        "demo.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
