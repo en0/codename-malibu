@@ -42,6 +42,16 @@ class IGame(ABC):
     """A Game context"""
 
     @abstractmethod
+    def startup(self) -> None:
+        """Initialize the game"""
+        ...
+
+    @abstractmethod
+    def shutdown(self) -> None:
+        """Shutdown and cleanup the game."""
+        ...
+
+    @abstractmethod
     def set_scene(self, next_scene: IGameScene) -> None:
         """Set the current scene"""
         ...
@@ -238,6 +248,11 @@ class IEventBus(ABC):
     @abstractmethod
     def attach(self, topic: str, callback: EventCallback) -> None:
         """Attach topic to callback"""
+        ...
+
+    @abstractmethod
+    def detach(self, callback: EventCallback) -> None:
+        """Detach a callback from all topics."""
         ...
 
     @abstractmethod

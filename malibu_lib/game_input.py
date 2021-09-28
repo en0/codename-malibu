@@ -17,7 +17,6 @@ def _m(button: int) -> Tuple[str, int]:
 class GameInput(IGameInput):
 
     def process_event(self, event: pygame.event.Event) -> None:
-        self.ebus.process_event(event)
         if event.type == pygame.KEYDOWN:
             self.pressed.add(_k(event.key))
             self.triggered.add(_k(event.key))
@@ -60,11 +59,9 @@ class GameInput(IGameInput):
 
     def __init__(self, settings_manager: ISettingManager, ebus: IEventBus):
         self.settings_manager = settings_manager
-        self.ebus = ebus
         self.mouse_pos: Tuple[int, int] = 0, 0
         self.pressed = set()
         self.triggered = set()
         self.input_map = dict()
         self._reconfigure()
-
-        self.ebus.attach(SETTINGS_CHANGED, lambda x: self._reconfigure())
+        ebus.attach(SETTINGS_CHANGED, lambda x: self._reconfigure())

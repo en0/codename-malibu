@@ -1,6 +1,7 @@
 import pygame
 from typing import Optional
 
+from malibu_lib.abc import GameABC
 from malibu_lib.model import GameSettings
 from malibu_lib.events import *
 from malibu_lib.typing import (
@@ -12,75 +13,32 @@ from malibu_lib.typing import (
 )
 
 
-class MalibuGame(IGame):
-    def set_scene(self, next_scene: IGameScene) -> None:
-        if self.scene:
-            self.scene.shutdown()
-        self.scene = next_scene
-        self.scene.startup()
+class MalibuGame(GameABC):
 
-    def play(self) -> None:
-        self.is_playing = True
-        while self.is_playing:
-            delta = self.clock.tick(self.frame_rate)
-            self.do_events()
-            self.do_update(delta)
-            self.do_render()
+    x = 0
 
-    def close(self) -> None:
-        self.is_playing = False
+    def startup(self) -> None:
+        print("STARTUP")
 
-    def _reconfigure(self) -> None:
-        settings = self.settings_manager.get_settings()
-        video_opts = 0
-        if settings.video_settings.full_screen:
-            video_opts |= pygame.FULLSCREEN
-            if settings.video_settings.hardware_accel:
-                video_opts |= pygame.HWSURFACE
-            elif settings.video_settings.open_gl:
-                video_opts |= pygame.OPENGL
-        if settings.video_settings.double_buffer:
-            video_opts |= pygame.DOUBLEBUF
+    def shutdown(self) -> None:
+        print("SHUTDOWN")
 
-        self.frame_rate = settings.video_settings.frame_rate
-        self.screen = pygame.display.set_mode(
-            size=settings.video_settings.resolution,
-            flags=video_opts)
+    def update(self, frame_delta: int) -> None:
+        self.x += 1
+        if self.x % 100 == 0:
+            print(self.x)
 
-    def do_events(self) -> None:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.close()
-            self.ebus.process_event(event)
-            self.game_input.process_event(event)
-            self.scene.process_event(event)
+        if self.x == 100:
+            print("Going full screen")
+            settings = self.settings_manager.get_settings()
+            settings.video_settings.full_screen = True
+            self.settings_manager.set_settings(settings)
 
-    def do_update(self, frame_delta: int) -> None:
-        self.scene.update(frame_delta)
+        if self.x == 300:
+            print("Going NOT full screen")
+            settings = self.settings_manager.get_settings()
+            settings.video_settings.full_screen = False
+            self.settings_manager.set_settings(settings)
 
-        # This needs to happen last.
-        self.game_input.update(frame_delta)
-
-    def do_render(self) -> None:
-        self.screen.fill((0, 0, 66))
-        self.scene.render(self.screen)
-        pygame.display.flip()
-
-    def __init__(
-        self,
-        clock: pygame.time.Clock,
-        game_input: IGameInput,
-        settings_manager: ISettingManager,
-        ebus: IEventBus,
-    ) -> None:
-        self.is_playing: bool = False
-        self.scene: Optional[IGameScene] = None
-        self.screen: Optional[pygame.Surface] = None
-        self.frame_rate: int = 0
-        self.clock = clock
-        self.game_input = game_input
-        self.settings_manager = settings_manager
-        self.ebus = ebus
-
-        self._reconfigure()
-        self.ebus.attach(SETTINGS_CHANGED, lambda x: self._reconfigure())
+        if self.x == 500:
+            self.close()

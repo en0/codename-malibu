@@ -15,22 +15,6 @@ from malibu_lib.typing import (
 _ioc: Optional[Container] = None
 
 
-def _next_generator():
-    i = 0
-    while True:
-        i += 1
-        yield i
-
-
-_ng = _next_generator()
-auto = lambda: next(_ng)
-
-
-SCENE_SPLASH = auto()
-SCENE_MAIN_MENU = auto()
-SCENE_SETTINGS_MENU = auto()
-
-
 def _build_ioc() -> Container:
 
     ioc = StaticContainerBuilder()
@@ -60,7 +44,7 @@ def _build_ioc() -> Container:
     ioc.bind(
         annotation=IEventBus,
         implementation=PygameUserEventBus,
-        scope=ScopeEnum.TRANSIENT)
+        scope=ScopeEnum.SINGLETON)
 
     # Settings Manager
 
@@ -109,7 +93,7 @@ def _build_ioc() -> Container:
 
     # Game Scenes
 
-    from .scene import MainMenuScene
+    from .scene import MainMenuScene, SCENE_MAIN_MENU
     ioc.bind(SCENE_MAIN_MENU, MainMenuScene)
 
     return ioc.build()

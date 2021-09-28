@@ -7,13 +7,35 @@
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "malibu/assets/world/demo.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 1461.3333333333333,
+                "y": 905
+            }
+        },
+        "malibu/assets/world/sheets/farmland.tsx": {
+            "scaleInDock": 1
+        },
+        "malibu/assets/world/sheets/forest.tsx": {
+            "scaleInDock": 1
+        },
+        "malibu/assets/world/sheets/village.tsx": {
+            "scaleInDock": 1
+        }
     },
     "last.imagePath": "/home/ian/src/codename-malibu/malibu/assets/world/sheets",
+    "map.height": 38,
     "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 50,
     "openFiles": [
     ],
     "project": "word-maps.tiled-project",
     "recentFiles": [
+        "malibu/assets/world/demo.tmx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }

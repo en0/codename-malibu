@@ -1,14 +1,14 @@
 from pygame import Surface, draw
 import pygame
 
+from malibu_lib.abc import SceneABC
 from malibu_lib.model import GameSettings
-from malibu_lib.typing import IGameScene, IGameInput
+from malibu_lib.typing import IGameInput
 
 
-class MainMenuScene(IGameScene):
+class MainMenuScene(SceneABC):
 
-    def reconfigure(self, settings: GameSettings) -> None:
-        pass
+    x = (0, 0)
 
     def render(self, screen: Surface) -> None:
         draw.circle(screen, (0, 255, 0), self.x, 3)
@@ -24,17 +24,10 @@ class MainMenuScene(IGameScene):
             x -= m
         if self.game_input.is_pressed(key=pygame.K_d):
             x += m
+        if self.game_input.is_triggered(key=pygame.K_8):
+            self.ebus.publish("SOME_TRIGGER")
+
         self.x = (x, y)
 
-    def startup(self) -> None:
-        pass
-
-    def shutdown(self) -> None:
-        pass
-
-    def process_event(self, event) -> None:
-        pass
-
-    def __init__(self, game_input: IGameInput):
-        self.game_input = game_input
-        self.x = (0, 0)
+    def on_some_trigger(self, event):
+        print("HIT", event)
