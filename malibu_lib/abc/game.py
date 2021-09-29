@@ -2,11 +2,10 @@ import pygame
 from typing import Optional
 from abc import abstractmethod
 
-from ..utils import auto_wireup_events
+from ..mixin import EventListenerMixin
+from ..utils import publish_game_event
 from ..model import GameSettings
-from ..events import *
 from ..typing import (
-    IEventBus,
     IGame,
     IGameInput,
     IGameScene,
@@ -14,19 +13,7 @@ from ..typing import (
 )
 
 
-class GameABC(IGame):
-
-    @abstractmethod
-    def update(self, frame_delta: int) -> None:
-        ...
-
-    @abstractmethod
-    def startup(self) -> None:
-        ...
-
-    @abstractmethod
-    def shutdown(self) -> None:
-        ...
+class GameABC(EventListenerMixin, IGame):
 
     @property
     def game_input(self) -> IGameInput:
@@ -44,8 +31,12 @@ class GameABC(IGame):
     def scene(self) -> Optional[IGameScene]:
         return self._scene
 
+    def publish(self, topic: str, **data):
+        publish_game_event(topic, **data)
+
     def set_scene(self, next_scene: IGameScene) -> None:
-        if self._scene: self._scene.shutdown()
+        if self._scene:
+            self._scene.shutdown()
         self._scene = next_scene
         self._scene.startup()
 
@@ -60,9 +51,9 @@ class GameABC(IGame):
 
             # Process game events
             for event in pygame.event.get():
-                self._ebus.process_event(event)
                 self._game_input.process_event(event)
                 self._scene.process_event(event)
+                self.process_event(event)
 
             # Process game updates
             self._scene.update(delta)
@@ -77,10 +68,10 @@ class GameABC(IGame):
         self.shutdown()
         pygame.quit()
 
-    def _on_settings_changed(self, event: pygame.event.Event) -> None:
+    def on_settings_changed(self, event: pygame.event.Event) -> None:
         self._reconfigure(event.settings)
 
-    def _on_game_exit(self, event: pygame.event.Event) -> None:
+    def on_quit(self, event: pygame.event.Event) -> None:
         self._is_playing = False
 
     def _initialize(self) -> None:
@@ -105,7 +96,6 @@ class GameABC(IGame):
 
     def __init__(
         self,
-        ebus: IEventBus,
         clock: pygame.time.Clock,
         game_input: IGameInput,
         settings_manager: ISettingManager,
@@ -117,12 +107,6 @@ class GameABC(IGame):
         self._clock = clock
         self._game_input = game_input
         self._settings_manager = settings_manager
-        self._ebus = ebus
 
         # initialize the screen
         self._initialize()
-
-        # Wireup events
-        self._ebus.attach(SETTINGS_CHANGED, self._on_settings_changed)
-        self._ebus.attach(GAME_EXIT, self._on_game_exit)
-        auto_wireup_events(self._ebus, self)

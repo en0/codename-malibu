@@ -1,16 +1,4 @@
-import pygame
-from typing import Optional
-
 from malibu_lib.abc import GameABC
-from malibu_lib.model import GameSettings
-from malibu_lib.events import *
-from malibu_lib.typing import (
-    IEventBus,
-    IGame,
-    IGameInput,
-    IGameScene,
-    ISettingManager,
-)
 
 
 class MalibuGame(GameABC):
@@ -18,10 +6,10 @@ class MalibuGame(GameABC):
     x = 0
 
     def startup(self) -> None:
-        print("STARTUP")
+        ...
 
     def shutdown(self) -> None:
-        print("SHUTDOWN")
+        ...
 
     def update(self, frame_delta: int) -> None:
         self.x += 1

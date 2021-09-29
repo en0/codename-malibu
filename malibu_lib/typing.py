@@ -18,11 +18,6 @@ class IGameScene(ABC):
         ...
 
     @abstractmethod
-    def process_event(self, event: Event) -> None:
-        """An optional method to process pygame events"""
-        ...
-
-    @abstractmethod
     def update(self, frame_delta: int) -> None:
         """Update the current game state"""
         ...
@@ -43,12 +38,17 @@ class IGame(ABC):
 
     @abstractmethod
     def startup(self) -> None:
-        """Initialize the game"""
+        """Called when the game starts."""
         ...
 
     @abstractmethod
     def shutdown(self) -> None:
-        """Shutdown and cleanup the game."""
+        """Called right before the game closes."""
+        ...
+
+    @abstractmethod
+    def publish(self, topic: str, **data):
+        """Publish a new event."""
         ...
 
     @abstractmethod
@@ -236,27 +236,3 @@ class IPathProvider(ABC):
     def ensure_data_dir_exists(self, version: str=None) -> None:
         """Create the data directory if it doesn't exist."""
         ...
-
-class IEventBus(ABC):
-    """Publish a message to the event system"""
-
-    @abstractmethod
-    def publish(self, topic: str, **data):
-        """Publish a new event."""
-        ...
-
-    @abstractmethod
-    def attach(self, topic: str, callback: EventCallback) -> None:
-        """Attach topic to callback"""
-        ...
-
-    @abstractmethod
-    def detach(self, callback: EventCallback) -> None:
-        """Detach a callback from all topics."""
-        ...
-
-    @abstractmethod
-    def process_event(self, event: Event) -> None:
-        """Check for event updates"""
-        ...
-

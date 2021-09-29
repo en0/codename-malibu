@@ -24,10 +24,4 @@ class MainMenuScene(SceneABC):
             x -= m
         if self.game_input.is_pressed(key=pygame.K_d):
             x += m
-        if self.game_input.is_triggered(key=pygame.K_8):
-            self.ebus.publish("SOME_TRIGGER")
-
         self.x = (x, y)
-
-    def on_some_trigger(self, event):
-        print("HIT", event)

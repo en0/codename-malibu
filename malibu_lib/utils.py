@@ -1,13 +1,16 @@
-from .typing import IEventBus
+from pygame.event import Event, post
+from pygame import USEREVENT
 
-def auto_wireup_events(ebus: IEventBus, obj: object):
-    events = []
-    for method in dir(obj):
-        if method.startswith("on_"):
-            meth = getattr(obj, method)
-            events.append(meth)
-            ebus.attach(method[3:].upper(), meth)
-    return events
+GAME_EVENT_TYPE = "GAME_TOPIC"
+
+
+def is_game_event(event: Event) -> bool:
+    return event.type == USEREVENT and event.user_type == GAME_EVENT_TYPE
+
+
+def publish_game_event(topic: str, **data):
+    post(Event(USEREVENT, user_type=GAME_EVENT_TYPE, topic=topic, **data))
+
 
 def counter(limit=-1):
     def _next_generator():

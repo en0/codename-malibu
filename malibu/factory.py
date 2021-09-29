@@ -8,7 +8,6 @@ from malibu_lib.typing import (
     IGameScene,
     ISettingManager,
     IPathProvider,
-    IEventBus,
 )
 
 
@@ -35,15 +34,6 @@ def _build_ioc() -> Container:
         annotation=IPathProvider,
         implementation=UserPathProvider,
         on_activate=activate_path_provider,
-        scope=ScopeEnum.SINGLETON)
-
-    # Event Broadcaster
-
-    from malibu_lib import PygameUserEventBus
-
-    ioc.bind(
-        annotation=IEventBus,
-        implementation=PygameUserEventBus,
         scope=ScopeEnum.SINGLETON)
 
     # Settings Manager
@@ -110,9 +100,9 @@ def _get(interface, annotation=None):
     try:
         ret = _get_ioc().get(annotation or interface)
     except KeyError as ex:
-        raise ValueError("The given type does not exist") from ax
+        raise ValueError("The given type does not exist:", interface) from ex
     if not isinstance(ret, interface):
-        raise ValueError("The given type does not exist")
+        raise ValueError("The given type does not exist:", interface)
     return ret
 
 

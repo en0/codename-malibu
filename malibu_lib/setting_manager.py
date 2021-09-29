@@ -4,7 +4,8 @@ from yaml import safe_load, safe_dump
 from .events import SETTINGS_CHANGED
 
 from .model import GameSettings
-from .typing import ISettingManager, IPathProvider, IEventBus
+from .typing import ISettingManager, IPathProvider
+from .utils import publish_game_event
 
 
 class YamlSettingsManager(ISettingManager):
@@ -17,7 +18,7 @@ class YamlSettingsManager(ISettingManager):
     def set_settings(self, settings: GameSettings) -> None:
         self._settings = settings
         self._write_to_disk()
-        self._ebus.publish(SETTINGS_CHANGED, settings=self._settings)
+        publish_game_event(SETTINGS_CHANGED, settings=self._settings)
 
     def set_defaults(self, settings: GameSettings) -> None:
         self._defaults = settings
@@ -36,9 +37,8 @@ class YamlSettingsManager(ISettingManager):
         with open(self._path, "w") as fd:
             safe_dump(self._settings.todict(), fd)
 
-    def __init__(self, path_provider: IPathProvider, ebus: IEventBus):
+    def __init__(self, path_provider: IPathProvider):
         self._path_provider = path_provider
-        self._ebus = ebus
         self._path = path_provider.get_config_path("game-settings.yaml")
         self._settings: Optional[GameSettings] = None
         self._defaults: Optional[GameSettings] = None

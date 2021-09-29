@@ -1,9 +1,7 @@
 import pygame
 from typing import Tuple, Optional
 
-from malibu_lib.model import GameSettings
-from malibu_lib.typing import IGameInput, ISettingManager, IEventBus
-from malibu_lib.events import *
+from .typing import IGameInput, ISettingManager
 
 
 def _k(key: int) -> Tuple[str, int]:
@@ -57,11 +55,10 @@ class GameInput(IGameInput):
         input_settings = settings.input_settings.copy()
         self.input_map = {a: (t, k) for a, (t, k) in input_settings.items()}
 
-    def __init__(self, settings_manager: ISettingManager, ebus: IEventBus):
+    def __init__(self, settings_manager: ISettingManager):
         self.settings_manager = settings_manager
         self.mouse_pos: Tuple[int, int] = 0, 0
         self.pressed = set()
         self.triggered = set()
         self.input_map = dict()
         self._reconfigure()
-        ebus.attach(SETTINGS_CHANGED, lambda x: self._reconfigure())
