@@ -2,6 +2,7 @@ import pygame
 from typing import Tuple, Optional
 
 from .typing import IGameInput, ISettingManager
+from .model import GameSettings
 
 
 def _k(key: int) -> Tuple[str, int]:
@@ -28,7 +29,7 @@ class GameInput(IGameInput):
         elif event.type == pygame.MOUSEMOTION:
             self.mouse_pos = event.pos
 
-    def update(self, frame_delta: int):
+    def update(self, frame_delta: int) -> None:
         self.triggered = set()
 
     def is_pressed(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
@@ -50,15 +51,20 @@ class GameInput(IGameInput):
     def get_mouse_pos(self) -> Tuple[int, int]:
         return self.mouse_pos
 
-    def _reconfigure(self) -> None:
-        settings = self.settings_manager.get_settings()
+    def on_settings_changed(self, event: pygame.event.Event) -> None:
+        self._reconfigure(event.settings)
+
+    def _reconfigure(self, settings: GameSettings) -> None:
         input_settings = settings.input_settings.copy()
         self.input_map = {a: (t, k) for a, (t, k) in input_settings.items()}
 
-    def __init__(self, settings_manager: ISettingManager):
+    def __init__(self, settings_manager: ISettingManager) -> None:
         self.settings_manager = settings_manager
         self.mouse_pos: Tuple[int, int] = 0, 0
         self.pressed = set()
         self.triggered = set()
         self.input_map = dict()
-        self._reconfigure()
+
+        # Configure inputs
+        settings = self.settings_manager.get_settings()
+        self._reconfigure(settings)

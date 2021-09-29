@@ -1,9 +1,7 @@
 import pygame
 from typing import Optional
-from abc import abstractmethod
 
 from ..mixin import EventListenerMixin
-from ..utils import publish_game_event
 from ..model import GameSettings
 from ..typing import (
     IGame,
@@ -16,23 +14,12 @@ from ..typing import (
 class GameABC(EventListenerMixin, IGame):
 
     @property
-    def game_input(self) -> IGameInput:
-        return self._game_input
-
-    @property
     def settings_manager(self) -> ISettingManager:
         return self._settings_manager
 
     @property
-    def screen(self) -> pygame.Surface:
-        return self._screen
-
-    @property
-    def scene(self) -> Optional[IGameScene]:
-        return self._scene
-
-    def publish(self, topic: str, **data):
-        publish_game_event(topic, **data)
+    def game_input(self) -> IGameInput:
+        return self._game_input
 
     def set_scene(self, next_scene: IGameScene) -> None:
         if self._scene:
@@ -44,8 +31,17 @@ class GameABC(EventListenerMixin, IGame):
         pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def play(self) -> None:
+
+        # Start "playing"
         self._is_playing = True
+
+        # Give the impl an opertunity to set defaults
         self.startup()
+
+        # initialize the screen
+        settings = self._settings_manager.get_settings()
+        self._reconfigure(settings)
+
         while self._is_playing:
             delta = self._clock.tick(self._frame_rate)
 
@@ -73,10 +69,6 @@ class GameABC(EventListenerMixin, IGame):
 
     def on_quit(self, event: pygame.event.Event) -> None:
         self._is_playing = False
-
-    def _initialize(self) -> None:
-        settings = self._settings_manager.get_settings()
-        self._reconfigure(settings)
 
     def _reconfigure(self, settings: GameSettings) -> None:
         video_opts = 0
@@ -107,6 +99,3 @@ class GameABC(EventListenerMixin, IGame):
         self._clock = clock
         self._game_input = game_input
         self._settings_manager = settings_manager
-
-        # initialize the screen
-        self._initialize()

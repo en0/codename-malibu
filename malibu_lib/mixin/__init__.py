@@ -1,1 +1,1 @@
-from .event import EventListenerMixin
+from .event import EventListenerMixin, EventPublisherMixin

@@ -1,5 +1,4 @@
 # codename-malibu
 
-TODO: The ebus is over complicated.  The gameabc object should wireup events to scenes and
-deconstruct them when they are unset.  Additionally, the game object should expose a publish method
-and each scene should be handed the game object.
+TODO: Move IOC for builtins into lib and make it so malibu/factory.py only contains
+details about this game, not the engine components like settings_manager and game_input.

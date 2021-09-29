@@ -1,9 +1,7 @@
 from pygame import USEREVENT, QUIT
 from pygame.event import Event, post
 
-from ..utils import publish_game_event, is_game_event
-
-USER_TYPE = "GAME_TOPIC"
+from ..events import publish_game_event, is_game_event
 
 
 class EventListenerMixin:

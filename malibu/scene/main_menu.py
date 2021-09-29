@@ -10,6 +10,12 @@ class MainMenuScene(SceneABC):
 
     x = (0, 0)
 
+    def startup(self) -> None:
+        ...
+
+    def shutdown(self) -> None:
+        ...
+
     def render(self, screen: Surface) -> None:
         draw.circle(screen, (0, 255, 0), self.x, 3)
 

@@ -1,32 +1,26 @@
+import pygame
+
 from malibu_lib.abc import GameABC
+from malibu_lib.model import GameSettings, VideoSettings
 
 
 class MalibuGame(GameABC):
 
-    x = 0
-
     def startup(self) -> None:
-        ...
+        self.settings_manager.set_defaults(GameSettings(
+            video_settings=VideoSettings(),
+            input_settings={}
+        ))
 
     def shutdown(self) -> None:
         ...
 
     def update(self, frame_delta: int) -> None:
-        self.x += 1
-        if self.x % 100 == 0:
-            print(self.x)
+        if self.game_input.is_triggered(key=pygame.K_F11):
+            self._toggle_full_screen()
 
-        if self.x == 100:
-            print("Going full screen")
-            settings = self.settings_manager.get_settings()
-            settings.video_settings.full_screen = True
-            self.settings_manager.set_settings(settings)
-
-        if self.x == 300:
-            print("Going NOT full screen")
-            settings = self.settings_manager.get_settings()
-            settings.video_settings.full_screen = False
-            self.settings_manager.set_settings(settings)
-
-        if self.x == 500:
-            self.close()
+    def _toggle_full_screen(self):
+        settings = self.settings_manager.get_settings()
+        full_screen = settings.video_settings.full_screen
+        settings.video_settings.full_screen = not full_screen
+        self.settings_manager.set_settings(settings)

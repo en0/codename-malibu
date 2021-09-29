@@ -13,13 +13,18 @@ class IGameScene(ABC):
     """A Game Scene"""
 
     @abstractmethod
-    def render(self, screen: Surface) -> None:
-        """Render the current scene to the given display"""
+    def process_event(self, event: Event) -> None:
+        """Process pygame events."""
         ...
 
     @abstractmethod
     def update(self, frame_delta: int) -> None:
         """Update the current game state"""
+        ...
+
+    @abstractmethod
+    def render(self, screen: Surface) -> None:
+        """Render the current scene to the given display"""
         ...
 
     @abstractmethod
@@ -44,11 +49,6 @@ class IGame(ABC):
     @abstractmethod
     def shutdown(self) -> None:
         """Called right before the game closes."""
-        ...
-
-    @abstractmethod
-    def publish(self, topic: str, **data):
-        """Publish a new event."""
         ...
 
     @abstractmethod
@@ -186,6 +186,7 @@ class IGameInput(ABC):
         """
         ...
 
+
 class ISettingManager(ABC):
     """Manage Game Settings"""
 
@@ -203,6 +204,7 @@ class ISettingManager(ABC):
     def set_defaults(self, settings: GameSettings) -> None:
         """Set the default settings"""
         ...
+
 
 class IPathProvider(ABC):
     """Provides the appropriate paths considering the operating system"""

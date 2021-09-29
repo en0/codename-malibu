@@ -1,11 +1,10 @@
 from os.path import exists
 from typing import Optional
 from yaml import safe_load, safe_dump
-from .events import SETTINGS_CHANGED
 
 from .model import GameSettings
 from .typing import ISettingManager, IPathProvider
-from .utils import publish_game_event
+from .events import publish_game_event, SETTINGS_CHANGED
 
 
 class YamlSettingsManager(ISettingManager):
@@ -18,7 +17,7 @@ class YamlSettingsManager(ISettingManager):
     def set_settings(self, settings: GameSettings) -> None:
         self._settings = settings
         self._write_to_disk()
-        publish_game_event(SETTINGS_CHANGED, settings=self._settings)
+        publish_game_event(SETTINGS_CHANGED, settings=settings)
 
     def set_defaults(self, settings: GameSettings) -> None:
         self._defaults = settings

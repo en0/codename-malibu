@@ -40,22 +40,9 @@ def _build_ioc() -> Container:
 
     from malibu_lib import YamlSettingsManager
 
-    def activate_settings_manager(m: ISettingManager):
-        import pygame
-        from malibu_lib.model import GameSettings, VideoSettings
-        m.set_defaults(GameSettings(
-            video_settings=VideoSettings(),
-            input_settings={
-                "attack": ("key", pygame.K_SPACE),
-                "inventory": ("key", pygame.K_e),
-            }
-        ))
-        return m
-
     ioc.bind(
         annotation=ISettingManager,
         implementation=YamlSettingsManager,
-        on_activate=activate_settings_manager,
         scope=ScopeEnum.SINGLETON)
 
     # Bind the main game object
