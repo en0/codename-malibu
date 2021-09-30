@@ -52,7 +52,7 @@ class IGame(ABC):
         ...
 
     @abstractmethod
-    def set_scene(self, next_scene: IGameScene) -> None:
+    def set_scene(self, next_scene: str) -> None:
         """Set the current scene"""
         ...
 
@@ -200,11 +200,6 @@ class ISettingManager(ABC):
         """Replace game settings with new ones."""
         ...
 
-    @abstractmethod
-    def set_defaults(self, settings: GameSettings) -> None:
-        """Set the default settings"""
-        ...
-
 
 class IPathProvider(ABC):
     """Provides the appropriate paths considering the operating system"""
@@ -238,3 +233,5 @@ class IPathProvider(ABC):
     def ensure_data_dir_exists(self, version: str=None) -> None:
         """Create the data directory if it doesn't exist."""
         ...
+
+IGameSceneFactory = Callable[[str], IGameScene]

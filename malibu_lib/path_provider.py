@@ -3,13 +3,10 @@ from os.path import join as join_path, exists
 from appdirs import user_log_dir, user_config_dir, user_data_dir
 
 from .typing import IPathProvider
+from .model import GameConfig
 
 
 class UserPathProvider(IPathProvider):
-
-    _author: str
-    _game: str
-    _ver: str
 
     def get_log_path(self, name: str, version: str=None) -> str:
         return join_path(self._get_log_dir(version), name)
@@ -32,34 +29,26 @@ class UserPathProvider(IPathProvider):
         d = self._get_data_dir(version)
         if not exists(d): makedirs(d)
 
-    def configure(self, author: str, game: str):
-        self._author = author
-        self._game = game
-        self._ready = True
-
     def _get_log_dir(self, ver) -> None:
-        if not self._ready:
-            raise ValueError("Provider Not Configured!")
         return user_log_dir(
             appname=self._game,
             appauthor=self._author,
-            version=ver)
+            version=ver or self._ver)
 
     def _get_data_dir(self, ver) -> None:
-        if not self._ready:
-            raise ValueError("Provider Not Configured!")
         return user_data_dir(
             appname=self._game,
             appauthor=self._author,
-            version=ver)
+            version=ver or self._ver)
 
     def _get_config_dir(self, ver) -> None:
-        if not self._ready:
-            raise ValueError("Provider Not Configured!")
         return user_config_dir(
             appname=self._game,
             appauthor=self._author,
-            version=ver)
+            version=ver or self._ver)
 
-    def __init__(self):
-        self._ready = False
+    def __init__(self, config: GameConfig):
+        self._game = config.name
+        self._author = config.author
+        self._ver = config.version
+

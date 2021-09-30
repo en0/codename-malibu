@@ -1,4 +1,4 @@
-from typing import Dict, List, IO, Tuple, Set
+from typing import Dict, List, IO, Tuple, Set, NamedTuple
 from dataclasses import dataclass, asdict
 
 
@@ -114,3 +114,10 @@ class GameSettings:
         return GameSettings(
             video_settings=VideoSettings.load(dat.get("video_settings", {})),
             input_settings=dat.get("input_settings", {}))
+
+
+class GameConfig(NamedTuple):
+    author: str
+    name: str
+    version: str
+    default_settings: GameSettings

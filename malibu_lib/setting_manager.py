@@ -2,7 +2,7 @@ from os.path import exists
 from typing import Optional
 from yaml import safe_load, safe_dump
 
-from .model import GameSettings
+from .model import GameSettings, GameConfig
 from .typing import ISettingManager, IPathProvider
 from .events import publish_game_event, SETTINGS_CHANGED
 
@@ -19,9 +19,6 @@ class YamlSettingsManager(ISettingManager):
         self._write_to_disk()
         publish_game_event(SETTINGS_CHANGED, settings=settings)
 
-    def set_defaults(self, settings: GameSettings) -> None:
-        self._defaults = settings
-
     def _load_from_disk_or_default(self):
         if not exists(self._path):
             self._settings = self._defaults
@@ -36,9 +33,9 @@ class YamlSettingsManager(ISettingManager):
         with open(self._path, "w") as fd:
             safe_dump(self._settings.todict(), fd)
 
-    def __init__(self, path_provider: IPathProvider):
+    def __init__(self, game_config: GameConfig, path_provider: IPathProvider):
         self._path_provider = path_provider
         self._path = path_provider.get_config_path("game-settings.yaml")
         self._settings: Optional[GameSettings] = None
-        self._defaults: Optional[GameSettings] = None
+        self._defaults: GameSettings = game_config.default_settings
 

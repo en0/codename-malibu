@@ -8,6 +8,7 @@ from ..typing import (
     IGameInput,
     IGameScene,
     ISettingManager,
+    IGameSceneFactory,
 )
 
 
@@ -21,10 +22,10 @@ class GameABC(EventListenerMixin, IGame):
     def game_input(self) -> IGameInput:
         return self._game_input
 
-    def set_scene(self, next_scene: IGameScene) -> None:
+    def set_scene(self, next_scene: str) -> None:
         if self._scene:
             self._scene.shutdown()
-        self._scene = next_scene
+        self._scene = self._scene_factory(next_scene)
         self._scene.startup()
 
     def close(self) -> None:
@@ -91,6 +92,7 @@ class GameABC(EventListenerMixin, IGame):
         clock: pygame.time.Clock,
         game_input: IGameInput,
         settings_manager: ISettingManager,
+        scene_factory: IGameSceneFactory,
     ) -> None:
         self._is_playing: bool = False
         self._scene: Optional[IGameScene] = None
@@ -99,3 +101,4 @@ class GameABC(EventListenerMixin, IGame):
         self._clock = clock
         self._game_input = game_input
         self._settings_manager = settings_manager
+        self._scene_factory = scene_factory

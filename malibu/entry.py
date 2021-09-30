@@ -1,9 +1,9 @@
 import pygame
-from . import factory
+from .ioc import get_game
 
 
 def main():
-    game = factory.get_game()
+    game = get_game()
     game.play()
 
 
