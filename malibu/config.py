@@ -2,9 +2,10 @@ import pygame
 from malibu_lib.model import GameConfig, GameSettings, VideoSettings
 
 game_config = GameConfig(
+
     author="ian.laird",
     name="malibu",
-    version="0.0.1",
+    version="0.0.2",
 
     # If you changes are required,
     # you must change the version above
@@ -12,6 +13,7 @@ game_config = GameConfig(
         VideoSettings(
             frame_rate=60,
             resolution=(800, 600),
+            viewport=(400, 300),
             full_screen=False,
             double_buffer=True,
             hardware_accel=True,

@@ -12,6 +12,7 @@ class MalibuGame(GameABC):
         self.set_scene(SCENE_MAIN_MENU)
 
     def shutdown(self) -> None:
+        print(pygame.display.list_modes())
         ...
 
     def update(self, frame_delta: int) -> None:

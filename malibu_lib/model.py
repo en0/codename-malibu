@@ -91,6 +91,7 @@ class SpriteSheetSpec:
 class VideoSettings:
     frame_rate: int = 60
     resolution: Tuple[int, int] = 800, 600
+    viewport: Tuple[int, int] = 800, 600
     full_screen: bool = False
     double_buffer: bool = True
     hardware_accel: bool = True

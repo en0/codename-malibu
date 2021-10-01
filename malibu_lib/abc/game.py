@@ -33,16 +33,11 @@ class GameABC(EventListenerMixin, IGame):
 
     def play(self) -> None:
 
-        # Start "playing"
-        self._is_playing = True
-
-        # Give the impl an opertunity to set defaults
-        self.startup()
-
-        # initialize the screen
         settings = self._settings_manager.get_settings()
         self._reconfigure(settings)
 
+        self._is_playing = True
+        self.startup()
         while self._is_playing:
             delta = self._clock.tick(self._frame_rate)
 
@@ -58,8 +53,9 @@ class GameABC(EventListenerMixin, IGame):
             self._game_input.update(delta)
 
             # Update Screen
-            self._screen.fill((0, 0, 66))
             self._scene.render(self._screen)
+            screen = pygame.transform.scale(self._screen, self._display.get_size())
+            self._display.blit(screen, (0, 0))
             pygame.display.flip()
 
         self.shutdown()
@@ -83,9 +79,11 @@ class GameABC(EventListenerMixin, IGame):
             video_opts |= pygame.DOUBLEBUF
 
         self._frame_rate = settings.video_settings.frame_rate
-        self._screen = pygame.display.set_mode(
+        self._screen = pygame.Surface(settings.video_settings.viewport)
+        self._display = pygame.display.set_mode(
             size=settings.video_settings.resolution,
-            flags=video_opts)
+            flags=video_opts
+        )
 
     def __init__(
         self,
@@ -96,6 +94,7 @@ class GameABC(EventListenerMixin, IGame):
     ) -> None:
         self._is_playing: bool = False
         self._scene: Optional[IGameScene] = None
+        self._display: Optional[pygame.Surface] = None
         self._screen: Optional[pygame.Surface] = None
         self._frame_rate: int = 0
         self._clock = clock
