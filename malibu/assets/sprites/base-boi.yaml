@@ -59,7 +59,6 @@ animations:
 
     # Some of these are incomplete due to lack of sprite-sheet data
   - name: run-up
-    type: repeat
     frames:
       - index: 0
 

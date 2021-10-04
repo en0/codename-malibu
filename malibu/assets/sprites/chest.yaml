@@ -1,0 +1,21 @@
+name: chest
+desc: A open or closed chest
+
+defaults:
+  delay: 200
+  mirror: false
+  flip: false
+  opacity: 255
+  rotation: 0
+  sheet: chest
+  scale-height: 1
+  scale-width: 1
+  repeat: 0
+
+animations:
+  - name: closed
+    frames:
+      - index: 0
+  - name: opened
+    frames:
+      - index: 1

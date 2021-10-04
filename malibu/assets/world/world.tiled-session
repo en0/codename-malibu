@@ -12,21 +12,21 @@
             "scale": 1.5545,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 149.88742360887747,
-                "y": 186.2335155998713
+                "x": 12.222579607590866,
+                "y": 131.87520102926985
             }
         },
         "sheets/farmland.tsx": {
-            "scaleInDock": 1.9225,
-            "scaleInEditor": 1.4745
+            "scaleInDock": 1.1053,
+            "scaleInEditor": 2.43
         },
         "sheets/forest.tsx": {
-            "scaleInDock": 1.3991,
-            "scaleInEditor": 3.6488
+            "scaleInDock": 1.9573,
+            "scaleInEditor": 2.43
         },
         "sheets/village.tsx": {
-            "scaleInDock": 2.3707,
-            "scaleInEditor": 2.21
+            "scaleInDock": 7.913,
+            "scaleInEditor": 2.43
         },
         "untitled.tmx": {
             "scale": 7.3921874999999995,
@@ -52,11 +52,11 @@
     ],
     "project": "",
     "recentFiles": [
-        "untitled.tmx",
         "sheets/forest.tsx",
         "sheets/farmland.tsx",
         "sheets/village.tsx",
-        "demo.tmx"
+        "demo.tmx",
+        "untitled.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

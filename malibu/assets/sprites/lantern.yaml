@@ -1,5 +1,5 @@
-name: campfire
-desc: Fire on wood.
+name: lantern
+desc: A lantern
 
 defaults:
   delay: 200
@@ -7,24 +7,14 @@ defaults:
   flip: false
   opacity: 255
   rotation: 0
-  sheet: campfire
+  sheet: lantern
   scale-height: 1
   scale-width: 1
+  repeat: 0
 
 animations:
-  - name: unlit
-    repeat: 0
-    frames:
-      - index: 0
-
-  - name: coals
-    repeat: 0
-    frames:
-      - index: 1
-
   - name: lit
     frames:
+      - index: 0
+      - index: 1
       - index: 2
-      - index: 3
-      - index: 4
-
