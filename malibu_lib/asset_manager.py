@@ -5,7 +5,7 @@ from pygame import Surface, image, Rect
 from logging import getLogger
 from yaml import safe_load
 
-from .model import SpriteSpec, SpriteSheetSpec
+from .model import SpriteSpec, SpriteSheetSpec, GameConfig
 from .typing import IAssetManager
 
 
@@ -65,6 +65,8 @@ class StructuredAssetManager(IAssetManager):
         _log.debug("Full tile sheet path: %s", path)
 
         sprite_sheet = image.load(path)
+        if spec.color_key:
+            sprite_sheet.set_colorkey(spec.color_key)
         width, height = sprite_sheet.get_size()
         tile_width, tile_height = spec.tile_size
         _log.debug(
@@ -82,9 +84,9 @@ class StructuredAssetManager(IAssetManager):
         _log.debug("Loaded %s tile from %s:%s", len(ret), self._package, spec.path)
         return ret
 
-    def __init__(self, package: str) -> None:
+    def __init__(self, config: GameConfig) -> None:
 
-        self._package = package
+        self._package = config.asset_module
         with pkg_resources.resource_stream(self._package, "assets/index.yaml") as fp:
             index = safe_load(fp)
 

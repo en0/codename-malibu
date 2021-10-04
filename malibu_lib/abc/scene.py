@@ -1,5 +1,12 @@
-from ..typing import IGameScene, IGameInput, ISettingManager
 from ..mixin import EventListenerMixin, EventPublisherMixin
+from ..typing import (
+    IGameScene,
+    IGameInput,
+    ISettingManager,
+    IAssetManager,
+    IGameSceneFactory,
+    IGameSpriteFactory,
+)
 
 
 class SceneABC(EventListenerMixin, EventPublisherMixin, IGameScene):
@@ -12,10 +19,26 @@ class SceneABC(EventListenerMixin, EventPublisherMixin, IGameScene):
     def settings_manager(self) -> ISettingManager:
         return self._settings_manager
 
+    @property
+    def asset_manager(self) -> IAssetManager:
+        return self._asset_manager
+
+    def create_scene(self, name: str) -> IGameScene:
+        return self._create_scene(name)
+
+    def create_sprite(self, name: str) -> IGameScene:
+        return self._create_sprite(name)
+
     def __init__(
         self,
         game_input: IGameInput,
         settings_manager: ISettingManager,
+        asset_manager: IAssetManager,
+        scene_factory: IGameSceneFactory,
+        sprite_factory: IGameSpriteFactory,
     ) -> None:
         self._game_input = game_input
         self._settings_manager = settings_manager
+        self._asset_manager = asset_manager
+        self._create_scene = scene_factory
+        self._create_sprite = sprite_factory

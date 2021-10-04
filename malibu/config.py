@@ -6,6 +6,7 @@ game_config = GameConfig(
     author="ian.laird",
     name="malibu",
     version="0.0.2",
+    asset_module="malibu",
 
     # If you changes are required,
     # you must change the version above

@@ -234,4 +234,26 @@ class IPathProvider(ABC):
         """Create the data directory if it doesn't exist."""
         ...
 
+
+class IGameSprite(ABC):
+
+    @property
+    @abstractmethod
+    def image(self) -> Surface:
+        """The image to render"""
+        ...
+
+    @abstractmethod
+    def process_event(self, event: Event) -> None:
+        """Process pygame events."""
+        ...
+
+    @abstractmethod
+    def update(self, frame_delta: int) -> None:
+        """Update the current sprite."""
+        ...
+
+
 IGameSceneFactory = Callable[[str], IGameScene]
+IGameSpriteFactory = Callable[[str], IGameSprite]
+

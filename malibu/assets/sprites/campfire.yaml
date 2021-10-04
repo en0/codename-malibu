@@ -1,0 +1,28 @@
+name: campfire
+desc: Fire on wood.
+
+defaults:
+  delay: 200
+  mirror: false
+  flip: false
+  opacity: 255
+  rotation: 0
+  sheet: campfire
+  scale-height: 1
+  scale-width: 1
+
+animations:
+  - name: unlit
+    frames:
+      - index: 0
+
+  - name: coals
+    frames:
+      - index: 1
+
+  - name: lit
+    frames:
+      - index: 2
+      - index: 3
+      - index: 4
+

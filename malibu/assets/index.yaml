@@ -3,10 +3,17 @@ sprite-sheets:
     path: assets/sprites/sheets/base-boi.png
     tile-width: 32
     tile-height: 32
+  - name: campfire
+    path: assets/sprites/sheets/campfire.png
+    color-key: 255, 0, 255
+    tile-width: 16
+    tile-height: 32
 
 sprite-specs:
   - name: base-boi
     path: assets/sprites/base-boi.yaml
+  - name: campfire
+    path: assets/sprites/campfire.yaml
 
 world-map:
   - name: beach

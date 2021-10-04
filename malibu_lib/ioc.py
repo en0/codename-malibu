@@ -6,12 +6,14 @@ from .model import GameConfig
 from .game_input import GameInput
 from .setting_manager import YamlSettingsManager
 from .path_provider import UserPathProvider
+from .asset_manager import StructuredAssetManager
 from .typing import (
     IGameInput,
-    IGameScene,
+    IAssetManager,
     ISettingManager,
     IPathProvider,
     IGameSceneFactory,
+    IGameSpriteFactory,
 )
 
 
@@ -47,6 +49,10 @@ class ContainerBuilderFacade(ContainerBuilder):
             annotation=IGameSceneFactory,
             factory=lambda x: lambda y: x.get(y))
 
+        self.bind_factory(
+            annotation=IGameSpriteFactory,
+            factory=lambda x: lambda y: x.get(y))
+
         self.bind(
             annotation=Clock,
             implementation=Clock)
@@ -65,6 +71,12 @@ class ContainerBuilderFacade(ContainerBuilder):
             annotation=IGameInput,
             implementation=GameInput,
             scope=ScopeEnum.SINGLETON)
+
+        self.bind(
+            annotation=IAssetManager,
+            implementation=StructuredAssetManager,
+            scope=ScopeEnum.SINGLETON,
+        )
 
     def __init__(self):
         self._ioc = StaticContainerBuilder()

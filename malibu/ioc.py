@@ -13,6 +13,11 @@ from .scene import (
     MainMenuScene
 )
 
+from .sprite import *
+from .sprite import (
+    PlayerSprite
+)
+
 
 _ioc: Optional[Container] = None
 
@@ -22,12 +27,17 @@ def _build_ioc() -> Container:
     ioc = ContainerBuilder()
     ioc.bind_defaults(game_config)
 
+    # Game
     ioc.bind(
         annotation=IGame,
         implementation=MalibuGame,
         scope=ScopeEnum.SINGLETON)
 
+    # Scenes
     ioc.bind(SCENE_MAIN_MENU, MainMenuScene)
+
+    # Sprites
+    ioc.bind(SPRITE_PLAYER, PlayerSprite)
 
     return ioc.build()
 

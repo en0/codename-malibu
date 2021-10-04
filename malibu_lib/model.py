@@ -77,13 +77,18 @@ class SpriteSheetSpec:
     name: str
     path: str
     tile_size: Tuple[int, int]
+    color_key: Tuple[int, int, int]
 
     @staticmethod
     def load(dat: dict) -> "SpriteSheetSpec":
+        color_key = dat.get("color-key")
+        if color_key:
+            color_key = [int(x.strip(" ")) for x in color_key.split(",")]
         return SpriteSheetSpec(
             name=dat["name"],
             path=dat["path"],
             tile_size=(dat["tile-width"], dat["tile-height"]),
+            color_key=color_key,
         )
 
 
@@ -121,4 +126,5 @@ class GameConfig(NamedTuple):
     author: str
     name: str
     version: str
+    asset_module: str
     default_settings: GameSettings
