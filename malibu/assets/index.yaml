@@ -27,7 +27,7 @@ sprite-sheets:
     path: assets/sprites/sheets/lantern.png
     color-key: 255, 0, 255
     tile-width: 16
-    tile-height: 16
+    tile-height: 32
   - name: door
     path: assets/sprites/sheets/door.png
     color-key: 255, 0, 255
