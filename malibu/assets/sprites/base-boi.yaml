@@ -4,6 +4,7 @@
 # Helps us keep track of what we are working on
 name: base-boi
 desc: An example sprite
+default_animation: bored
 
 # These are the defaults for every frame
 # described in this file

@@ -60,6 +60,7 @@ class SpriteSpec:
     name: str
     desc: str
     animations: Dict[str, AnimationSpec]
+    default_animation: str
 
     @staticmethod
     def load(dat: dict) -> "SpriteSpec":
@@ -68,7 +69,8 @@ class SpriteSpec:
         return SpriteSpec(
             name=dat["name"],
             desc=dat["desc"],
-            animations={a.name: a for a in map(lambda x: AnimationSpec.load(x, **defaults), dat["animations"])}
+            animations={a.name: a for a in map(lambda x: AnimationSpec.load(x, **defaults), dat["animations"])},
+            default_animation=dat["default_animation"]
         )
 
 

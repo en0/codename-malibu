@@ -1,5 +1,6 @@
 name: campfire
 desc: Fire on wood.
+default_animation: unlit
 
 defaults:
   delay: 200

@@ -6,6 +6,7 @@ from ..typing import (
     IAssetManager,
     IGameSceneFactory,
     IGameSpriteFactory,
+    IGameSprite,
 )
 
 
@@ -26,8 +27,10 @@ class SceneABC(EventListenerMixin, EventPublisherMixin, IGameScene):
     def create_scene(self, name: str) -> IGameScene:
         return self._create_scene(name)
 
-    def create_sprite(self, name: str) -> IGameScene:
-        return self._create_sprite(name)
+    def create_sprite(self, name: str, **kwargs) -> IGameSprite:
+        sprite = self._create_sprite(name)
+        sprite.initialize(**kwargs)
+        return sprite
 
     def __init__(
         self,

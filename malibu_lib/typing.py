@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from pygame import Surface
+from pygame import Surface, Rect
 from pygame.event import Event
 from typing import List, Tuple, Optional, Callable
 
@@ -7,7 +7,6 @@ from .model import SpriteSpec, GameSettings
 
 
 EventCallback = Callable[[Event], None]
-
 
 class IGameScene(ABC):
     """A Game Scene"""
@@ -243,6 +242,12 @@ class IGameSprite(ABC):
         """The image to render"""
         ...
 
+    @property
+    @abstractmethod
+    def rect(self) -> Rect:
+        """The location to render the image"""
+        ...
+
     @abstractmethod
     def process_event(self, event: Event) -> None:
         """Process pygame events."""
@@ -251,6 +256,11 @@ class IGameSprite(ABC):
     @abstractmethod
     def update(self, frame_delta: int) -> None:
         """Update the current sprite."""
+        ...
+
+    @abstractmethod
+    def initialize(self, **kwargs) -> None:
+        """Initialize the sprite"""
         ...
 
 

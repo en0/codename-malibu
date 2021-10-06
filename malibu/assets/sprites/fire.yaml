@@ -1,5 +1,6 @@
 name: fire
 desc: Fire on whatever.
+default_animation: burning
 
 defaults:
   delay: 200
@@ -12,7 +13,7 @@ defaults:
   scale-width: 1
 
 animations:
-  - name: default
+  - name: burning
     frames:
       - index: 0
       - index: 1

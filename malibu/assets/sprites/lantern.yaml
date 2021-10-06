@@ -1,5 +1,6 @@
 name: lantern
 desc: A lantern
+default_animation: on
 
 defaults:
   delay: 200
@@ -13,7 +14,7 @@ defaults:
   repeat: 0
 
 animations:
-  - name: lit
+  - name: on
     frames:
       - index: 0
       - index: 1

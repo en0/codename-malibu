@@ -1,5 +1,6 @@
 name: door
 desc: Door animations.
+default_animation: closed
 
 defaults:
   delay: 200
