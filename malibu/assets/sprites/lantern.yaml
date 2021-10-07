@@ -1,6 +1,6 @@
 name: lantern
 desc: A lantern
-default_animation: on
+default_animation: "on"
 
 defaults:
   delay: 200
@@ -11,10 +11,15 @@ defaults:
   sheet: lantern
   scale-height: 1
   scale-width: 1
-  repeat: 0
+  footprint:
+    size: 16,8
+    offset: 0,24
+  boundary:
+    size: 16,16
+    offset: 0,0
 
 animations:
-  - name: on
+  - name: "on"
     frames:
       - index: 0
       - index: 1

@@ -1,24 +1,15 @@
-from pygame import Surface, Rect
+from pygame import Surface, Rect, draw
 from typing import Dict, Optional, List, Tuple
 
-from ..typing import IGameSprite, IAssetManager
-from ..mixin import EventListenerMixin
+from ..typing import IGameSprite, IAssetManager, IGameItem
 from ..model import SpriteSpec
 from ..animation import BasicAnimation
 
 
-class GameSprite(EventListenerMixin, IGameSprite):
+class GameSprite(IGameSprite):
     """A game sprite based on sprite specification data."""
 
     sprite_name: str
-
-    @property
-    def position(self) -> Tuple[float, float]:
-        return self._position
-
-    @position.setter
-    def position(self, value: Tuple[float, float]) -> None:
-        self._position = value
 
     @property
     def asset_manager(self) -> IAssetManager:
@@ -52,20 +43,52 @@ class GameSprite(EventListenerMixin, IGameSprite):
     # IGameSprite Interface
     @property
     def image(self) -> Surface:
-        return self.animation.image
+        surf = self.animation.image.copy()
+        if self._show_bounding_box:
+            fp = self.animation.get_footprint()
+            bb = self.animation.get_boundary()
+            draw.rect(surf, (255,0,0), bb, width=1)
+            draw.rect(surf, (0,0,255), fp, width=1)
+        return surf
 
     @property
     def rect(self) -> Rect:
         rect = self.animation.image.get_rect()
-        rect.midleft = self._position
+        fp = self.animation.get_footprint()
+        rect.midbottom = self._position
+        rect.bottom += rect.height - fp.bottom
+        rect.centerx += (rect.width/2) - fp.centerx
         return rect
+
+    @property
+    def position(self) -> Tuple[float, float]:
+        return self._position
+
+    @position.setter
+    def position(self, value: Tuple[float, float]) -> None:
+        self._position = value
+
+    @property
+    def inventory(self) -> Dict[str, IGameItem]:
+        return self._inventory
 
     def update(self, frame_delta: int) -> None:
         self.animation.update(frame_delta)
 
+    def execute(self, action: str, *args, **kwargs) -> None:
+        meth = f"on_{action.lower()}"
+        if hasattr(self, meth):
+            fn = getattr(self, meth)
+            fn(*args, **kwargs)
+
+    def on_toggle_bounding_box(self):
+        self._show_bounding_box = not self._show_bounding_box
+
     def __init__(self, am: IAssetManager):
+        self._show_bounding_box = False
         self._animation_manager = am
         self._spec = am.get_sprite_spec(self.sprite_name)
         self._active_animation = self._spec.default_animation
         self._animations = {k: BasicAnimation(v, am) for k, v in self._spec.animations.items()}
         self._position = 0, 0
+        self._inventory = {}

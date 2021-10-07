@@ -1,4 +1,4 @@
-from pygame import Surface, transform, time
+from pygame import Surface, transform, Rect
 from typing import List, Callable
 from logging import getLogger
 
@@ -35,6 +35,12 @@ class BasicAnimation(IAnimation):
         self._repeat_count = self._init_repeat_count
         self._frame_duration = 0
         self._frame_index = 0
+
+    def get_footprint(self) -> Rect:
+        return self._footprints[self._frame_index].copy()
+
+    def get_boundary(self) -> Rect:
+        return self._boundaries[self._frame_index].copy()
 
     def update(self, frame_delta: int) -> None:
         self._update_method(frame_delta / 1000.0)
@@ -89,6 +95,8 @@ class BasicAnimation(IAnimation):
         self._name = spec.name
         self._tiles: List[Surface] = []
         self._deltas: List[float] = []
+        self._boundaries: List[Rect] = []
+        self._footprints: List[Rect] = []
         self._complete = False
         self._init_repeat_count = spec.repeat
         self._repeat_count = spec.repeat
@@ -122,5 +130,7 @@ class BasicAnimation(IAnimation):
             # Convert the delay to seconds
             self._deltas.append(frame.delay / 1000.0)
             self._tiles.append(tile)
+            self._boundaries.append(frame.boundary)
+            self._footprints.append(frame.footprint)
 
         self.reset()

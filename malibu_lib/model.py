@@ -1,18 +1,27 @@
+from pygame import Rect
 from typing import Dict, List, IO, Tuple, Set, NamedTuple
 from dataclasses import dataclass, asdict
+
+
+def _spec2rect(spec: Dict[str, str]):
+    width, height = [int(x.strip(" ")) for x in spec["size"].split(",")]
+    x, y = [int(x.strip(" ")) for x in spec["offset"].split(",")]
+    return Rect(x, y, width, height)
 
 
 @dataclass
 class AnimationFrameSpec:
     index: int
     sheet: str
-    delay: int = 500
-    mirror: bool = False
-    flip: bool = False
-    opacity: int = 255
-    rotation: int = 0
-    scale_height: float = 1.0
-    scale_width: float = 1.0
+    delay: int
+    mirror: bool
+    flip: bool
+    opacity: int
+    rotation: int
+    scale_height: float
+    scale_width: float
+    footprint: Rect
+    boundary: Rect
 
     @staticmethod
     def load(dat: dict, **defaults) -> "AnimationFrameSpec":
@@ -33,6 +42,8 @@ class AnimationFrameSpec:
             rotation=int(dat.get("rotation", defaults["rotation"])),
             scale_width=float(dat.get("scale-width", defaults["scale-width"])),
             scale_height=float(dat.get("scale-height", defaults["scale-height"])),
+            footprint=_spec2rect(dat.get("footprint", defaults["footprint"])),
+            boundary=_spec2rect(dat.get("boundary", defaults["boundary"])),
         )
 
 

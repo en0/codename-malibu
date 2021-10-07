@@ -12,6 +12,12 @@ defaults:
   scale-height: 1
   scale-width: 1
   repeat: 0
+  footprint:
+    size: 16,8
+    offset: 0,23
+  boundary:
+    size: 16,25
+    offset: 0,6
 
 animations:
   - name: closed

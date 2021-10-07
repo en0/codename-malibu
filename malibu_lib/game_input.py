@@ -1,5 +1,5 @@
 import pygame
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List, Union, Set
 
 from .typing import IGameInput, ISettingManager
 from .model import GameSettings
@@ -21,6 +21,7 @@ class GameInput(IGameInput):
             self.triggered.add(_k(event.key))
         elif event.type == pygame.KEYUP and _k(event.key) in self.pressed:
             self.pressed.remove(_k(event.key))
+            self.released.add(_k(event.key))
         elif event.type == pygame.MOUSEBUTTONDOWN:
             self.pressed.add(_m(event.button))
             self.triggered.add(_m(event.button))
@@ -31,12 +32,21 @@ class GameInput(IGameInput):
 
     def update(self, frame_delta: int) -> None:
         self.triggered = set()
+        self.released = set()
 
     def is_pressed(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
         return (
             _k(key) in self.pressed if key is not None else
             _m(button) in self.pressed if button is not None else
             self.input_map.get(mapped) in self.pressed if mapped is not None else
+            False
+        )
+
+    def is_released(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
+        return (
+            _k(key) in self.released if key is not None else
+            _m(button) in self.released if button is not None else
+            self.input_map.get(mapped) in self.released if mapped is not None else
             False
         )
 
@@ -63,6 +73,7 @@ class GameInput(IGameInput):
         self.mouse_pos: Tuple[int, int] = 0, 0
         self.pressed = set()
         self.triggered = set()
+        self.released = set()
         self.input_map = dict()
 
         # Configure inputs

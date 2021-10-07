@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pygame import Surface, Rect
 from pygame.event import Event
-from typing import List, Tuple, Optional, Callable
+from typing import List, Tuple, Optional, Callable, Dict
 
 from .model import SpriteSpec, GameSettings
 
@@ -153,6 +153,16 @@ class IAnimation(ABC):
         """Reset the animation frames."""
         ...
 
+    @abstractmethod
+    def get_footprint(self) -> Rect:
+        """Get the footprint of the current animation frame"""
+        ...
+
+    @abstractmethod
+    def get_boundary(self) -> Rect:
+        """Get the collision box for the current animation frame"""
+        ...
+
 
 class IGameInput(ABC):
     """Track game input"""
@@ -160,6 +170,10 @@ class IGameInput(ABC):
     @abstractmethod
     def is_pressed(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
         """Check if a key is currently pressed (held down)"""
+        ...
+
+    def is_released(self, mapped: Optional[str] = None, key: Optional[int] = None, button: Optional[int] = None) -> bool:
+        """Check if a key was pressed and is no longer pressed"""
         ...
 
     @abstractmethod
@@ -234,6 +248,10 @@ class IPathProvider(ABC):
         ...
 
 
+class IGameItem(ABC):
+    ...
+
+
 class IGameSprite(ABC):
 
     @property
@@ -248,9 +266,22 @@ class IGameSprite(ABC):
         """The location to render the image"""
         ...
 
+    @property
     @abstractmethod
-    def process_event(self, event: Event) -> None:
-        """Process pygame events."""
+    def position(self) -> Tuple[float, float]:
+        """Gets the location of the sprite"""
+        ...
+
+    @position.setter
+    @abstractmethod
+    def position(self, value: Tuple[float, float]) -> None:
+        """Sets the location of the sprite"""
+        ...
+
+    @property
+    @abstractmethod
+    def inventory(self) -> Dict[str, IGameItem]:
+        """The inventory of the sprite"""
         ...
 
     @abstractmethod
@@ -261,6 +292,11 @@ class IGameSprite(ABC):
     @abstractmethod
     def initialize(self, **kwargs) -> None:
         """Initialize the sprite"""
+        ...
+
+    @abstractmethod
+    def execute(self, action: str, *args, **kwargs) -> bool:
+        """Execute the given action."""
         ...
 
 

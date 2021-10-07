@@ -1,11 +1,13 @@
 import pygame
 from malibu_lib.model import GameConfig, GameSettings, VideoSettings
 
-game_config = GameConfig(
+from . import kb
 
+
+game_config = GameConfig(
     author="ian.laird",
     name="malibu",
-    version="0.0.2",
+    version="0.0.4",
     asset_module="malibu",
 
     # If you changes are required,
@@ -21,13 +23,13 @@ game_config = GameConfig(
             open_gl=False,
         ),
         input_settings={
-            "full_screen": ("key", pygame.K_F11),
-            "run-up": ("key", pygame.K_w),
-            "run-left": ("key", pygame.K_a),
-            "run-right": ("key", pygame.K_d),
-            "run-down": ("key", pygame.K_s),
-            "attack": ("key", pygame.K_SPACE),
-            "inventory": ("key", pygame.K_e),
+            kb.FULL_SCREEN: ("key", pygame.K_F11),
+            kb.MOVE_UP: ("key", pygame.K_w),
+            kb.MOVE_LEFT: ("key", pygame.K_a),
+            kb.MOVE_RIGHT: ("key", pygame.K_d),
+            kb.MOVE_DOWN: ("key", pygame.K_s),
+            kb.ATTACK: ("key", pygame.K_SPACE),
+            kb.INVENTORY: ("key", pygame.K_e),
         }
     )
 )

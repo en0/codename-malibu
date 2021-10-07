@@ -11,6 +11,12 @@ defaults:
   sheet: door
   scale-height: 1
   scale-width: 1
+  footprint:
+    size: 16,8
+    offset: 0,24
+  boundary:
+    size: 16,32
+    offset: 0,0
 
 animations:
   - name: closed

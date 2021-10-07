@@ -1,6 +1,6 @@
 import pygame
 from malibu_lib import BasicAnimation
-from malibu_lib.typing import IAssetManager
+from malibu_lib.typing import IAssetManager, IAnimation
 
 from .gui import SpriteViewUI
 from ..watcher.watch import FileWatcher
@@ -9,7 +9,7 @@ from ..watcher.watch import FileWatcher
 class SpriteViewer:
 
     @property
-    def current_animation(self):
+    def current_animation(self) -> IAnimation:
         if self.trigger_animation and self.trigger_animation.complete:
             self.target_animation = "base"
         elif self.trigger_animation is None:
@@ -55,6 +55,17 @@ class SpriteViewer:
             rect = self.current_animation.image.get_rect()
             rect.center = self.frame_rect.width // 2, self.frame_rect.height // 2
             self.frame.blit(self.current_animation.image, rect)
+
+            if self._show_boxes:
+                b = self.current_animation.get_boundary()
+                b.x += rect.x
+                b.y += rect.y
+                pygame.draw.rect(self.frame, (200, 0, 0), b, width=1)
+
+                f = self.current_animation.get_footprint()
+                f.x += rect.x
+                f.y += rect.y
+                pygame.draw.rect(self.frame, (0, 0, 200), f, width=1)
 
         _frame = pygame.transform.scale(self.frame, self.ui.frame_area_rect.size)
         self.display.blit(_frame, self.ui.frame_area_rect.topleft)
@@ -135,15 +146,14 @@ class SpriteViewer:
             self.ui.alert(f"Failed to reload specification\n{str(ex)}")
             self.spec = backup_spec
 
-
     def __init__(self, sprite_name: str, asset_manager: IAssetManager, display_size=(1024, 600), disp_opts=None):
         disp_opts = disp_opts or (
-            pygame.HWACCEL |
-            pygame.DOUBLEBUF
+                pygame.HWACCEL |
+                pygame.DOUBLEBUF
         )
         self.am = asset_manager
         self.spec = asset_manager.get_sprite_spec(sprite_name)
-        self.bg_color = pygame.Color("#000000")
+        self.bg_color = pygame.Color("#000060")
         self.clock_divider = 1.0
         self.running = False
         self.clock = pygame.time.Clock()
@@ -185,3 +195,4 @@ class SpriteViewer:
         # Set default UI elements
         self.adjust_speed(0)
         self.adjust_zoom(-100)
+        self._show_boxes = True

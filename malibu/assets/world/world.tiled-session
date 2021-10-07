@@ -51,6 +51,7 @@
         "demo.tmx"
     ],
     "project": "",
+    "property.type": "string",
     "recentFiles": [
         "sheets/forest.tsx",
         "sheets/farmland.tsx",

@@ -28,11 +28,18 @@ defaults:
   scale-height: 1
   scale-width: 1
 
+  footprint:
+    size: 16,8
+    offset: 8,24
+
+  boundary:
+    size: 16,29
+    offset: 8,3
+
 # These describe each animation.
 animations:
     # This describe the run-left animation
   - name: run-left
-    repeat: 3
     # This overrides the default mirror and causes each frame to be mirrored
     mirror: true
     # This is a list of all the frames inside the animation

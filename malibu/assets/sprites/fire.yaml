@@ -11,10 +11,25 @@ defaults:
   sheet: fire
   scale-height: 1
   scale-width: 1
+  footprint:
+    size: 16,8
+    offset: 0,24
+  boundary:
+    size: 16,8
+    offset: 0,24
 
 animations:
   - name: burning
     frames:
       - index: 0
+        boundary:
+          size: 16,15
+          offset: 0,12
       - index: 1
+        boundary:
+          size: 16,13
+          offset: 0,13
       - index: 2
+        boundary:
+          size: 16,14
+          offset: 0,12

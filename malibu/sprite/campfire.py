@@ -5,8 +5,11 @@ class CampfireSprite(GameSprite):
 
     sprite_name = "campfire"
 
-    def initialize(self, **kwargs) -> None:
-        self.position = kwargs.get("position", (0, 0))
-
-    def lite(self):
+    def on_toggle(self):
         self.active_animation = "lit"
+
+    def initialize(self, **kwargs) -> None:
+        x, y = kwargs.get("position", (0, 0))
+        # Adjust the location to compensate for the
+        # map editors coordinate system
+        self.position = (x + 8, y + 16)

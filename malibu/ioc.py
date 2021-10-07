@@ -43,7 +43,7 @@ def _build_ioc() -> Container:
     ioc.bind(SPRITE_PLAYER, PlayerSprite)
     ioc.bind(SPRITE_CAMPFIRE, CampfireSprite)
     ioc.bind(SPRITE_CHEST, ChestSprite)
-    ioc.bind(SPRITE_MAP_TILE, ChestSprite)
+    ioc.bind(SPRITE_MAP_TILE, MapTileSprite)
 
     return ioc.build()
 
