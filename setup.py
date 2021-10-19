@@ -19,14 +19,14 @@ setup(
     author_email="irlaird@gmail.com",
     url="https://github.com/en0/codename-malibu",
     install_requires=['pygame'],
-    packages=["malibu", "malibu_lib", "malibu_utils"],
+    packages=["malibu"],
     include_package_data=True,
     package_data={'malibu': ['assets/*']},
     entry_points={
-        'console_scripts': [
-            'malibu-tools=malibu_utils.entry.main',
-            'malibu=malibu.entry.main'
-        ],
+    #    'console_scripts': [
+    #        'malibu-tools=malibu_utils.entry.main',
+    #        'malibu=malibu.entry.main'
+    #    ],
     },
     classifiers=[
         "Programming Language :: Python :: 3.5",

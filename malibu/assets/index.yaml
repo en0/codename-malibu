@@ -51,7 +51,59 @@ sprite-specs:
     path: assets/sprites/door.yaml
 
 world-map:
-  - name: beach
+  - name: demo
+    music: world1
     path: assets/world/demo.tmx
-    coord-x: 0
-    coord-y: 0
+
+audio:
+  - name: step
+    # Type describes how the audio system plays the given audio file.
+    # MUSIC can only be used for "background music"
+    # KINETIC is a sound that always plays to the end. Like a gun shot
+    # PASSIVE is a sound that can stop abruptly. Like buzzing bees.
+    # This field is required
+    type: PASSIVE
+
+    # Gain, given as a percentage, can be used to reduce the overall
+    # loudness of the audio. This is useful if a particular sound is
+    # just too loud everywhere.
+    # This field is Optional. Default: 1.0
+    gain: 0.75
+
+    # Distance is used to set the maximum distance in game the sound
+    # can be heard from.  The volume is scaled down in proportion
+    # to the distance from the player using this value as the clip-point
+    # This field is Optional. Default: View-Window Height
+    distance: 300
+
+    # Category is used to give volume control to the player for different
+    # groups of sounds. Think minecraft, hostel mobs or villagers.
+    # This field is Required.
+    category: AMBIENT
+
+    # The relative path to the sound file.
+    # This field is Required.
+    path: assets/sounds/stepwood_1.wav
+
+  - name: boom4
+    type: KINETIC
+    category: COMBAT
+    path: assets/sounds/boom4.wav
+
+  - name: world2
+    type: MUSIC
+    category: MUSIC
+    gain: 0.1
+    path: assets/sounds/test.wav
+
+  - name: world1
+    type: MUSIC
+    category: MUSIC
+    gain: 0.1
+    path: assets/sounds/music1.wav
+
+  - name: moving-water
+    type: PASSIVE
+    category: AMBIENT
+    gain: 1
+    path: assets/sounds/amb_stream.flac
