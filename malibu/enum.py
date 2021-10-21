@@ -4,6 +4,7 @@ from enum import Enum, auto
 class ComponentMessageEnum(Enum):
     SET_VELOCITY = auto()
     SET_LOCATION = auto()
+    SET_BOUNDING_BOX = auto()
 
 
 class SpriteEnum(Enum):
@@ -13,6 +14,7 @@ class SpriteEnum(Enum):
 class SceneEnum(Enum):
     SPLASH = auto()
     MAIN_MENU = auto()
+    GAME_MENU = auto()
     SETTINGS = auto()
     PLAY = auto()
 

@@ -17,6 +17,15 @@ class SceneSandbox(KeyboardMixin, LoggerMixin, GraphicMixin):
         ServiceLocator.get_game().set_scene(scene)
 
     @classmethod
+    def push_to_scene(cls, name: SceneEnum):
+        scene = ServiceLocator.get_scene_factory().new(name)
+        ServiceLocator.get_game().push_scene(scene)
+
+    @classmethod
+    def pop_to_scene(cls):
+        ServiceLocator.get_game().pop_scene()
+
+    @classmethod
     def create_sprite(cls, name: SpriteEnum):
         return ServiceLocator.get_sprite_factory().new(name)
 

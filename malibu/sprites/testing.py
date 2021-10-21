@@ -43,7 +43,7 @@ class TestPhysicsComponent(IGameSpritePhysicsComponent, INotifiableComponent):
     _container: INotifierGameSprite
     _pos = pygame.Vector2(100, 100)
     _velocity: pygame.Vector2 = pygame.Vector2(0, 0)
-    _move_speed = 100
+    _move_speed = 150
 
     def notify(self, sender: object, msg_type: ComponentMessageEnum, value: any):
         self._velocity = value
@@ -65,6 +65,7 @@ class TestPhysicsComponent(IGameSpritePhysicsComponent, INotifiableComponent):
     def set_container(self, sprite: INotifierGameSprite):
         sprite.subscribe(ComponentMessageEnum.SET_VELOCITY, self)
         self._container = sprite
+        self._container.broadcast(self, ComponentMessageEnum.SET_LOCATION, self._pos)
 
 
 class TestGraphicsComponent(IGameSpriteGraphicsComponent, INotifiableComponent):

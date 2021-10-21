@@ -1,6 +1,6 @@
 import pygame
 from collections import deque
-from typing import Optional
+from typing import Optional, Deque
 
 from ..const import FRAME_RATE
 from ..typing import IGameScene, IGameService
@@ -21,13 +21,29 @@ class GameService(LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameSer
     def close(self) -> None:
         self._is_stopping = True
 
+    def get_current_scene(self) -> IGameScene:
+        return self._scene
+
     def set_scene(self, scene: IGameScene) -> None:
+        self._activate_scene_on_flip = True
+        self._inactivate_scene_on_flip = True
         self._next_scene = scene
+
+    def push_scene(self, scene: IGameScene) -> None:
+        self._activate_scene_on_flip = True
+        self._inactivate_scene_on_flip = False
+        self._scenes.append(self._scene)
+        self._next_scene = scene
+
+    def pop_scene(self) -> IGameScene:
+        self._activate_scene_on_flip = False
+        self._inactivate_scene_on_flip = True
+        self._next_scene = self._scenes.pop()
+        return self._scene
 
     def run(self, scene: IGameScene):
 
-
-        font_name =  pygame.font.get_default_font()
+        font_name = pygame.font.get_default_font()
         self._fnt = pygame.font.SysFont(font_name, 24)
         frame_delta = self._tick()
 
@@ -47,6 +63,7 @@ class GameService(LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameSer
             self._scene.update(frame_delta)
 
             # Render
+            self.graphics.fill((0, 0, 0))
             self._scene.render()
             self._show_framerate()
             self.audio.update(self._scene.player_location)
@@ -69,9 +86,17 @@ class GameService(LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameSer
             self._scene.__class__.__name__,
             self._next_scene.__class__.__name__)
 
+        # Inactivate the old scene depending on how it is being replaced
+        if self._scene is not None and self._inactivate_scene_on_flip:
+            self._scene.inactivate()
+
+        # Set the new scene
         self._scene = self._next_scene
         self._next_scene = None
-        self._scene.activate()
+
+        # Activate the scene depending on how it is being set
+        if self._activate_scene_on_flip:
+            self._scene.activate()
 
     def _show_framerate(self):
         fr = self._clock.get_fps()
@@ -92,9 +117,12 @@ class GameService(LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameSer
     def __init__(self):
         self._clock = pygame.time.Clock()
         self._is_stopping = False
+        self._inactivate_scene_on_flip = False
+        self._activate_scene_on_flip = False
         self._scene: Optional[IGameScene] = None
+        self._scenes: Deque[IGameScene] = deque()
         self._next_scene: Optional[IGameScene] = None
-        self._fr_min = FRAME_RATE
-        self._fr_max = 0
+        self._fr_min: float = float(FRAME_RATE)
+        self._fr_max: float = 0
         self._fnt = None
         self._cnt = 0

@@ -1,7 +1,7 @@
 import pygame
 from ..mixins import SpriteFactoryMixin, KeyboardMixin, GraphicMixin
 
-from ..typing import IGameScene, IGameSprite
+from ..typing import IGameScene, IGameObject
 
 
 class NullScene(SpriteFactoryMixin, KeyboardMixin, GraphicMixin, IGameScene):

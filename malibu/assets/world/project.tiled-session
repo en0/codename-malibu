@@ -3,10 +3,22 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "demo.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "demo.tmx": {
+            "scale": 0.0835,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": -239.52095808383228,
+                "y": 2347.305389221556
+            }
+        },
+        "forest.tsx": {
+            "scaleInDock": 0.4904,
+            "scaleInEditor": 1
+        }
     },
     "last.imagePath": "/Users/ilaird/Projects/Personal/codename-malibu/malibu/assets/world/sheets",
     "map.lastUsedFormat": "tmx",
@@ -14,10 +26,14 @@
     "map.tileHeight": 64,
     "map.tileWidth": 64,
     "openFiles": [
+        "forest.tsx",
+        "demo.tmx"
     ],
     "project": "project.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "forest.tsx",
+        "demo.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

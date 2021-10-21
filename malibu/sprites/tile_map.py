@@ -1,15 +1,13 @@
-from typing import List, Optional, Dict, Tuple, Union
-from ..lib import QuadTree
-from pygame import draw
-from pytmx import TiledMap, TiledTileLayer
 from dataclasses import dataclass
 from enum import Enum
-
-from pygame import Rect, Surface, Vector2
+from pygame import draw, Rect, Surface, Vector2
+from pytmx import TiledMap, TiledTileLayer
+from typing import List, Optional, Dict, Tuple, Union
 
 from ..enum import MaterialEnum
-from ..typing import ITileMap, IGameSprite
+from ..lib import QuadTree
 from ..mixins import AudioMixin
+from ..typing import ITileMap, IGameObject
 
 
 class TileLayerTypeEnum(Enum):
@@ -70,14 +68,17 @@ class TileMap(AudioMixin, ITileMap):
 
     show_sound = False
 
-    def get_sprites(self) -> List[IGameSprite]:
+    def get_sprites(self) -> List[IGameObject]:
         return []
+
+    def get_rect(self) -> Rect:
+        return self._map_rect.copy()
 
     def get_default_music(self) -> str:
         return self._default_music
 
-    def render(self, gfx: Surface) -> None:
-        for desc in self._tiles:
+    def render(self, gfx: Surface, rect: Rect) -> None:
+        for desc in self._qtree.hit(rect):
             for gid in desc.tiles:
                 if isinstance(gid, int):
                     image = self._tiled_map.get_tile_image_by_gid(gid)
@@ -102,6 +103,8 @@ class TileMap(AudioMixin, ITileMap):
             desc.update(frame_delta)
 
     def is_walkable(self, rect: Rect) -> bool:
+        if not self._map_rect.contains(rect):
+            return False
         tiles: List[TileDescription] = self._qtree.hit(rect)
         return all(map(lambda x: x.is_walkable, tiles))
 
@@ -116,8 +119,8 @@ class TileMap(AudioMixin, ITileMap):
         self._sounds.append((sound_name, point))
 
     def initialize(self) -> None:
-        # TODO: add index to do collition detection, quadtree?
-        self._map_pixel_size = (
+        self._map_rect = Rect(
+            0, 0,
             self._tiled_map.width * self._tiled_map.tilewidth,
             self._tiled_map.height * self._tiled_map.tileheight,
         )
@@ -152,7 +155,7 @@ class TileMap(AudioMixin, ITileMap):
                     # Add the frame to the list of frames for this animation group
                     desc.anim.setdefault(grp, []).append(gid)
 
-        self._qtree = QuadTree([x for x in self._tiles], bounding_rect=Rect(0, 0, *self._map_pixel_size))
+        self._qtree = QuadTree([x for x in self._tiles], bounding_rect=self._map_rect)
 
     def _as_rect(self, x: int, y: int) -> Rect:
         return Rect(
@@ -190,4 +193,4 @@ class TileMap(AudioMixin, ITileMap):
         self._layer_animations: Dict[str, LayerAnimationDesc] = {}
         self._sounds = []
         self._qtree: QuadTree = None
-        self._map_pixel_size: Tuple[int, int] = 0, 0
+        self._map_rect: Rect = Rect(0, 0, 0, 0)

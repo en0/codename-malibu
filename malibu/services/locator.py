@@ -126,7 +126,7 @@ class ServiceLocator:
 
         from pygame import display, FULLSCREEN, HWACCEL, DOUBLEBUF
         from ..const import SCREEN_SIZE
-        graphics_provider = display.set_mode(SCREEN_SIZE, FULLSCREEN | HWACCEL | DOUBLEBUF)
+        graphics_provider = display.set_mode(SCREEN_SIZE, HWACCEL | DOUBLEBUF)
         cls.set_graphics_provider(graphics_provider)
 
         from .scene_factory import SceneFactoryService

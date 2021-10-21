@@ -1,7 +1,7 @@
 from pygame import Vector2, Surface, Rect
 from pygame.event import Event
 from abc import ABC, abstractmethod
-from typing import Set, Iterable, Optional, Union, Generator, List
+from typing import Set, Iterable, Optional, Union, Generator, List, Tuple
 
 from .models import AudioSpec, MapSpec
 from .enum import (
@@ -59,7 +59,7 @@ class ISceneFactoryService(ABC):
 
 class ISpriteFactoryService(ABC):
     @abstractmethod
-    def new(self, sprite_name: SpriteEnum) -> "IGameSprite": ...
+    def new(self, sprite_name: SpriteEnum) -> "IGameObject": ...
 
 
 class IGameScene(ABC):
@@ -82,6 +82,12 @@ class IGameService(ABC):
     def close(self) -> None: ...
     @abstractmethod
     def set_scene(self, scene: IGameScene) -> None: ...
+    @abstractmethod
+    def push_scene(self, scene: IGameScene) -> None: ...
+    @abstractmethod
+    def pop_scene(self) -> IGameScene: ...
+    @abstractmethod
+    def get_current_scene(self) -> IGameScene: ...
 
 
 class INotifiableComponent(ABC):
@@ -116,7 +122,13 @@ class IGameSpriteGraphicsComponent(IGameSpriteComponent):
     def render(self, gfx: Surface): ...
 
 
-class IGameSprite(ABC):
+class IGameObject(ABC):
+    @property
+    @abstractmethod
+    def position(self) -> Vector2: ...
+    @property
+    @abstractmethod
+    def bounding_box(self) -> Rect: ...
     @property
     @abstractmethod
     def input_component(self) -> IGameSpriteInputComponent: ...
@@ -139,7 +151,7 @@ class IGameSprite(ABC):
 
 class ITileMap(ABC):
     @abstractmethod
-    def render(self, gfx: Surface) -> None: ...
+    def render(self, gfx: Surface, rect: Rect) -> None: ...
     @abstractmethod
     def update(self, frame_delta: float) -> None: ...
     @abstractmethod
@@ -147,9 +159,11 @@ class ITileMap(ABC):
     @abstractmethod
     def get_material(self, rect: Rect) -> MaterialEnum: ...
     @abstractmethod
-    def get_sprites(self) -> List[IGameSprite]: ...
+    def get_sprites(self) -> List[IGameObject]: ...
     @abstractmethod
     def get_default_music(self) -> str: ...
+    @abstractmethod
+    def get_rect(self) -> Rect: ...
 
 
 class IMapFactoryService(ABC):
