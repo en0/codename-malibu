@@ -7,7 +7,7 @@ from ..typing import (
     IGameSpritePhysicsComponent,
     IKeyboardService,
     INotifiableComponent,
-    INotifierGameSprite, ITileMap,
+    INotifierGameSprite, IWorldMap,
 )
 
 
@@ -48,7 +48,7 @@ class TestPhysicsComponent(IGameSpritePhysicsComponent, INotifiableComponent):
     def notify(self, sender: object, msg_type: ComponentMessageEnum, value: any):
         self._velocity = value
 
-    def update(self, frame_delay: float, tile_map: ITileMap):
+    def update(self, frame_delay: float, tile_map: IWorldMap):
         if self._velocity.x == 0 and self._velocity.y == 0:
             return
         new_pos = self._velocity * self._move_speed * frame_delay + self._pos

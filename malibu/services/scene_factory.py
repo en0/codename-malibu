@@ -2,11 +2,11 @@ from typing import Callable, Dict
 
 from .locator import ServiceLocator
 from ..enum import SceneEnum
-from ..typing import ISceneFactoryService, IGameScene
+from ..typing import ISceneFactory, IGameScene
 from ..scenes import *
 
 
-class SceneFactoryService(ISceneFactoryService):
+class SceneFactory(ISceneFactory):
 
     def new(self, scene: SceneEnum) -> IGameScene:
         return self._builders[scene]()

@@ -1,7 +1,9 @@
 import pygame
 
-from ..enum import SceneEnum, AudioEdgeTransitionEnum
 from .sandbox import SceneSandbox
+from ..services import ServiceLocator
+from ..enum import SceneEnum, AudioEdgeTransitionEnum
+
 
 
 class SplashScene(SceneSandbox):

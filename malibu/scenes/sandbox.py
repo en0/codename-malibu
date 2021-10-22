@@ -1,6 +1,8 @@
+from pygame import Rect
 from typing import Optional
 
-from ..enum import AudioEdgeTransitionEnum, SceneEnum, SpriteEnum
+from ..typing import ICamera
+from ..enum import AudioEdgeTransitionEnum, SceneEnum, GameObjectEnum
 from ..mixins import KeyboardMixin, LoggerMixin, GraphicMixin
 from ..services import ServiceLocator
 
@@ -26,9 +28,13 @@ class SceneSandbox(KeyboardMixin, LoggerMixin, GraphicMixin):
         ServiceLocator.get_game().pop_scene()
 
     @classmethod
-    def create_sprite(cls, name: SpriteEnum):
-        return ServiceLocator.get_sprite_factory().new(name)
+    def create_object(cls, name: GameObjectEnum):
+        return ServiceLocator.get_object_factory().new(name)
 
     @classmethod
-    def load_map(cls, name: str):
-        return ServiceLocator.get_map_factory().get_tile_map(name)
+    def load_world(cls, name: str):
+        return ServiceLocator.get_world_factory().build_world(name)
+
+    @classmethod
+    def create_camera(cls, world: Rect) -> ICamera:
+        return ServiceLocator().get_camera_factory().create_camera(world)

@@ -1,13 +1,25 @@
 from dataclasses import dataclass
 from enum import Enum
 from pygame import draw, Rect, Surface, Vector2
-from pytmx import TiledMap, TiledTileLayer
+from pytmx import TiledMap, TiledTileLayer, load_pygame
 from typing import List, Optional, Dict, Tuple, Union
 
 from ..enum import MaterialEnum
-from ..lib import QuadTree
 from ..mixins import AudioMixin
-from ..typing import ITileMap, IGameObject
+from ..quad_tree import QuadTree
+from ..typing import IWorldMap, IGameObject
+from ..mixins import AssetMixin
+from ..typing import IWorldFactory, IWorldMap
+
+
+class MapFactory(AssetMixin, IWorldFactory):
+
+    def build_world(self, name: str) -> IWorldMap:
+        spec = self.asset_manager.get_map_spec(name)
+        tiled_map = load_pygame(spec.path)
+        ret = WorldMap(tiled_map, spec.music)
+        ret.initialize()
+        return ret
 
 
 class TileLayerTypeEnum(Enum):
@@ -64,7 +76,7 @@ class TileDescription:
             anim={})
 
 
-class TileMap(AudioMixin, ITileMap):
+class WorldMap(AudioMixin, IWorldMap):
 
     show_sound = False
 

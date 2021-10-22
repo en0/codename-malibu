@@ -5,7 +5,9 @@ from .typing import (
     IAssetService,
     IKeyboardService,
     IAudioService,
+    IObjectFactory,
     IGameService,
+    ICamera,
 )
 
 
@@ -53,5 +55,11 @@ class SceneFactoryMixin:
 
 class SpriteFactoryMixin:
     @property
-    def sprite_factory(self):
+    def sprite_factory(self) -> IObjectFactory:
         return ServiceLocator.get_sprite_factory()
+
+
+class CameraFactoryMixin:
+    @property
+    def camera_factory(self) -> ICamera:
+        return ServiceLocator().get_camera_factory()

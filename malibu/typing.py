@@ -1,16 +1,19 @@
 from pygame import Vector2, Surface, Rect
 from pygame.event import Event
 from abc import ABC, abstractmethod
-from typing import Set, Iterable, Optional, Union, Generator, List, Tuple
+from typing import Set, Iterable, Optional, Union, Generator, List, Tuple, Type, TypeVar
 
 from .models import AudioSpec, MapSpec
 from .enum import (
     AudioEdgeTransitionEnum,
     SceneEnum,
-    SpriteEnum,
+    GameObjectEnum,
     ComponentMessageEnum,
     MaterialEnum,
 )
+
+
+T_GameComponent = TypeVar("T_GameComponent", bound="IGameComponent")
 
 
 class IAudioService(ABC):
@@ -52,14 +55,14 @@ class ISettingsService(ABC):
     ...
 
 
-class ISceneFactoryService(ABC):
+class ISceneFactory(ABC):
     @abstractmethod
     def new(self, scene: SceneEnum) -> "IGameScene": ...
 
 
-class ISpriteFactoryService(ABC):
+class IObjectFactory(ABC):
     @abstractmethod
-    def new(self, sprite_name: SpriteEnum) -> "IGameObject": ...
+    def new(self, sprite_name: GameObjectEnum) -> "IGameObject": ...
 
 
 class IGameScene(ABC):
@@ -90,66 +93,45 @@ class IGameService(ABC):
     def get_current_scene(self) -> IGameScene: ...
 
 
-class INotifiableComponent(ABC):
+class INotifiableObject(ABC):
     @abstractmethod
-    def notify(self, sender: object, msg_type: ComponentMessageEnum, value: any): ...
+    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any): ...
 
 
-class INotifierGameSprite(ABC):
+class IGameComponent(INotifiableObject):
     @abstractmethod
-    def subscribe(self, msg_type: ComponentMessageEnum, component: INotifiableComponent): ...
-    @abstractmethod
-    def broadcast(self, sender: object, msg_type: ComponentMessageEnum, value: any): ...
+    def set_parent(self, game_object: "IGameObject"): ...
 
 
-class IGameSpriteComponent(ABC):
-    @abstractmethod
-    def set_container(self, sprite: INotifierGameSprite): ...
-
-
-class IGameSpriteInputComponent(IGameSpriteComponent):
+class IInputComponent(IGameComponent):
     @abstractmethod
     def process_input(self, keyboard: IKeyboardService): ...
 
 
-class IGameSpritePhysicsComponent(IGameSpriteComponent):
+class IPhysicsComponent(IGameComponent):
     @abstractmethod
-    def update(self, frame_delta: float, tile_map: "ITileMap"): ...
+    def update(self, frame_delta: float, world: "IWorldMap"): ...
 
 
-class IGameSpriteGraphicsComponent(IGameSpriteComponent):
+class IGraphicsComponent(IGameComponent):
     @abstractmethod
     def render(self, gfx: Surface): ...
 
 
-class IGameObject(ABC):
-    @property
+class IGameObject(INotifiableObject):
     @abstractmethod
-    def position(self) -> Vector2: ...
-    @property
+    def process_input(self, keyboard: IKeyboardService): ...
     @abstractmethod
-    def bounding_box(self) -> Rect: ...
-    @property
+    def update(self, frame_delta: float, world: "IWorldMap"): ...
     @abstractmethod
-    def input_component(self) -> IGameSpriteInputComponent: ...
-    @input_component.setter
+    def render(self, gfx: Surface): ...
     @abstractmethod
-    def input_component(self, val: IGameSpriteInputComponent) -> None: ...
-    @property
+    def subscribe(self, msg_type: ComponentMessageEnum, component: INotifiableObject): ...
     @abstractmethod
-    def physics_component(self) -> IGameSpritePhysicsComponent: ...
-    @physics_component.setter
-    @abstractmethod
-    def physics_component(self, val: IGameSpritePhysicsComponent) -> None: ...
-    @property
-    @abstractmethod
-    def graphics_component(self) -> IGameSpriteGraphicsComponent: ...
-    @graphics_component.setter
-    @abstractmethod
-    def graphics_component(self, val: IGameSpriteGraphicsComponent) -> None: ...
+    def get_component(self, component_type: Type[T_GameComponent]) -> Optional[T_GameComponent]: ...
 
 
-class ITileMap(ABC):
+class IWorldMap(ABC):
     @abstractmethod
     def render(self, gfx: Surface, rect: Rect) -> None: ...
     @abstractmethod
@@ -166,6 +148,23 @@ class ITileMap(ABC):
     def get_rect(self) -> Rect: ...
 
 
-class IMapFactoryService(ABC):
+class IWorldFactory(ABC):
     @abstractmethod
-    def get_tile_map(self, name: str) -> ITileMap: ...
+    def build_world(self, name: str) -> IWorldMap: ...
+
+
+class ICamera(INotifiableObject):
+    @property
+    @abstractmethod
+    def world_offset(self): ...
+    @property
+    @abstractmethod
+    def aperture(self) -> Rect: ...
+    @abstractmethod
+    def attach_to(self, obj: IGameObject) -> None: ...
+    @abstractmethod
+    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any): ...
+
+class ICameraFactory(ABC):
+    @abstractmethod
+    def create_camera(self, world: Rect = None) -> ICamera: ...
