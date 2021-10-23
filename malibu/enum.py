@@ -1,11 +1,6 @@
 from enum import Enum, auto
 
 
-class CameraTypeEnum(Enum):
-    STATIC = auto()
-    DYNAMIC = auto()
-
-
 class ComponentMessageEnum(Enum):
     SET_VELOCITY = auto()
     SET_LOCATION = auto()

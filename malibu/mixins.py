@@ -63,3 +63,8 @@ class CameraFactoryMixin:
     @property
     def camera_factory(self) -> ICamera:
         return ServiceLocator().get_camera_factory()
+
+class CameraMixin:
+    @property
+    def camera(self) -> ICamera:
+        return ServiceLocator().get_camera()

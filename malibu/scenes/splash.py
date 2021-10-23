@@ -13,7 +13,7 @@ class SplashScene(SceneSandbox):
         return pygame.Vector2(0)
 
     def activate(self) -> None:
-        self.play_music("world2", AudioEdgeTransitionEnum.NONE)
+        self.audio.set_music("world2", AudioEdgeTransitionEnum.NONE)
 
     def inactivate(self) -> None:
         pass

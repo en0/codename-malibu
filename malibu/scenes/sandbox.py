@@ -1,17 +1,12 @@
 from pygame import Rect
 from typing import Optional
 
-from ..typing import ICamera
-from ..enum import AudioEdgeTransitionEnum, SceneEnum, GameObjectEnum
-from ..mixins import KeyboardMixin, LoggerMixin, GraphicMixin
+from ..enum import SceneEnum, GameObjectEnum
+from ..mixins import KeyboardMixin, LoggerMixin, GraphicMixin, AudioMixin, CameraMixin
 from ..services import ServiceLocator
 
 
-class SceneSandbox(KeyboardMixin, LoggerMixin, GraphicMixin):
-
-    @classmethod
-    def play_music(cls, name: str, edge: Optional[AudioEdgeTransitionEnum] = None) -> None:
-        ServiceLocator.get_audio().set_music(name, edge)
+class SceneSandbox(KeyboardMixin, LoggerMixin, GraphicMixin, AudioMixin, CameraMixin):
 
     @classmethod
     def switch_to_scene(cls, name: SceneEnum):
@@ -34,7 +29,3 @@ class SceneSandbox(KeyboardMixin, LoggerMixin, GraphicMixin):
     @classmethod
     def load_world(cls, name: str):
         return ServiceLocator.get_world_factory().build_world(name)
-
-    @classmethod
-    def create_camera(cls, world: Rect) -> ICamera:
-        return ServiceLocator().get_camera_factory().create_camera(world)

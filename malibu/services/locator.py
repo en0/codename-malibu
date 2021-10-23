@@ -10,14 +10,14 @@ from ..typing import (
     ISceneFactory,
     IObjectFactory,
     IWorldFactory,
-    ICameraFactory,
+    ICamera,
 )
 
 
 class ServiceLocator:
 
     _game: IGameService = None
-    _camera_factory: ICameraFactory
+    _camera: ICamera
     _scene_factory: ISceneFactory = None
     _object_factory: IObjectFactory = None
     _graphics: Surface = None
@@ -28,8 +28,12 @@ class ServiceLocator:
     _world_factory: IWorldFactory = None
 
     @classmethod
-    def get_camera_factory(cls) -> ICameraFactory:
+    def get_camera_factory(cls) -> ICamera:
         return cls._camera_factory
+
+    @classmethod
+    def get_camera(cls) -> ICamera:
+        return cls._camera
 
     @classmethod
     def get_world_factory(cls) -> IWorldFactory:
@@ -68,8 +72,8 @@ class ServiceLocator:
         return cls._asset_manager
 
     @classmethod
-    def set_camera_factory_provider(cls, camera_factory: ICameraFactory) -> None:
-        cls._camera_factory = camera_factory
+    def set_camera_provider(cls, camera: ICamera) -> None:
+        cls._camera = camera
 
     @classmethod
     def set_world_factory_provider(cls, world_factory: IWorldFactory) -> None:
@@ -151,12 +155,13 @@ class ServiceLocator:
         world_factory = MapFactory()
         cls.set_world_factory_provider(world_factory)
 
-        from .camera import CameraFactory
-        camera_factory = CameraFactory()
-        cls.set_camera_factory_provider(camera_factory)
+        from .camera import Camera
+        camera = Camera()
+        cls.set_camera_provider(camera)
 
         # Init
         from logging import basicConfig
         basicConfig(level="DEBUG")
         asset_manager.initialize()
         audio_provider.initialize()
+        camera.initialize()

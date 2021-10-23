@@ -9,10 +9,11 @@ from ..mixins import (
     KeyboardMixin,
     AudioMixin,
     GraphicMixin,
+    CameraMixin,
 )
 
 
-class GameService(LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameService):
+class GameService(CameraMixin, LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameService):
 
     @property
     def target_frame_rate(self) -> int:
@@ -66,7 +67,7 @@ class GameService(LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameSer
             self.graphics.fill((0, 0, 0))
             self._scene.render()
             self._show_framerate()
-            self.audio.update(self._scene.player_location)
+            self.audio.update()
             pygame.display.flip()
 
             if self._next_scene:

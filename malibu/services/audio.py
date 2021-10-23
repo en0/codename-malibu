@@ -4,14 +4,15 @@ from typing import List, Optional, Tuple, Dict, Union
 
 from .locator import ServiceLocator
 
-from ..typing import IAudioService
-from ..enum import AudioTypeEnum, AudioEdgeTransitionEnum
+from ..typing import IAudioService, IGameObject
+from ..enum import AudioTypeEnum, AudioEdgeTransitionEnum, ComponentMessageEnum
 from ..models import AudioSpec
 from ..mixins import LoggerMixin, AssetMixin
 
 
 class AudioService(LoggerMixin, AssetMixin, IAudioService):
 
+    focus_point: Vector2 = Vector2(0)
     cross_fade_ms = 2000
 
     def initialize(self):
@@ -21,6 +22,17 @@ class AudioService(LoggerMixin, AssetMixin, IAudioService):
         self._music_channel = Channel(0)
         self._next_music_channel = Channel(1)
         self._sounds = {spec.name: Sound(spec.path) for spec in self.asset_manager.iter_audio_specs()}
+        self.focus_point = ServiceLocator.get_graphics().get_rect().center
+
+    def attach(self, obj: IGameObject) -> None:
+        obj.subscribe(ComponentMessageEnum.SET_LOCATION, self)
+
+    def detach(self, obj: IGameObject) -> None:
+        obj.unsubscribe(ComponentMessageEnum.SET_LOCATION, self)
+        self.focus_point = ServiceLocator.get_graphics().get_rect().center
+
+    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any):
+        self.focus_point = value
 
     def set_music(self, name: Union[str, None], edge_transition: Optional[AudioEdgeTransitionEnum] = None) -> None:
         edge_transition = edge_transition or AudioEdgeTransitionEnum.CROSSFADE
@@ -58,7 +70,7 @@ class AudioService(LoggerMixin, AssetMixin, IAudioService):
         else:
             self.log.critical("Dropping request for unknown audio spec: %s.", name)
 
-    def update(self, origin: Vector2) -> None:
+    def update(self) -> None:
         todo: Dict[AudioTypeEnum, Dict[str, Tuple[AudioSpec, float]]] = {
             AudioTypeEnum.KINETIC: {},
             AudioTypeEnum.PASSIVE: {},
@@ -66,7 +78,7 @@ class AudioService(LoggerMixin, AssetMixin, IAudioService):
 
         # Deduplicate and sort enqueued requests
         for spec, point in self._buffer:
-            volume = self._compute_volume(spec, origin, point)
+            volume = self._compute_volume(spec, self.focus_point, point)
             if volume <= 0:
                 # Drop audio that will not be heard
                 continue

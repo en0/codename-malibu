@@ -38,6 +38,12 @@ class GameObject(IGameObject):
     def subscribe(self, msg_type: ComponentMessageEnum, component: INotifiableObject):
         self._subscriptions.setdefault(msg_type, []).append(component)
 
+    def unsubscribe(self, msg_type: ComponentMessageEnum, component: INotifiableObject):
+        try:
+            self._subscriptions.get(msg_type, []).remove(component)
+        except ValueError:
+            pass
+
     def get_component(self, component_type: Type[T_GameComponent]) -> Optional[T_GameComponent]:
         for component in self._components:
             if isinstance(component, component_type):

@@ -1,20 +1,16 @@
 from pygame import Rect, Vector2
+from typing import Tuple
 
 from .locator import ServiceLocator
-from ..enum import CameraTypeEnum, ComponentMessageEnum
-from ..typing import ICamera, ICameraFactory, IGameObject
-
-
-class CameraFactory(ICameraFactory):
-    def create_camera(self, world: Rect = None):
-        aperture = ServiceLocator.get_graphics().get_rect()
-        if world == None:
-            return StaticCamera(aperture)
-        else:
-            return Camera(aperture, world)
+from ..enum import ComponentMessageEnum
+from ..typing import ICamera, IGameObject
 
 
 class Camera(ICamera):
+
+    _aperture: Rect
+    _world: Rect
+    _world_offset: Tuple[float, float]
 
     @property
     def world_offset(self):
@@ -24,10 +20,16 @@ class Camera(ICamera):
     def aperture(self) -> Rect:
         return self._aperture
 
-    def attach_to(self, obj: IGameObject) -> None:
+    def set_world_rect(self, rect: Rect) -> None:
+        self._world = rect.copy()
+
+    def attach(self, obj: IGameObject) -> None:
         obj.subscribe(ComponentMessageEnum.SET_LOCATION, self)
 
-    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any):
+    def detach(self, obj: IGameObject) -> None:
+        obj.unsubscribe(ComponentMessageEnum.SET_LOCATION, self)
+
+    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any) -> None:
         self._set_focus(value)
 
     def _set_focus(self, location: Vector2):
@@ -38,27 +40,8 @@ class Camera(ICamera):
         self._aperture.bottom = min(self._aperture.bottom, self._world.bottom)
         self._world_offset = -self._aperture.x, -self._aperture.y
 
-    def __init__(self, aperture: Rect, world: Rect):
-        self._aperture = aperture
-        self._world = world
+    def initialize(self):
+        self._aperture = ServiceLocator.get_graphics().get_rect()
+        self._world = self._aperture.copy()
         self._world_offset = 0, 0
 
-
-class StaticCamera(ICamera):
-
-    @property
-    def world_offset(self):
-        return 0
-
-    @property
-    def aperture(self) -> Rect:
-        return _aperture
-
-    def attach_to(self, obj: IGameObject) -> None:
-        pass
-
-    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any):
-        pass
-
-    def __init__(self, aperture: Rect):
-        self._apreture = aperture
