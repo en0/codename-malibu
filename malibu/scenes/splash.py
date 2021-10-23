@@ -8,10 +8,6 @@ from ..enum import SceneEnum, AudioEdgeTransitionEnum
 
 class SplashScene(SceneSandbox):
 
-    @property
-    def player_location(self) -> pygame.Vector2:
-        return pygame.Vector2(0)
-
     def activate(self) -> None:
         self.audio.set_music("world2", AudioEdgeTransitionEnum.NONE)
 

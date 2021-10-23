@@ -9,11 +9,10 @@ from ..mixins import (
     KeyboardMixin,
     AudioMixin,
     GraphicMixin,
-    CameraMixin,
 )
 
 
-class GameService(CameraMixin, LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameService):
+class GameService(LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameService):
 
     @property
     def target_frame_rate(self) -> int:
@@ -108,7 +107,7 @@ class GameService(CameraMixin, LoggerMixin, KeyboardMixin, AudioMixin, GraphicMi
             True,
             (255, 0, 0),
             (0, 0, 0)
-        ), (0, 0))
+        ), absolute=(0, 0))
         self._cnt = (self._cnt + 1) % 1000
         if self._cnt == 0:
             self._fr_max = 0

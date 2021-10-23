@@ -1,50 +1,43 @@
 import pygame
-from typing import List, Tuple
+from typing import List
 from .sandbox import SceneSandbox
-from ..services import ServiceLocator
-from ..enum import AudioEdgeTransitionEnum, GameObjectEnum, SceneEnum
+from ..enum import GameObjectEnum, SceneEnum
 from ..typing import IGameObject, IGameScene, IWorldMap
 
 
 class PlayScene(SceneSandbox, IGameScene):
 
-    _map_surface: pygame.Surface
-    _objects: List[IGameObject] = []
-    _player: IGameObject
+    objects: List[IGameObject] = []
+    player: IGameObject
     world: IWorldMap = None
 
-    @property
-    def player_location(self) -> pygame.Vector2:
-        return pygame.Vector2(0)
-
     def activate(self) -> None:
-        self._player = self.create_object(GameObjectEnum.HERO)
-        self._objects.append(self._player)
+        self.player = self.create_object(GameObjectEnum.HERO)
+        self.objects.append(self.player)
         self.world = self.load_world("demo")
         self.audio.set_music(self.world.get_default_music())
-        self._map_surface = pygame.Surface(self.world.get_rect().size)
-        self.camera.set_world_rect(self.world.get_rect())
-        self.camera.attach(self._player)
-        self.audio.attach(self._player)
+
+        self.graphics.set_world_boundary(self.world.get_rect())
+        self.graphics.attach(self.player)
+        self.audio.attach(self.player)
 
     def inactivate(self) -> None:
-        self.camera.detach(self._player)
-        self.audio.detach(self._player)
+        self.graphics.detach(self.player)
+        self.audio.detach(self.player)
 
     def process_inputs(self) -> None:
-        for obj in self._objects:
+        for obj in self.objects:
             obj.process_input(self.keyboard)
         if self.keyboard.is_pressed(pygame.K_ESCAPE):
             self.push_to_scene(SceneEnum.GAME_MENU)
 
     def update(self, frame_delta: float) -> None:
-        for obj in self._objects:
+        for obj in self.objects:
             obj.update(frame_delta, self.world)
         self.world.update(frame_delta)
 
     def render(self) -> None:
-        self._map_surface.fill((0, 0, 0))
-        self.world.render(self._map_surface, self.camera.aperture)
-        for obj in self._objects:
-            obj.render(self._map_surface)
-        self.graphics.blit(self._map_surface, self.camera.world_offset)
+        self.graphics.fill((0, 0, 0))
+        self.world.render(self.graphics)
+        for obj in self.objects:
+            obj.render(self.graphics)

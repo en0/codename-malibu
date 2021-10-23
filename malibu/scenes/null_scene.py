@@ -6,10 +6,6 @@ from ..typing import IGameScene, IGameObject
 
 class NullScene(SpriteFactoryMixin, KeyboardMixin, GraphicMixin, IGameScene):
 
-    @property
-    def player_location(self) -> pygame.Vector2:
-        return pygame.Vector2(0)
-
     def activate(self) -> None:
         pass
 
@@ -23,7 +19,4 @@ class NullScene(SpriteFactoryMixin, KeyboardMixin, GraphicMixin, IGameScene):
         pass
 
     def render(self) -> None:
-        pass
-
-    def __init__(self) -> None:
         pass

@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from enum import Enum
-from pygame import draw, Rect, Surface, Vector2
+from pygame import draw, Rect, Vector2
 from pytmx import TiledMap, TiledTileLayer, load_pygame
 from typing import List, Optional, Dict, Tuple, Union
 
 from .enum import MaterialEnum
 from .mixins import AudioMixin
 from .quad_tree import QuadTree
-from .typing import IWorldMap, IGameObject
+from .typing import IWorldMap, IGameObject, IGraphicsService
 
 
 
@@ -78,8 +78,8 @@ class WorldMap(AudioMixin, IWorldMap):
     def get_default_music(self) -> str:
         return self._default_music
 
-    def render(self, gfx: Surface, rect: Rect) -> None:
-        for desc in self._qtree.hit(rect):
+    def render(self, gfx: IGraphicsService) -> None:
+        for desc in self._qtree.hit(gfx.get_viewport()):
             for gid in desc.tiles:
                 if isinstance(gid, int):
                     image = self._tiled_map.get_tile_image_by_gid(gid)

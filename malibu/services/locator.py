@@ -10,30 +10,21 @@ from ..typing import (
     ISceneFactory,
     IObjectFactory,
     IWorldFactory,
-    ICamera,
+    IGraphicsService,
 )
 
 
 class ServiceLocator:
 
     _game: IGameService = None
-    _camera: ICamera
     _scene_factory: ISceneFactory = None
     _object_factory: IObjectFactory = None
-    _graphics: Surface = None
+    _graphics: IGraphicsService = None
     _audio: IAudioService = None
     _keyboard: IKeyboardService = None
     _asset_manager: IAssetService = None
     _settings_manager: ISettingsService = None
     _world_factory: IWorldFactory = None
-
-    @classmethod
-    def get_camera_factory(cls) -> ICamera:
-        return cls._camera_factory
-
-    @classmethod
-    def get_camera(cls) -> ICamera:
-        return cls._camera
 
     @classmethod
     def get_world_factory(cls) -> IWorldFactory:
@@ -56,7 +47,7 @@ class ServiceLocator:
         return cls._settings_manager
 
     @classmethod
-    def get_graphics(cls) -> Surface:
+    def get_graphics(cls) -> IGraphicsService:
         return cls._graphics
 
     @classmethod
@@ -70,10 +61,6 @@ class ServiceLocator:
     @classmethod
     def get_asset_manager(cls) -> IAssetService:
         return cls._asset_manager
-
-    @classmethod
-    def set_camera_provider(cls, camera: ICamera) -> None:
-        cls._camera = camera
 
     @classmethod
     def set_world_factory_provider(cls, world_factory: IWorldFactory) -> None:
@@ -100,7 +87,7 @@ class ServiceLocator:
         cls._audio = audio
 
     @classmethod
-    def set_graphics_provider(cls, graphics: Surface):
+    def set_graphics_provider(cls, graphics: IGraphicsService):
         cls._graphics = graphics
 
     @classmethod
@@ -138,9 +125,8 @@ class ServiceLocator:
         game_provider = GameService()
         cls.set_game_provider(game_provider)
 
-        from pygame import display, FULLSCREEN, HWACCEL, DOUBLEBUF
-        from ..const import SCREEN_SIZE
-        graphics_provider = display.set_mode(SCREEN_SIZE, HWACCEL | DOUBLEBUF)
+        from .graphics import GraphicsService
+        graphics_provider = GraphicsService()
         cls.set_graphics_provider(graphics_provider)
 
         from .scene_factory import SceneFactory
@@ -155,13 +141,9 @@ class ServiceLocator:
         world_factory = MapFactory()
         cls.set_world_factory_provider(world_factory)
 
-        from .camera import Camera
-        camera = Camera()
-        cls.set_camera_provider(camera)
-
         # Init
         from logging import basicConfig
         basicConfig(level="DEBUG")
+        graphics_provider.initialize()
         asset_manager.initialize()
         audio_provider.initialize()
-        camera.initialize()

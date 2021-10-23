@@ -2,11 +2,11 @@ from pygame import Rect
 from typing import Optional
 
 from ..enum import SceneEnum, GameObjectEnum
-from ..mixins import KeyboardMixin, LoggerMixin, GraphicMixin, AudioMixin, CameraMixin
+from ..mixins import KeyboardMixin, LoggerMixin, GraphicMixin, AudioMixin
 from ..services import ServiceLocator
 
 
-class SceneSandbox(KeyboardMixin, LoggerMixin, GraphicMixin, AudioMixin, CameraMixin):
+class SceneSandbox(KeyboardMixin, LoggerMixin, GraphicMixin, AudioMixin):
 
     @classmethod
     def switch_to_scene(cls, name: SceneEnum):

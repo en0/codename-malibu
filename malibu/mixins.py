@@ -7,7 +7,7 @@ from .typing import (
     IAudioService,
     IObjectFactory,
     IGameService,
-    ICamera,
+    IGraphicsService,
 )
 
 
@@ -37,7 +37,7 @@ class AudioMixin:
 
 class GraphicMixin:
     @property
-    def graphics(self) -> Surface:
+    def graphics(self) -> IGraphicsService:
         return ServiceLocator.get_graphics()
 
 
@@ -57,14 +57,3 @@ class SpriteFactoryMixin:
     @property
     def sprite_factory(self) -> IObjectFactory:
         return ServiceLocator.get_sprite_factory()
-
-
-class CameraFactoryMixin:
-    @property
-    def camera_factory(self) -> ICamera:
-        return ServiceLocator().get_camera_factory()
-
-class CameraMixin:
-    @property
-    def camera(self) -> ICamera:
-        return ServiceLocator().get_camera()

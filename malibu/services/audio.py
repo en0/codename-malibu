@@ -22,14 +22,14 @@ class AudioService(LoggerMixin, AssetMixin, IAudioService):
         self._music_channel = Channel(0)
         self._next_music_channel = Channel(1)
         self._sounds = {spec.name: Sound(spec.path) for spec in self.asset_manager.iter_audio_specs()}
-        self.focus_point = ServiceLocator.get_graphics().get_rect().center
+        self.focus_point = ServiceLocator.get_graphics().get_viewport().center
 
     def attach(self, obj: IGameObject) -> None:
         obj.subscribe(ComponentMessageEnum.SET_LOCATION, self)
 
     def detach(self, obj: IGameObject) -> None:
         obj.unsubscribe(ComponentMessageEnum.SET_LOCATION, self)
-        self.focus_point = ServiceLocator.get_graphics().get_rect().center
+        self.focus_point = ServiceLocator.get_graphics().get_viewport().center
 
     def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any):
         self.focus_point = value

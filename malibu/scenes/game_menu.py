@@ -7,15 +7,14 @@ from ..typing import IGameScene
 
 class GameMenu(SceneSandbox, IGameScene):
 
+    _rect: pygame.Surface = None
     _suf: pygame.Surface = None
-
-    @property
-    def player_location(self) -> pygame.Vector2:
-        return self.graphics.get_rect().center
 
     def activate(self) -> None:
         font = pygame.font.SysFont(pygame.font.get_default_font(), 45)
         self._suf = font.render("GAME MENU", True, (0, 0, 0), (255, 255, 255))
+        self._rect = self._suf.get_rect()
+        self._rect.center = pygame.Rect(0, 0, *self.graphics.get_resolution()).center
 
     def inactivate(self) -> None:
         pass
@@ -29,9 +28,7 @@ class GameMenu(SceneSandbox, IGameScene):
 
     def render(self) -> None:
         self._scene.render()
-        rect = self._suf.get_rect()
-        rect.center = self.player_location
-        self.graphics.blit(self._suf, rect)
+        self.graphics.blit(self._suf, absolute=self._rect)
 
     def __init__(self, current_scene: IGameScene) -> None:
         self._scene = current_scene
