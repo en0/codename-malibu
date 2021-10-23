@@ -8,7 +8,7 @@ from .enum import (
     AudioEdgeTransitionEnum,
     SceneEnum,
     GameObjectEnum,
-    ComponentMessageEnum,
+    GameObjectMessageEnum,
     MaterialEnum,
 )
 
@@ -88,7 +88,7 @@ class IGameService(ABC):
 
 class INotifiableObject(ABC):
     @abstractmethod
-    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any): ...
+    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any): ...
 
 
 class IGameComponent(INotifiableObject):
@@ -119,9 +119,9 @@ class IGameObject(INotifiableObject):
     @abstractmethod
     def render(self, gfx: Surface): ...
     @abstractmethod
-    def subscribe(self, msg_type: ComponentMessageEnum, component: INotifiableObject): ...
+    def subscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject): ...
     @abstractmethod
-    def unsubscribe(self, msg_type: ComponentMessageEnum, component: INotifiableObject): ...
+    def unsubscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject): ...
     @abstractmethod
     def get_component(self, component_type: Type[T_GameComponent]) -> Optional[T_GameComponent]: ...
 

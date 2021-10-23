@@ -1,10 +1,12 @@
 from enum import Enum, auto
 
 
-class ComponentMessageEnum(Enum):
+class GameObjectMessageEnum(Enum):
+    ALL = auto()
     SET_VELOCITY = auto()
     SET_LOCATION = auto()
     SET_BOUNDING_BOX = auto()
+    SET_STANDING_ON_MATERIAL = auto()
 
 
 class GameObjectEnum(Enum):

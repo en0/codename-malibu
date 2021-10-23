@@ -1,12 +1,12 @@
 import pygame
-from typing import List, Optional, Type, Dict
-from .enum import ComponentMessageEnum
-from .components import (
+from typing import List, Optional, Type, Dict, Set
+from .null import (
     NullInputComponent,
     NullPhysicsComponent,
     NullGraphicsComponent,
 )
-from .typing import (
+from ..enum import GameObjectMessageEnum
+from ..typing import (
     IGameObject,
     IGameComponent,
     IGraphicsComponent,
@@ -30,17 +30,23 @@ class GameObject(IGameObject):
     def render(self, gfx: pygame.Surface):
         self._gfx.render(gfx)
 
-    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any):
-        for component in self._subscriptions.get(msg_type, []):
+    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
+        for component in self._get_matching_subs(msg_type):
             if component is not sender:
                 component.receive_message(sender, msg_type, value)
 
-    def subscribe(self, msg_type: ComponentMessageEnum, component: INotifiableObject):
-        self._subscriptions.setdefault(msg_type, []).append(component)
+    def _get_matching_subs(self, msg_type: GameObjectMessageEnum) -> Set[INotifiableObject]:
+        return (
+            self._subscriptions.get(msg_type, set()) |
+            self._subscriptions.get(GameObjectMessageEnum.ALL, set())
+        )
 
-    def unsubscribe(self, msg_type: ComponentMessageEnum, component: INotifiableObject):
+    def subscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject):
+        self._subscriptions.setdefault(msg_type, set()).add(component)
+
+    def unsubscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject):
         try:
-            self._subscriptions.get(msg_type, []).remove(component)
+            self._subscriptions.get(msg_type, set()).remove(component)
         except ValueError:
             pass
 
@@ -52,7 +58,7 @@ class GameObject(IGameObject):
 
     def __init__(self, components: List[IGameComponent]) -> None:
         self._components = components.copy()
-        self._subscriptions: Dict[ComponentMessageEnum, List[INotifiableObject]] = dict()
+        self._subscriptions: Dict[GameObjectMessageEnum, Set[INotifiableObject]] = dict()
         self._input = self.get_component(IInputComponent) or NullInputComponent()
         self._phys = self.get_component(IPhysicsComponent) or NullPhysicsComponent()
         self._gfx = self.get_component(IGraphicsComponent) or NullGraphicsComponent()

@@ -2,7 +2,7 @@ from pytmx import load_pygame
 
 from ..mixins import AssetMixin
 from ..typing import IWorldFactory, IWorldMap
-from ..world import WorldMap
+from ..lib import WorldMap
 
 
 class MapFactory(AssetMixin, IWorldFactory):

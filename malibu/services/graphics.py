@@ -1,8 +1,8 @@
-from pygame import Surface, display, Rect, Vector2, FULLSCREEN, HWACCEL, DOUBLEBUF
+from pygame import Surface, display, Rect, Vector2
 from typing import Union, Tuple, Optional
 
-from ..enum import ComponentMessageEnum
-from ..const import SCREEN_SIZE
+from ..enum import GameObjectMessageEnum
+from ..const import SCREEN_SIZE, VIDEO_FLAGS
 from ..typing import IGraphicsService, IGameObject, INotifiableObject
 
 
@@ -26,12 +26,12 @@ class GraphicsService(INotifiableObject, IGraphicsService):
         self.hw_surface.fill(color, rect)
 
     def attach(self, obj: IGameObject) -> None:
-        obj.subscribe(ComponentMessageEnum.SET_LOCATION, self)
+        obj.subscribe(GameObjectMessageEnum.SET_LOCATION, self)
 
     def detach(self, obj: IGameObject) -> None:
-        obj.unsubscribe(ComponentMessageEnum.SET_LOCATION, self)
+        obj.unsubscribe(GameObjectMessageEnum.SET_LOCATION, self)
 
-    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any):
+    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
         self._set_focus(value)
 
     def get_world_boundary(self) -> Rect:
@@ -53,7 +53,7 @@ class GraphicsService(INotifiableObject, IGraphicsService):
         return self.hw_surface
 
     def initialize(self) -> None:
-        self.hw_surface = display.set_mode(SCREEN_SIZE, HWACCEL | DOUBLEBUF)
+        self.hw_surface = display.set_mode(SCREEN_SIZE, VIDEO_FLAGS)
         self.viewport = self.hw_surface.get_rect()
         self.world_boundary = self.viewport.copy()
         self.world_offset = 0, 0

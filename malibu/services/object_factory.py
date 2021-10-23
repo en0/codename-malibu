@@ -1,8 +1,7 @@
 from pygame import Vector2
-from ..game_object import GameObject
-from ..enum import GameObjectEnum, ComponentMessageEnum
+from ..enum import GameObjectEnum, GameObjectMessageEnum
 from ..typing import IObjectFactory, IGameObject
-from ..components import *
+from ..game_objects import *
 
 
 class ObjectFactory(IObjectFactory):

@@ -4,10 +4,10 @@ from pygame import draw, Rect, Vector2
 from pytmx import TiledMap, TiledTileLayer, load_pygame
 from typing import List, Optional, Dict, Tuple, Union
 
-from .enum import MaterialEnum
-from .mixins import AudioMixin
 from .quad_tree import QuadTree
-from .typing import IWorldMap, IGameObject, IGraphicsService
+from ..enum import MaterialEnum
+from ..mixins import AudioMixin
+from ..typing import IWorldMap, IGameObject, IGraphicsService
 
 
 

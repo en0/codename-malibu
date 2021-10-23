@@ -1,14 +1,14 @@
 import pygame
 
 from .base import GameComponentBase, SubMap_T
-from ..enum import ComponentMessageEnum
+from ..enum import GameObjectMessageEnum
 from ..typing import IGraphicsComponent, IWorldMap, IGraphicsService
 
 
 class TestGraphicsComponent(GameComponentBase, IGraphicsComponent):
 
     subscriptions = [
-        ComponentMessageEnum.SET_LOCATION
+        GameObjectMessageEnum.SET_LOCATION
     ]
 
     def set_location(self, sender: object, value: pygame.Vector2):

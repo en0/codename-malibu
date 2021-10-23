@@ -1,13 +1,13 @@
 from abc import abstractmethod
 from typing import List, Dict, Callable
-from ..enum import ComponentMessageEnum
+from ..enum import GameObjectMessageEnum
 from ..typing import IGameComponent, IGameObject
 
-SubMap_T = Dict[ComponentMessageEnum, Callable[[object, any], None]]
+SubMap_T = Dict[GameObjectMessageEnum, Callable[[object, any], None]]
 
 class GameComponentBase(IGameComponent):
 
-    subscriptions: List[ComponentMessageEnum] = []
+    subscriptions: List[GameObjectMessageEnum] = []
 
     _sub_map: SubMap_T = None
     _parent: IGameObject = None
@@ -16,7 +16,7 @@ class GameComponentBase(IGameComponent):
     def parent(self) -> IGameObject:
         return self._parent
 
-    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any):
+    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
         self._sub_map[msg_type](sender, value)
 
     def set_parent(self, game_object: IGameObject):

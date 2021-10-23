@@ -5,7 +5,7 @@ from typing import List, Optional, Tuple, Dict, Union
 from .locator import ServiceLocator
 
 from ..typing import IAudioService, IGameObject
-from ..enum import AudioTypeEnum, AudioEdgeTransitionEnum, ComponentMessageEnum
+from ..enum import AudioTypeEnum, AudioEdgeTransitionEnum, GameObjectMessageEnum
 from ..models import AudioSpec
 from ..mixins import LoggerMixin, AssetMixin
 
@@ -25,13 +25,13 @@ class AudioService(LoggerMixin, AssetMixin, IAudioService):
         self.focus_point = ServiceLocator.get_graphics().get_viewport().center
 
     def attach(self, obj: IGameObject) -> None:
-        obj.subscribe(ComponentMessageEnum.SET_LOCATION, self)
+        obj.subscribe(GameObjectMessageEnum.SET_LOCATION, self)
 
     def detach(self, obj: IGameObject) -> None:
-        obj.unsubscribe(ComponentMessageEnum.SET_LOCATION, self)
+        obj.unsubscribe(GameObjectMessageEnum.SET_LOCATION, self)
         self.focus_point = ServiceLocator.get_graphics().get_viewport().center
 
-    def receive_message(self, sender: object, msg_type: ComponentMessageEnum, value: any):
+    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
         self.focus_point = value
 
     def set_music(self, name: Union[str, None], edge_transition: Optional[AudioEdgeTransitionEnum] = None) -> None:

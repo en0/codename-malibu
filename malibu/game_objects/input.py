@@ -2,7 +2,7 @@ import pygame
 from collections import deque
 
 from .base import GameComponentBase
-from ..enum import ComponentMessageEnum
+from ..enum import GameObjectMessageEnum
 from ..typing import IInputComponent, IKeyboardService
 
 
@@ -42,7 +42,7 @@ class SimpleKBInputComponent(GameComponentBase, IInputComponent):
             self.set_velocity(pygame.Vector2(0, 0))
 
     def set_velocity(self, vector: pygame.Vector2):
-        self.parent.receive_message(self, ComponentMessageEnum.SET_VELOCITY, vector)
+        self.parent.receive_message(self, GameObjectMessageEnum.SET_VELOCITY, vector)
 
     def __init__(self):
         self.md = deque()
