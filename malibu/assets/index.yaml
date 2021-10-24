@@ -55,6 +55,10 @@ world-map:
     music: world1
     path: assets/world/demo.tmx
 
+objects:
+  - name: hero
+    path: assets/objects/hero.yaml
+
 audio:
   - name: step
     # Type describes how the audio system plays the given audio file.

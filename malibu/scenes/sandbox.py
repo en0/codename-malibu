@@ -1,7 +1,7 @@
 from pygame import Rect
 from typing import Optional
 
-from ..enum import SceneEnum, GameObjectEnum
+from ..enum import SceneEnum
 from ..mixins import KeyboardMixin, LoggerMixin, GraphicMixin, AudioMixin
 from ..services import ServiceLocator
 
@@ -23,7 +23,7 @@ class SceneSandbox(KeyboardMixin, LoggerMixin, GraphicMixin, AudioMixin):
         ServiceLocator.get_game().pop_scene()
 
     @classmethod
-    def create_object(cls, name: GameObjectEnum):
+    def create_object(cls, name: str):
         return ServiceLocator.get_object_factory().new(name)
 
     @classmethod

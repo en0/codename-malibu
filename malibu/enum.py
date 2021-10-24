@@ -9,10 +9,6 @@ class GameObjectMessageEnum(Enum):
     SET_STANDING_ON_MATERIAL = auto()
 
 
-class GameObjectEnum(Enum):
-    HERO = auto()
-
-
 class SceneEnum(Enum):
     SPLASH = auto()
     MAIN_MENU = auto()

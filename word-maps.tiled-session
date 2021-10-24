@@ -25,6 +25,7 @@
             "scaleInDock": 1
         }
     },
+    "frame.defaultDuration": 300,
     "last.imagePath": "/home/ian/src/codename-malibu/malibu/assets/world/sheets",
     "map.height": 38,
     "map.lastUsedFormat": "tmx",
@@ -34,6 +35,7 @@
     "openFiles": [
     ],
     "project": "word-maps.tiled-project",
+    "property.type": "file",
     "recentFiles": [
         "malibu/assets/world/demo.tmx"
     ],

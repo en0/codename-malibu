@@ -1,0 +1,7 @@
+Tags:
+  - player
+
+Components:
+  TestGraphicsComponent:
+  SimpleKBInputComponent:
+  BasicPhysicsComponent:

@@ -1,7 +1,7 @@
 import pygame
 from typing import List
 from .sandbox import SceneSandbox
-from ..enum import GameObjectEnum, SceneEnum
+from ..enum import SceneEnum
 from ..typing import IGameObject, IGameScene, IWorldMap
 
 
@@ -12,7 +12,7 @@ class PlayScene(SceneSandbox, IGameScene):
     world: IWorldMap = None
 
     def activate(self) -> None:
-        self.player = self.create_object(GameObjectEnum.HERO)
+        self.player = self.create_object("hero")
         self.objects.append(self.player)
         self.world = self.load_world("demo")
         self.audio.set_music(self.world.get_default_music())

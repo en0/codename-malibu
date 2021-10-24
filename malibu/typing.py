@@ -3,11 +3,10 @@ from pygame.event import Event
 from abc import ABC, abstractmethod
 from typing import Set, Iterable, Optional, Union, Generator, List, Tuple, Type, TypeVar
 
-from .models import AudioSpec, MapSpec
+from .models import AudioSpec, MapSpec, ObjectSpec, ObjectData
 from .enum import (
     AudioEdgeTransitionEnum,
     SceneEnum,
-    GameObjectEnum,
     GameObjectMessageEnum,
     MaterialEnum,
 )
@@ -47,6 +46,10 @@ class IAssetService(ABC):
     def iter_audio_specs(self) -> Generator[AudioSpec, None, None]: ...
     @abstractmethod
     def get_map_spec(self, name: str) -> MapSpec: ...
+    @abstractmethod
+    def get_object_spec(self, name: str) -> ObjectSpec: ...
+    @abstractmethod
+    def get_object_data(self, name: str) -> ObjectData: ...
 
 
 class ISettingsService(ABC):
@@ -113,6 +116,8 @@ class IGraphicsComponent(IGameComponent):
 
 class IGameObject(INotifiableObject):
     @abstractmethod
+    def has_tag(self, tag: str) -> bool: ...
+    @abstractmethod
     def process_input(self, keyboard: IKeyboardService): ...
     @abstractmethod
     def update(self, frame_delta: float, world: "IWorldMap"): ...
@@ -128,7 +133,7 @@ class IGameObject(INotifiableObject):
 
 class IObjectFactory(ABC):
     @abstractmethod
-    def new(self, sprite_name: GameObjectEnum) -> IGameObject: ...
+    def new(self, name: str) -> IGameObject: ...
 
 
 class IWorldMap(ABC):

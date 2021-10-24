@@ -21,6 +21,9 @@ from ..typing import (
 
 class GameObject(IGameObject):
 
+    def has_tag(self, tag: str) -> bool:
+        return tag in self._tags
+
     def process_input(self, keyboard: IKeyboardService):
         self._input.process_input(keyboard)
 
@@ -56,7 +59,8 @@ class GameObject(IGameObject):
                 return component
         return None
 
-    def __init__(self, components: List[IGameComponent]) -> None:
+    def __init__(self, tags: List[str], components: List[IGameComponent]) -> None:
+        self._tags = set(tags)
         self._components = components.copy()
         self._subscriptions: Dict[GameObjectMessageEnum, Set[INotifiableObject]] = dict()
         self._input = self.get_component(IInputComponent) or NullInputComponent()
