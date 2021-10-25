@@ -24,4 +24,5 @@ class GameComponentBase(IGameComponent):
         self._parent = game_object
         for sub in self.subscriptions:
             self._parent.subscribe(sub, self)
-            self._sub_map[sub] = getattr(self, sub.name.lower())
+            fn_name = f"on_{sub.name.lower()}"
+            self._sub_map[sub] = getattr(self, fn_name)

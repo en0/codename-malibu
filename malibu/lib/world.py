@@ -1,13 +1,11 @@
-from dataclasses import dataclass
-from enum import Enum
 from pygame import draw, Rect, Vector2
-from pytmx import TiledMap, TiledTileLayer, load_pygame
-from typing import List, Optional, Dict, Tuple, Union, NamedTuple, Generator
+from pytmx import TiledMap, TiledTileLayer
+from typing import List, Optional, Dict, Tuple, Union, NamedTuple, Generator, Callable, Iterable
 
 from .quad_tree import QuadTree
-from ..enum import MaterialEnum
-from ..mixins import AudioMixin
-from ..typing import IWorldMap, IGameObject, IGraphicsService
+from ..enum import MaterialEnum, GameObjectMessageEnum
+from ..mixins import AudioMixin, ObjectFactoryMixin
+from ..typing import IWorldMap, IGameObject, IGraphicsService, IKeyboardService
 
 
 class AnimationFrame(NamedTuple):
@@ -72,12 +70,16 @@ class TileDescription:
         self._gids: List[int] = []
 
 
-class WorldMap(AudioMixin, IWorldMap):
+class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
 
-    show_sound = False
+    def objects(self) -> Iterable[IGameObject]:
+        return self.find_game_objects(lambda x: True)
 
-    def get_sprites(self) -> List[IGameObject]:
-        return []
+    def find_game_objects(self, predicate: Callable[[IGameObject], bool] = None) -> Iterable[IGameObject]:
+        return filter(predicate or True, self._game_objects)
+
+    def find_first_game_objects(self, predicate: Callable[[IGameObject], bool] = None) -> Optional[IGameObject]:
+        return next(filter(predicate or True, self._game_objects), None)
 
     def get_rect(self) -> Rect:
         return self._map_rect.copy()
@@ -95,17 +97,20 @@ class WorldMap(AudioMixin, IWorldMap):
                 img = self._tiled_map.get_tile_image_by_gid(gid)
                 gfx.blit(img, desc.rect)
 
-        if self.show_sound:
-            # Show audio sources
-            for sound, point in self._tile_sounds:
-                abs_point = gfx.compute_absolute(point)
-                draw.circle(gfx.get_hw_surface(), (0, 0, 100), abs_point, radius=8)
+        for obj in self._game_objects:
+            obj.render(gfx)
 
     def update(self, frame_delta: float) -> None:
         for name, point in self._tile_sounds:
             self.audio.enqueue(name, point)
         for desc in self._animation_map.values():
             desc.update(frame_delta)
+        for obj in self._game_objects:
+            obj.update(frame_delta, self)
+
+    def process_input(self, keyboard: IKeyboardService):
+        for obj in self._game_objects:
+            obj.process_input(keyboard)
 
     def is_walkable(self, rect: Rect) -> bool:
         if not self._map_rect.contains(rect):
@@ -156,6 +161,14 @@ class WorldMap(AudioMixin, IWorldMap):
                 desc.add_gid(gid)
                 self.add_ambience(sound, rect.center)
 
+        # Load game objects
+        self._game_objects = []
+        for map_object in self._tiled_map.objects:
+            game_object = self.object_factory.new(map_object.name)
+            location = Vector2(map_object.x, map_object.y)
+            game_object.receive_message(self, GameObjectMessageEnum.SET_LOCATION, location)
+            self._game_objects.append(game_object)
+
         self._qtree = QuadTree([x for x in all_tiles], bounding_rect=self._map_rect)
 
     def _as_rect(self, x: int, y: int) -> Rect:
@@ -183,3 +196,4 @@ class WorldMap(AudioMixin, IWorldMap):
         self._map_rect: Rect = Rect(0, 0, 0, 0)
         self._tile_sounds: Tuple[str, Vector2] = []
         self._animation_map: Dict[int, GidAnimationDescription] = {}
+        self._game_objects: List[IGameObject] = []

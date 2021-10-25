@@ -12,28 +12,25 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="2">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="3">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="4">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
+   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="5">
@@ -47,14 +44,12 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="7">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="8">
@@ -244,14 +239,13 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="30">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
+   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="31">
@@ -427,56 +421,48 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="53">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="54">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="55">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="56">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="57">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="58">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="59">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="60">
@@ -643,42 +629,36 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="79">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="80">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="81">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="82">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="83">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="84">
@@ -769,14 +749,12 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="97">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="98">
@@ -861,7 +839,6 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="105">
@@ -875,14 +852,12 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="107">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="108">
@@ -896,7 +871,6 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="110">
@@ -909,7 +883,6 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="112">
@@ -991,14 +964,12 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="123">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="124">
@@ -1083,49 +1054,42 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="131">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="132">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="133">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="134">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="135">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="136">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="137">
@@ -1139,7 +1103,6 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="139">
@@ -1265,42 +1228,36 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="157">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="158">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="159">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="160">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="161">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="162">
@@ -1447,42 +1404,36 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="183">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="184">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="185">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="186">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="187">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="188">
@@ -1626,7 +1577,6 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="209">
@@ -1640,14 +1590,12 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="211">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="212">
@@ -1661,7 +1609,6 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="214">
@@ -1689,7 +1636,6 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="218">
@@ -1831,14 +1777,14 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
+   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="238">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
+   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="239">
@@ -2000,6 +1946,7 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
+   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="262">
@@ -2013,14 +1960,14 @@
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
+   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="264">
   <properties>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
+   <property name="walkable" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="265">

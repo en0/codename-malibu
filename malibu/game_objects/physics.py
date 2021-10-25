@@ -14,10 +14,14 @@ class BasicPhysicsComponent(GameComponentBase, IPhysicsComponent):
 
     subscriptions = [
         GameObjectMessageEnum.SET_VELOCITY,
+        GameObjectMessageEnum.SET_LOCATION,
     ]
 
-    def set_velocity(self, sender: object, value: pygame.Vector2):
+    def on_set_velocity(self, sender: object, value: pygame.Vector2):
         self.velocity = value
+
+    def on_set_location(self, sender: object, value: pygame.Vector2):
+        self._set_location(value)
 
     def update(self, frame_delta: float, world: IWorldMap):
 

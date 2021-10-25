@@ -57,14 +57,11 @@ class GameService(LoggerMixin, KeyboardMixin, AudioMixin, GraphicMixin, IGameSer
             # Process input
             events = pygame.event.get()
             self.keyboard.update(events)
-            self._scene.process_inputs()
 
             # Update game
             self._scene.update(frame_delta)
 
             # Render
-            self.graphics.fill((0, 0, 0))
-            self._scene.render()
             self._show_framerate()
             self.audio.update()
             pygame.display.flip()

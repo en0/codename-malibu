@@ -53,7 +53,7 @@ class SceneFactoryMixin:
         return ServiceLocator.get_scene_factory()
 
 
-class SpriteFactoryMixin:
+class ObjectFactoryMixin:
     @property
-    def sprite_factory(self) -> IObjectFactory:
-        return ServiceLocator.get_sprite_factory()
+    def object_factory(self) -> IObjectFactory:
+        return ServiceLocator.get_object_factory()

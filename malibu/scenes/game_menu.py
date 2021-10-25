@@ -19,15 +19,10 @@ class GameMenu(SceneSandbox, IGameScene):
     def inactivate(self) -> None:
         pass
 
-    def process_inputs(self) -> None:
+    def update(self, frame_delta: float) -> None:
         if self.keyboard.is_pressed(pygame.K_ESCAPE):
             self.pop_to_scene()
-
-    def update(self, frame_delta: float) -> None:
-        pass
-
-    def render(self) -> None:
-        self._scene.render()
+        #self._scene.render()
         self.graphics.blit(self._suf, absolute=self._rect)
 
     def __init__(self, current_scene: IGameScene) -> None:
