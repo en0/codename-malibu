@@ -24,6 +24,9 @@ class GameObject(IGameObject):
     def has_tag(self, tag: str) -> bool:
         return tag in self._tags
 
+    def get_location(self) -> pygame.Vector2:
+        return self._phys.get_location()
+
     def process_input(self, keyboard: IKeyboardService):
         self._input.process_input(keyboard)
 
@@ -68,3 +71,4 @@ class GameObject(IGameObject):
         self._gfx = self.get_component(IGraphicsComponent) or NullGraphicsComponent()
         for component in components:
             component.set_parent(self)
+

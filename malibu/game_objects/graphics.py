@@ -16,10 +16,13 @@ class TestGraphicsComponent(GameComponentBase, IGraphicsComponent):
 
     def render(self, gfx: IGraphicsService):
         surface = gfx.get_hw_surface()
-        abs_center = gfx.compute_absolute(self.rect.center)
-        abs_rect = gfx.compute_absolute_rect(self.rect)
-        pygame.draw.circle(surface, (0, 0, 200), abs_center, 10)
-        pygame.draw.rect(gfx.get_hw_surface(), (200, 0, 0), abs_rect, width=1)
+        body_rect = pygame.Rect(0, 0, 45, 120)
+        foot_rect = pygame.Rect(0, 0, 45, 20)
+        foot_rect.center = gfx.compute_absolute(self.rect.center)
+        body_rect.midbottom = foot_rect.midbottom
+
+        pygame.draw.rect(gfx.get_hw_surface(), (0, 0, 255), body_rect)
+        pygame.draw.rect(gfx.get_hw_surface(), (255, 0, 0), foot_rect, width=2)
 
     def __init__(self):
         self.rect = pygame.Rect(0, 0, 10, 10)

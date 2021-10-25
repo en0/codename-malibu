@@ -38,8 +38,8 @@ class AudioCategoryEnum(Enum):
 
 
 class MaterialEnum(Enum):
-    STONE: auto()
-    WOOD: auto()
-    GRASS: auto()
-    DIRT: auto()
-    SNOW: auto()
+    STONE = auto()
+    WOOD = auto()
+    GRASS = auto()
+    DIRT = auto()
+    SNOW = auto()

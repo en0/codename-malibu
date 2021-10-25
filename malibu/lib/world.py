@@ -1,6 +1,6 @@
-from pygame import draw, Rect, Vector2
+from pygame import draw, Rect, Vector2, Surface
 from pytmx import TiledMap, TiledTileLayer
-from typing import List, Optional, Dict, Tuple, Union, NamedTuple, Generator, Callable, Iterable
+from typing import List, Optional, Dict, Tuple, Union, NamedTuple, Generator, Callable, Iterable, Set
 
 from .quad_tree import QuadTree
 from ..enum import MaterialEnum, GameObjectMessageEnum
@@ -70,6 +70,22 @@ class TileDescription:
         self._gids: List[int] = []
 
 
+class DummyObject:
+
+    def get_location(self) -> Vector2:
+        return self._loc
+
+    def render(self, gfx: IGraphicsService):
+        gfx.blit(self._img, self._rect)
+
+    def __init__(self, img: Surface, rect: Rect, zheight: int):
+        self._img = img
+        self._rect = rect
+        x, y = self._rect.midbottom
+        self._loc = Vector2(x, y + zheight)
+        #print(self._rect.midbottom, self._loc)
+
+
 class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
 
     def objects(self) -> Iterable[IGameObject]:
@@ -89,15 +105,31 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
 
     def render(self, gfx: IGraphicsService) -> None:
 
+
+        # We need to pull out the "foreground" tiles. These need to be
+        # Sorted into the game object list so the world is layered correctly
+        # This will put the player behind or infront of things like trees and bushes
+        foreground_tiles = []
+
+        # We will use the viewport to get only the tiles in the visible area
         vp = gfx.get_viewport()
-        for desc in self._qtree.hit(gfx.get_viewport()):
+
+        for desc in self._tiles.hit(gfx.get_viewport()):
             for gid in desc.get_gids():
                 if gid in self._animation_map:
                     gid = self._animation_map[gid].gid
                 img = self._tiled_map.get_tile_image_by_gid(gid)
-                gfx.blit(img, desc.rect)
+                if gid in self._foreground_map:
+                    # This img needs to be sorted into the object list
+                    foreground_tiles.append(DummyObject(img, desc.rect, self._foreground_map[gid]))
+                else:
+                    gfx.blit(img, desc.rect)
 
-        for obj in self._game_objects:
+        # Sort all the game objects by the y axis to layer the forground
+        objects = sorted(
+            self._game_objects + foreground_tiles,
+            key=lambda x: x.get_location().y)
+        for obj in objects:
             obj.render(gfx)
 
     def update(self, frame_delta: float) -> None:
@@ -115,11 +147,11 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
     def is_walkable(self, rect: Rect) -> bool:
         if not self._map_rect.contains(rect):
             return False
-        tiles: List[TileDescription] = self._qtree.hit(rect)
+        tiles: List[TileDescription] = self._tiles.hit(rect)
         return all(map(lambda x: x.is_walkable, tiles))
 
     def get_material(self, rect: Rect) -> MaterialEnum:
-        tiles: List[TileDescription] = self._qtree.hit(rect)
+        tiles: List[TileDescription] = self._tiles.hit(rect)
         for tile in tiles:
             if tile.rect.collidepoint(rect.center):
                 return tile.material
@@ -138,15 +170,19 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
 
         # Collect Properties for each GID. Collect Frames for each GID
         self._animation_map, prop_map = {}, {}
+        self._foreground_map = {}
         for key in self._tiled_map.gidmap.keys():
             props = self._tiled_map.get_tile_properties_by_gid(key)
+            mat = props.get("material")
             prop_map[key] = (
                 props.get("walkable"),
-                props.get("material"),
-                props.get("sound")
+                MaterialEnum[mat.upper()] if mat else None,
+                props.get("sound"),
             )
             if "frames" in props and props["frames"]:
                 self._animation_map[key] = GidAnimationDescription(props["frames"])
+            if props.get("foreground", False):
+                self._foreground_map[key] = props.get("z-height", 0) * self._tiled_map.tileheight
 
         # Create tile with each layer described in that tile
         all_tiles = []
@@ -169,7 +205,7 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
             game_object.receive_message(self, GameObjectMessageEnum.SET_LOCATION, location)
             self._game_objects.append(game_object)
 
-        self._qtree = QuadTree([x for x in all_tiles], bounding_rect=self._map_rect)
+        self._tiles = QuadTree([x for x in all_tiles], bounding_rect=self._map_rect)
 
     def _as_rect(self, x: int, y: int) -> Rect:
         return Rect(
@@ -192,8 +228,9 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
     def __init__(self, tiled_map: TiledMap, default_music_name: str) -> None:
         self._default_music = default_music_name
         self._tiled_map = tiled_map
-        self._qtree: QuadTree = None
+        self._tiles: QuadTree = None
         self._map_rect: Rect = Rect(0, 0, 0, 0)
         self._tile_sounds: Tuple[str, Vector2] = []
         self._animation_map: Dict[int, GidAnimationDescription] = {}
+        self._foreground_map: Dict[int, int] = {}
         self._game_objects: List[IGameObject] = []

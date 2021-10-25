@@ -103,7 +103,8 @@ class IInputComponent(IGameComponent):
 class IPhysicsComponent(IGameComponent):
     @abstractmethod
     def update(self, frame_delta: float, world: "IWorldMap"): ...
-
+    @abstractmethod
+    def get_location(self) -> Vector2: ...
 
 class IGraphicsComponent(IGameComponent):
     @abstractmethod
@@ -113,6 +114,8 @@ class IGraphicsComponent(IGameComponent):
 class IGameObject(INotifiableObject):
     @abstractmethod
     def has_tag(self, tag: str) -> bool: ...
+    @abstractmethod
+    def get_location(self) -> Vector2: ...
     @abstractmethod
     def process_input(self, keyboard: IKeyboardService): ...
     @abstractmethod

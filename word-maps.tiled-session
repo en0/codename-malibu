@@ -35,7 +35,7 @@
     "openFiles": [
     ],
     "project": "word-maps.tiled-project",
-    "property.type": "file",
+    "property.type": "int",
     "recentFiles": [
         "malibu/assets/world/demo.tmx"
     ],

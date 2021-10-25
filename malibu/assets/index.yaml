@@ -52,7 +52,7 @@ sprite-specs:
 
 world-map:
   - name: demo
-    music: world1
+    music: lost_in_the_meadows
     path: assets/world/demo.tmx
 
 objects:
@@ -97,17 +97,50 @@ audio:
   - name: world2
     type: MUSIC
     category: MUSIC
-    gain: 0.1
     path: assets/sounds/test.wav
 
   - name: world1
     type: MUSIC
     category: MUSIC
-    gain: 0.1
     path: assets/sounds/music1.wav
+
+  - name: lost_in_the_meadows
+    type: MUSIC
+    category: MUSIC
+    path: assets/sounds/lost_in_the_meadows.flac
 
   - name: moving-water
     type: PASSIVE
     category: AMBIENT
-    gain: 1
-    path: assets/sounds/amb_stream.flac
+    gain: 0.7
+    path: assets/sounds/stream7.ogg
+
+  - name: falling-water
+    type: PASSIVE
+    category: AMBIENT
+    path: assets/sounds/waterfall3.ogg
+
+  - name: campfire
+    type: PASSIVE
+    category: AMBIENT
+    path: assets/sounds/campfire.wav
+
+  - name: grass-footsteps
+    type: PASSIVE
+    category: AMBIENT
+    path: assets/sounds/footsteps_grass.wav
+
+  - name: dirt-footsteps
+    type: PASSIVE
+    category: AMBIENT
+    path: assets/sounds/footsteps_grass.wav
+
+  - name: stone-footsteps
+    type: PASSIVE
+    category: AMBIENT
+    path: assets/sounds/footsteps_grass.wav
+
+  - name: wood-footsteps
+    type: PASSIVE
+    category: AMBIENT
+    path: assets/sounds/footsteps_grass.wav

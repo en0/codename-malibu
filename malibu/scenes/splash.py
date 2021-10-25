@@ -9,7 +9,7 @@ from ..enum import SceneEnum, AudioEdgeTransitionEnum
 class SplashScene(SceneSandbox):
 
     def activate(self) -> None:
-        self.audio.set_music("world2", AudioEdgeTransitionEnum.NONE)
+        self.audio.set_music(None, AudioEdgeTransitionEnum.NONE)
 
     def inactivate(self) -> None:
         pass

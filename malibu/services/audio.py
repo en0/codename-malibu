@@ -37,7 +37,7 @@ class AudioService(LoggerMixin, AssetMixin, IAudioService):
     def set_music(self, name: Union[str, None], edge_transition: Optional[AudioEdgeTransitionEnum] = None) -> None:
         edge_transition = edge_transition or AudioEdgeTransitionEnum.CROSSFADE
         spec = self.asset_manager.get_audio_spec(name)
-        sound = self._get_sound(spec)
+        sound = self._get_sound(spec) if spec else None
 
         if self._current_music == sound:
             return
