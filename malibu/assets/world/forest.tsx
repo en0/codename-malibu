@@ -1405,8 +1405,7 @@
    <property name="foreground" type="bool" value="true"/>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
-   <property name="z-height" type="int" value="1"/>
+   <property name="z-height" type="int" value="2"/>
   </properties>
  </tile>
  <tile id="163">
@@ -1414,8 +1413,7 @@
    <property name="foreground" type="bool" value="true"/>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
-   <property name="z-height" type="int" value="1"/>
+   <property name="z-height" type="int" value="2"/>
   </properties>
  </tile>
  <tile id="164">
@@ -1423,8 +1421,7 @@
    <property name="foreground" type="bool" value="true"/>
    <property name="material" value=""/>
    <property name="sound" value=""/>
-   <property name="walkable" type="bool" value="false"/>
-   <property name="z-height" type="int" value="1"/>
+   <property name="z-height" type="int" value="2"/>
   </properties>
  </tile>
  <tile id="165">
