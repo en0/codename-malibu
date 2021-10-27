@@ -51,6 +51,6 @@ class BasicPhysicsComponent(GameComponentBase, IPhysicsComponent):
 
     def _set_material(self, material: str):
         self.material = material
-        self.parent.receive_message(self, GameObjectMessageEnum.SET_STANDING_ON_MATERIAL, material)
+        self.parent.receive_message(self, GameObjectMessageEnum.SET_MATERIAL, material)
         print(f"I'm walking on {material}")
 

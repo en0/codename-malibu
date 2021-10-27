@@ -1,5 +1,6 @@
 import pygame
 from typing import List, Optional, Type, Dict, Set
+from .spatial import SpatialComponent
 from .null import (
     NullInputComponent,
     NullPhysicsComponent,
@@ -7,13 +8,14 @@ from .null import (
 )
 from ..enum import GameObjectMessageEnum
 from ..typing import (
-    IGameObject,
     IGameComponent,
+    IGameObject,
     IGraphicsComponent,
     IInputComponent,
     IKeyboardService,
     INotifiableObject,
     IPhysicsComponent,
+    ISpatialComponent,
     IWorldMap,
     T_GameComponent,
 )
@@ -24,8 +26,14 @@ class GameObject(IGameObject):
     def has_tag(self, tag: str) -> bool:
         return tag in self._tags
 
-    def get_location(self) -> pygame.Vector2:
-        return self._phys.get_location()
+    def add_tag(self, tag: str) -> None:
+        self._tags.add(tag)
+
+    def remove_tag(self, tag: str) -> None:
+        try:
+            self._tags.remove(tag)
+        except KeyError:
+            pass
 
     def process_input(self, keyboard: IKeyboardService):
         self._input.process_input(keyboard)
@@ -66,9 +74,24 @@ class GameObject(IGameObject):
         self._tags = set(tags)
         self._components = components.copy()
         self._subscriptions: Dict[GameObjectMessageEnum, Set[INotifiableObject]] = dict()
-        self._input = self.get_component(IInputComponent) or NullInputComponent()
-        self._phys = self.get_component(IPhysicsComponent) or NullPhysicsComponent()
-        self._gfx = self.get_component(IGraphicsComponent) or NullGraphicsComponent()
-        for component in components:
-            component.set_parent(self)
+        self._input = self.get_component(IInputComponent)
+        self._phys = self.get_component(IPhysicsComponent)
+        self._gfx = self.get_component(IGraphicsComponent)
 
+        if self._input is None:
+            self._input = NullInputComponent()
+            self._components.append(self._input)
+
+        if self._phys is None:
+            self._phys = NullPhysicsComponent()
+            self._components.append(self._phys)
+
+        if self._gfx is None:
+            self._gfx = NullGraphicsComponent()
+            self._components.append(self._gfx)
+
+        if self.get_component(ISpatialComponent) is None:
+            self._components.append(SpatialComponent())
+
+        for component in self._components:
+            component.set_parent(self)

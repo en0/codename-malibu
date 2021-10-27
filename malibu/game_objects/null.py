@@ -1,14 +1,15 @@
 from math import inf
 from pygame import Surface, Vector2, Rect
-from typing import Union, Tuple
+from typing import Union, Tuple, Optional
 
-from ..enum import GameObjectMessageEnum
+from ..enum import GameObjectMessageEnum, DirectionEnum
 from ..typing import (
     IGameObject,
     IGraphicsComponent,
     IInputComponent,
     IKeyboardService,
     IPhysicsComponent,
+    ISpatialComponent,
     IWorldMap,
 )
 
@@ -30,3 +31,4 @@ class NullGraphicsComponent(IGraphicsComponent):
     def set_parent(self, game_object: IGameObject): ...
     def render(self, gfx: Surface): ...
     def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any): ...
+
