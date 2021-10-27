@@ -1,12 +1,21 @@
 from enum import Enum, auto
 
 
+class DirectionEnum(Enum):
+    NORTH = 1
+    SOUTH = 2
+    EAST = 3
+    WEST = 4
+
+
 class GameObjectMessageEnum(Enum):
     ALL = auto()
     SET_VELOCITY = auto()
     SET_LOCATION = auto()
     SET_BOUNDING_BOX = auto()
-    SET_STANDING_ON_MATERIAL = auto()
+    SET_FOOTPRINT = auto()
+    SET_FACING_DIR = auto()
+    SET_MATERIAL = auto()
 
 
 class SceneEnum(Enum):

@@ -25,7 +25,6 @@ class ObjectFactory(AssetMixin, IObjectFactory):
 
     def new(self, name: str) -> IGameObject:
         dat = self.asset_manager.get_object_data(name)
-        print(dat)
         return GameObject(dat.tags, [
             self._component_factory.new(n, args)
             for n, args in dat.components.items()

@@ -5,7 +5,14 @@ from typing import List, Optional, Dict, Tuple, Union, NamedTuple, Generator, Ca
 from .quad_tree import QuadTree
 from ..enum import MaterialEnum, GameObjectMessageEnum
 from ..mixins import AudioMixin, ObjectFactoryMixin
-from ..typing import IWorldMap, IGameObject, IGraphicsService, IKeyboardService
+from ..typing import IWorldMap, IGameObject, IGraphicsService, IKeyboardService, ISpatialComponent
+
+
+def get_object_sort_value(obj: IGameObject):
+    location = obj.get_component(ISpatialComponent).get_location()
+    if location is None:
+        return 0
+    return location.y
 
 
 class AnimationFrame(NamedTuple):
@@ -69,11 +76,17 @@ class TileDescription:
         self._animation_map = animation_map
         self._gids: List[int] = []
 
+class DummyObjectComponent(NamedTuple):
+
+    location: Vector2
+
+    def get_location(self) -> Vector2:
+        return self.location
 
 class DummyObject:
 
-    def get_location(self) -> Vector2:
-        return self._loc
+    def get_component(self, *arg) -> Vector2:
+        return self._component
 
     def render(self, gfx: IGraphicsService):
         gfx.blit(self._img, self._rect)
@@ -82,8 +95,7 @@ class DummyObject:
         self._img = img
         self._rect = rect
         x, y = self._rect.midbottom
-        self._loc = Vector2(x, y + zheight)
-        #print(self._rect.midbottom, self._loc)
+        self._component = DummyObjectComponent(location=Vector2(x, y + zheight))
 
 
 class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
@@ -128,7 +140,7 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
         # Sort all the game objects by the y axis to layer the forground
         objects = sorted(
             self._game_objects + foreground_tiles,
-            key=lambda x: x.get_location().y)
+            key=lambda o: get_object_sort_value(o))
         for obj in objects:
             obj.render(gfx)
 
