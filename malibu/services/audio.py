@@ -22,17 +22,7 @@ class AudioService(LoggerMixin, AssetMixin, IAudioService):
         self._music_channel = Channel(0)
         self._next_music_channel = Channel(1)
         self._sounds = {spec.name: Sound(spec.path) for spec in self.asset_manager.iter_audio_specs()}
-        self._set_focus(ServiceLocator.get_graphics().get_viewport().center)
-
-    def attach(self, obj: IGameObject) -> None:
-        obj.subscribe(GameObjectMessageEnum.SET_LOCATION, self)
-
-    def detach(self, obj: IGameObject) -> None:
-        obj.unsubscribe(GameObjectMessageEnum.SET_LOCATION, self)
-        self._set_focus(ServiceLocator.get_graphics().get_viewport().center)
-
-    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
-        self._set_focus(value)
+        self.set_focus(ServiceLocator.get_graphics().get_viewport().center)
 
     def set_music(self, name: Union[str, None], edge_transition: Optional[AudioEdgeTransitionEnum] = None) -> None:
         edge_transition = edge_transition or AudioEdgeTransitionEnum.CROSSFADE
@@ -111,7 +101,7 @@ class AudioService(LoggerMixin, AssetMixin, IAudioService):
 
         self._buffer = list()
 
-    def _set_focus(self, point):
+    def set_focus(self, point: Vector2):
         x, y, *_ = point
         self.focus_point = Vector2(x, y)
 

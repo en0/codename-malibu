@@ -5,11 +5,11 @@ from typing import List, Optional, Dict, Tuple, Union, NamedTuple, Generator, Ca
 from .quad_tree import QuadTree
 from ..enum import MaterialEnum, GameObjectMessageEnum
 from ..mixins import AudioMixin, ObjectFactoryMixin
-from ..typing import IWorldMap, IGameObject, IGraphicsService, IKeyboardService, ISpatialComponent
+from ..typing import IWorldMap, IGameObject, IGraphicsService, IKeyboardService, IDataComponent
 
 
 def get_object_sort_value(obj: IGameObject):
-    location = obj.get_component(ISpatialComponent).get_location()
+    location = obj.data.location
     if location is None:
         return 0
     return location.y
@@ -76,16 +76,15 @@ class TileDescription:
         self._animation_map = animation_map
         self._gids: List[int] = []
 
-class DummyObjectComponent(NamedTuple):
 
+class DummyObjectComponent(NamedTuple):
     location: Vector2
 
-    def get_location(self) -> Vector2:
-        return self.location
 
 class DummyObject:
 
-    def get_component(self, *arg) -> Vector2:
+    @property
+    def data(self):
         return self._component
 
     def render(self, gfx: IGraphicsService):
@@ -152,10 +151,6 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
         for obj in self._game_objects:
             obj.update(frame_delta, self)
 
-    def process_input(self, keyboard: IKeyboardService):
-        for obj in self._game_objects:
-            obj.process_input(keyboard)
-
     def is_walkable(self, rect: Rect) -> bool:
         if not self._map_rect.contains(rect):
             return False
@@ -214,7 +209,7 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
         for map_object in self._tiled_map.objects:
             game_object = self.object_factory.new(map_object.name)
             location = Vector2(map_object.x, map_object.y)
-            game_object.receive_message(self, GameObjectMessageEnum.SET_LOCATION, location)
+            game_object.data.location = location
             self._game_objects.append(game_object)
 
         self._tiles = QuadTree([x for x in all_tiles], bounding_rect=self._map_rect)

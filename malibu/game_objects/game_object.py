@@ -1,27 +1,23 @@
 import pygame
 from typing import List, Optional, Type, Dict, Set
-from .spatial import SpatialComponent
-from .null import (
-    NullInputComponent,
-    NullPhysicsComponent,
-    NullGraphicsComponent,
-)
+from .data import DataComponent
+from .graphics import DefaultGraphicsComponent
 from ..enum import GameObjectMessageEnum
 from ..typing import (
-    IGameComponent,
     IGameObject,
     IGraphicsComponent,
-    IInputComponent,
-    IKeyboardService,
     INotifiableObject,
-    IPhysicsComponent,
-    ISpatialComponent,
+    IDataComponent,
     IWorldMap,
-    T_GameComponent,
+    IBehaviorComponent,
 )
 
 
 class GameObject(IGameObject):
+
+    @property
+    def data(self) -> IDataComponent:
+        return self._data
 
     def has_tag(self, tag: str) -> bool:
         return tag in self._tags
@@ -35,11 +31,9 @@ class GameObject(IGameObject):
         except KeyError:
             pass
 
-    def process_input(self, keyboard: IKeyboardService):
-        self._input.process_input(keyboard)
-
     def update(self, frame_delta: float, world: IWorldMap):
-        self._phys.update(frame_delta, world)
+        for c in self._behaviors:
+            c.update(frame_delta, world)
 
     def render(self, gfx: pygame.Surface):
         self._gfx.render(gfx)
@@ -48,12 +42,6 @@ class GameObject(IGameObject):
         for component in self._get_matching_subs(msg_type):
             if component is not sender:
                 component.receive_message(sender, msg_type, value)
-
-    def _get_matching_subs(self, msg_type: GameObjectMessageEnum) -> Set[INotifiableObject]:
-        return (
-            self._subscriptions.get(msg_type, set()) |
-            self._subscriptions.get(GameObjectMessageEnum.ALL, set())
-        )
 
     def subscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject):
         self._subscriptions.setdefault(msg_type, set()).add(component)
@@ -64,34 +52,24 @@ class GameObject(IGameObject):
         except ValueError:
             pass
 
-    def get_component(self, component_type: Type[T_GameComponent]) -> Optional[T_GameComponent]:
-        for component in self._components:
-            if isinstance(component, component_type):
-                return component
-        return None
+    def _get_matching_subs(self, msg_type: GameObjectMessageEnum) -> Set[INotifiableObject]:
+        return (
+                self._subscriptions.get(msg_type, set()) |
+                self._subscriptions.get(GameObjectMessageEnum.ALL, set())
+        )
 
-    def __init__(self, tags: List[str], components: List[IGameComponent]) -> None:
+    def __init__(
+        self,
+        tags: List[str],
+        behaviors: List[IBehaviorComponent],
+        graphics: IGraphicsComponent = None,
+        dat: IDataComponent = None,
+    ) -> None:
         self._tags = set(tags)
-        self._components = components.copy()
+        self._data = dat or DataComponent()
+        self._behaviors = behaviors.copy()
         self._subscriptions: Dict[GameObjectMessageEnum, Set[INotifiableObject]] = dict()
-        self._input = self.get_component(IInputComponent)
-        self._phys = self.get_component(IPhysicsComponent)
-        self._gfx = self.get_component(IGraphicsComponent)
-
-        if self._input is None:
-            self._input = NullInputComponent()
-            self._components.append(self._input)
-
-        if self._phys is None:
-            self._phys = NullPhysicsComponent()
-            self._components.append(self._phys)
-
-        if self._gfx is None:
-            self._gfx = NullGraphicsComponent()
-            self._components.append(self._gfx)
-
-        if self.get_component(ISpatialComponent) is None:
-            self._components.append(SpatialComponent())
-
-        for component in self._components:
-            component.set_parent(self)
+        self._gfx = graphics or DefaultGraphicsComponent()
+        self._gfx.set_parent(self)
+        for behavior in self._behaviors:
+            behavior.set_parent(self)

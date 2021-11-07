@@ -16,13 +16,6 @@ from .enum import (
 T_GameComponent = TypeVar("T_GameComponent", bound="IGameComponent")
 
 
-class IAttachable(ABC):
-    @abstractmethod
-    def attach(self, obj: "IGameObject") -> None: ...
-    @abstractmethod
-    def detach(self, obj: "IGameObject") -> None: ...
-
-
 class IKeyboardService(ABC):
     @abstractmethod
     def is_pressed(self, key: int) -> bool: ...
@@ -91,53 +84,82 @@ class INotifiableObject(ABC):
     def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any): ...
 
 
-class IGameComponent(INotifiableObject):
+class IGameComponent(ABC):
     @abstractmethod
-    def set_parent(self, game_object: "IGameObject"): ...
-
-class ISpatialComponent(IGameComponent):
-    @abstractmethod
-    def get_location(self) -> Optional[Vector2]: ...
-    @abstractmethod
-    def get_footprint(self) -> Optional[Rect]: ...
-    @abstractmethod
-    def get_bounding_box(self) -> Optional[Rect]: ...
-    @abstractmethod
-    def get_facing_direction(self) -> Optional[DirectionEnum]: ...
-    @abstractmethod
-    def set_location(self, value: Vector2) -> None: ...
-    @abstractmethod
-    def set_footprint(self, value: Rect) -> None: ...
-    @abstractmethod
-    def set_bounding_box(self, value: Rect) -> None: ...
-    @abstractmethod
-    def set_facing_direction(self, value: DirectionEnum) -> None: ...
-
-class IInputComponent(IGameComponent):
-    @abstractmethod
-    def process_input(self, keyboard: IKeyboardService): ...
+    def set_parent(self, game_object: "IGameObject") -> None: ...
 
 
-class IPhysicsComponent(IGameComponent):
+class IBehaviorComponent(IGameComponent):
     @abstractmethod
-    def update(self, frame_delta: float, world: "IWorldMap"): ...
-    @abstractmethod
-    def get_location(self) -> Vector2: ...
+    def update(self, frame_delta: float, world: "IWorldMap") -> None: ...
+
 
 class IGraphicsComponent(IGameComponent):
     @abstractmethod
     def render(self, gfx: Surface): ...
 
 
+class IDataComponent():
+
+    @property
+    @abstractmethod
+    def location(self) -> Optional[Vector2]: ...
+
+    @location.setter
+    @abstractmethod
+    def location(self, value: Vector2) -> None: ...
+
+    @property
+    @abstractmethod
+    def footprint(self) -> Optional[Rect]: ...
+
+    @footprint.setter
+    @abstractmethod
+    def footprint(self, value: Rect) -> None: ...
+
+    @property
+    @abstractmethod
+    def bounding_box(self) -> Optional[Rect]: ...
+
+    @bounding_box.setter
+    @abstractmethod
+    def bounding_box(self, value: Rect) -> None: ...
+
+    @property
+    @abstractmethod
+    def facing_direction(self) -> Optional[DirectionEnum]: ...
+
+    @facing_direction.setter
+    @abstractmethod
+    def facing_direction(self, value: DirectionEnum) -> None: ...
+
+    @property
+    @abstractmethod
+    def sprite(self) -> Optional[Surface]: ...
+
+    @sprite.setter
+    @abstractmethod
+    def sprite(self) -> Optional[Surface]: ...
+
+    @property
+    @abstractmethod
+    def transform(self) -> Vector2: ...
+
+    @transform.setter
+    @abstractmethod
+    def transform(self, value: Vector2) -> None: ...
+
+
 class IGameObject(INotifiableObject):
+    @property
+    @abstractmethod
+    def data(self) -> IDataComponent: ...
     @abstractmethod
     def has_tag(self, tag: str) -> bool: ...
     @abstractmethod
     def add_tag(self, tag: str) -> None: ...
     @abstractmethod
     def remove_tag(self, tag: str) -> None: ...
-    @abstractmethod
-    def process_input(self, keyboard: IKeyboardService): ...
     @abstractmethod
     def update(self, frame_delta: float, world: "IWorldMap"): ...
     @abstractmethod
@@ -146,8 +168,6 @@ class IGameObject(INotifiableObject):
     def subscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject): ...
     @abstractmethod
     def unsubscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject): ...
-    @abstractmethod
-    def get_component(self, component_type: Type[T_GameComponent]) -> Optional[T_GameComponent]: ...
 
 
 class IObjectFactory(ABC):
@@ -160,8 +180,6 @@ class IWorldMap(ABC):
     def render(self, gfx: "IGraphicsService") -> None: ...
     @abstractmethod
     def update(self, frame_delta: float) -> None: ...
-    @abstractmethod
-    def process_input(self, keyboard: IKeyboardService): ...
     @abstractmethod
     def is_walkable(self, rect: Rect) -> bool: ...
     @abstractmethod
@@ -183,16 +201,18 @@ class IWorldFactory(ABC):
     def build_world(self, name: str) -> IWorldMap: ...
 
 
-class IAudioService(INotifiableObject, IAttachable):
+class IAudioService(ABC):
     @abstractmethod
     def set_music(self, name: Union[str, None], edge_transition: Optional[AudioEdgeTransitionEnum] = None) -> None: ...
     @abstractmethod
     def enqueue(self, name: str, point: Vector2) -> None: ...
     @abstractmethod
     def update(self, origin: Vector2) -> None: ...
+    @abstractmethod
+    def set_focus(self, point: Vector2) -> None: ...
 
 
-class IGraphicsService(IAttachable):
+class IGraphicsService(ABC):
     @abstractmethod
     def blit(
         self,

@@ -2,6 +2,10 @@ Tags:
   - player
 
 Components:
-  TestGraphicsComponent:
-  SimpleKBInputComponent:
-  BasicPhysicsComponent:
+  StaticSpriteComponent: null
+  SimpleKBInputComponent: null
+  BasicPhysicsComponent: null
+  CameraComponent: null
+
+Renderer:
+  DefaultRenderComponent: null

@@ -1,28 +1,23 @@
-import pygame
+from pygame import Rect
+from pygame import Surface
 
-from .base import GameComponentBase, SubMap_T
-from ..enum import GameObjectMessageEnum
-from ..typing import IGraphicsComponent, IWorldMap, IGraphicsService
+from ..typing import IGraphicsComponent, IWorldMap, IGameObject, IBehaviorComponent
 
 
-class TestGraphicsComponent(GameComponentBase, IGraphicsComponent):
+class DefaultGraphicsComponent(IGraphicsComponent):
 
-    subscriptions = [
-        GameObjectMessageEnum.SET_LOCATION
-    ]
+    parent: IGameObject
 
-    def on_set_location(self, sender: object, value: pygame.Vector2):
-        self.rect.center = value
+    def get_location_rect(self) -> Rect:
+        bb = self.parent.data.bounding_box.copy()
+        fp = self.parent.data.footprint.copy()
+        fp.center = self.parent.data.location
+        bb.midbottom = fp.midbottom
+        return bb
 
-    def render(self, gfx: IGraphicsService):
-        surface = gfx.get_hw_surface()
-        body_rect = pygame.Rect(0, 0, 45, 120)
-        foot_rect = pygame.Rect(0, 0, 45, 20)
-        foot_rect.center = gfx.compute_absolute(self.rect.center)
-        body_rect.midbottom = foot_rect.midbottom
+    def set_parent(self, game_object: IGameObject):
+        self.parent = game_object
 
-        pygame.draw.rect(gfx.get_hw_surface(), (0, 0, 255), body_rect)
-        pygame.draw.rect(gfx.get_hw_surface(), (255, 0, 0), foot_rect, width=2)
-
-    def __init__(self):
-        self.rect = pygame.Rect(0, 0, 10, 10)
+    def render(self, gfx: Surface):
+        if self.parent.data.sprite and self.parent.data.location:
+            gfx.blit(self.parent.data.sprite, self.get_location_rect())

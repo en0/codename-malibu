@@ -1,12 +1,11 @@
 from pygame import Surface, display, Rect, Vector2
 from typing import Union, Tuple, Optional
 
-from ..enum import GameObjectMessageEnum
 from ..const import SCREEN_SIZE, VIDEO_FLAGS
-from ..typing import IGraphicsService, IGameObject, INotifiableObject
+from ..typing import IGraphicsService
 
 
-class GraphicsService(INotifiableObject, IGraphicsService):
+class GraphicsService(IGraphicsService):
 
     hw_surface: Surface
     world_boundary: Surface
@@ -24,15 +23,6 @@ class GraphicsService(INotifiableObject, IGraphicsService):
 
     def fill(self, color: Tuple[int, int, int], rect: Optional[Rect] = None) -> None:
         self.hw_surface.fill(color, rect)
-
-    def attach(self, obj: IGameObject) -> None:
-        obj.subscribe(GameObjectMessageEnum.SET_LOCATION, self)
-
-    def detach(self, obj: IGameObject) -> None:
-        obj.unsubscribe(GameObjectMessageEnum.SET_LOCATION, self)
-
-    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
-        self._set_focus(value)
 
     def get_world_boundary(self) -> Rect:
         return self.world_boundary.copy()

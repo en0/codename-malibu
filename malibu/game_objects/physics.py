@@ -1,38 +1,25 @@
 import pygame
 
-from .base import GameComponentBase, SubMap_T
 from ..services import ServiceLocator
-from ..enum import GameObjectMessageEnum, MaterialEnum
-from ..typing import IPhysicsComponent, IWorldMap
+from ..typing import IBehaviorComponent, IWorldMap, IGameObject
 
 
-class BasicPhysicsComponent(GameComponentBase, IPhysicsComponent):
+class BasicPhysicsComponent(IBehaviorComponent):
 
+    parent: IGameObject = None
     move_speed = 150.0
     velocity: pygame.Vector2 = pygame.Vector2(0)
-    location: pygame.Vector2 = pygame.Vector2(100.0, 100.0)
     material: str = None
-
-    subscriptions = [
-        GameObjectMessageEnum.SET_VELOCITY,
-        GameObjectMessageEnum.SET_LOCATION,
-    ]
-
-    def on_set_velocity(self, sender: object, value: pygame.Vector2):
-        self.velocity = value
-
-    def on_set_location(self, sender: object, value: pygame.Vector2):
-        self._set_location(value)
 
     def update(self, frame_delta: float, world: IWorldMap):
 
         moving = False
-        rect = pygame.Rect(0.0, 0.0, 45, 20)
-        new_location = self.velocity * self.move_speed * frame_delta + self.location
+        rect = self.parent.data.footprint.copy()
+        new_location = self.parent.data.transform * self.move_speed * frame_delta + self.parent.data.location
         rect.center = new_location
         if world.is_walkable(rect):
             self._set_location(new_location)
-            moving = self.velocity != (0, 0)
+            moving = self.parent.data.transform != (0, 0)
 
         material = world.get_material(rect)
         if material != self.material:
@@ -40,17 +27,14 @@ class BasicPhysicsComponent(GameComponentBase, IPhysicsComponent):
 
         if moving:
             # TODO: Material?
-            ServiceLocator.get_audio().enqueue("grass-footsteps", self.location)
+            ServiceLocator.get_audio().enqueue("grass-footsteps", self.parent.data.location)
 
-    def get_location(self) -> pygame.Vector2:
-        return self.location
+    def set_parent(self, game_object: IGameObject):
+        self.parent = game_object
 
     def _set_location(self, location: pygame.Vector2):
-        self.location = pygame.Vector2(location)
-        self.parent.receive_message(self, GameObjectMessageEnum.SET_LOCATION, location)
+        self.parent.data.location = pygame.Vector2(location)
 
     def _set_material(self, material: str):
         self.material = material
-        self.parent.receive_message(self, GameObjectMessageEnum.SET_MATERIAL, material)
         print(f"I'm walking on {material}")
-
