@@ -2,7 +2,7 @@ import pygame
 from collections import deque
 
 from ..services import ServiceLocator
-from ..enum import GameObjectMessageEnum
+from ..enum import GameObjectMessageEnum, StateEnum
 from ..typing import IBehaviorComponent, IWorldMap, IGameObject
 
 
@@ -33,25 +33,23 @@ class SimpleKBInputComponent(IBehaviorComponent):
         if keyboard.is_released(pygame.K_d):
             self.md.remove("RIGHT")
 
+        # TODO: Input component has no business setting a velocity. Likely, it should
+        # simply broadcast or set a facing direction and toggle a moving flag.
         if len(self.md):
             if self.md[0] == "UP":
                 self.set_velocity(pygame.Vector2(0, -1))
-                self.parent.data.transform = pygame.Vector2(0, -1)
             elif self.md[0] == "DOWN":
                 self.set_velocity(pygame.Vector2(0, 1))
-                self.parent.data.transform = pygame.Vector2(0, 1)
             elif self.md[0] == "LEFT":
                 self.set_velocity(pygame.Vector2(-1, 0))
-                self.parent.data.transform = pygame.Vector2(-1, 0)
             elif self.md[0] == "RIGHT":
                 self.set_velocity(pygame.Vector2(1, 0))
-                self.parent.data.transform = pygame.Vector2(1, 0)
         else:
             self.set_velocity(pygame.Vector2(0, 0))
-            self.parent.data.transform = pygame.Vector2(0, 0)
+
 
     def set_velocity(self, vector: pygame.Vector2):
-        self.parent.receive_message(self, GameObjectMessageEnum.SET_VELOCITY, vector)
+        self.parent.set_state(StateEnum.TARGET_VECTOR, vector)
 
     def __init__(self):
         self.md = deque()

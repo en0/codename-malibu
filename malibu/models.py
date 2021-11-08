@@ -1,3 +1,4 @@
+from pygame import Surface, Vector2
 from dataclasses import dataclass, replace
 from typing import Dict, Optional, Tuple, List, Union
 

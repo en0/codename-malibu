@@ -10,13 +10,19 @@ class DirectionEnum(Enum):
 
 class GameObjectMessageEnum(Enum):
     ALL = auto()
-    SET_VELOCITY = auto()
-    SET_LOCATION = auto()
-    SET_BOUNDING_BOX = auto()
-    SET_FOOTPRINT = auto()
-    SET_FACING_DIR = auto()
-    SET_MATERIAL = auto()
+    STATE_CHANGED = auto()
+    ADD_TAG = auto()
+    REMOVE_TAG = auto()
 
+
+class StateEnum(Enum):
+    WORLD_LOCATION = auto()
+    SPRITE_LOCATION = auto()
+    SPRITE = auto()
+    BOUNDING_BOX = auto()
+    FOOTPRINT = auto()
+    TARGET_VECTOR = auto()
+    UPON_MATERIAL = auto()
 
 class SceneEnum(Enum):
     SPLASH = auto()

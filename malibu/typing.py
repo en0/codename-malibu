@@ -10,6 +10,7 @@ from .enum import (
     GameObjectMessageEnum,
     MaterialEnum,
     DirectionEnum,
+    StateEnum,
 )
 
 
@@ -99,61 +100,11 @@ class IGraphicsComponent(IGameComponent):
     def render(self, gfx: Surface): ...
 
 
-class IDataComponent():
-
-    @property
+class IGameObject(ABC):
     @abstractmethod
-    def location(self) -> Optional[Vector2]: ...
-
-    @location.setter
+    def get_state(self, key: StateEnum) -> Optional[any]: ...
     @abstractmethod
-    def location(self, value: Vector2) -> None: ...
-
-    @property
-    @abstractmethod
-    def footprint(self) -> Optional[Rect]: ...
-
-    @footprint.setter
-    @abstractmethod
-    def footprint(self, value: Rect) -> None: ...
-
-    @property
-    @abstractmethod
-    def bounding_box(self) -> Optional[Rect]: ...
-
-    @bounding_box.setter
-    @abstractmethod
-    def bounding_box(self, value: Rect) -> None: ...
-
-    @property
-    @abstractmethod
-    def facing_direction(self) -> Optional[DirectionEnum]: ...
-
-    @facing_direction.setter
-    @abstractmethod
-    def facing_direction(self, value: DirectionEnum) -> None: ...
-
-    @property
-    @abstractmethod
-    def sprite(self) -> Optional[Surface]: ...
-
-    @sprite.setter
-    @abstractmethod
-    def sprite(self) -> Optional[Surface]: ...
-
-    @property
-    @abstractmethod
-    def transform(self) -> Vector2: ...
-
-    @transform.setter
-    @abstractmethod
-    def transform(self, value: Vector2) -> None: ...
-
-
-class IGameObject(INotifiableObject):
-    @property
-    @abstractmethod
-    def data(self) -> IDataComponent: ...
+    def set_state(self, key: StateEnum, value: any) -> None: ...
     @abstractmethod
     def has_tag(self, tag: str) -> bool: ...
     @abstractmethod
@@ -168,6 +119,8 @@ class IGameObject(INotifiableObject):
     def subscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject): ...
     @abstractmethod
     def unsubscribe(self, msg_type: GameObjectMessageEnum, component: INotifiableObject): ...
+    @abstractmethod
+    def notify(self, sender: object, msg_type: GameObjectMessageEnum, value: any): ...
 
 
 class IObjectFactory(ABC):

@@ -6,6 +6,3 @@ Components:
   SimpleKBInputComponent: null
   BasicPhysicsComponent: null
   CameraComponent: null
-
-Renderer:
-  DefaultRenderComponent: null

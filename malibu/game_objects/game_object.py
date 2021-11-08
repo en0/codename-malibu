@@ -1,13 +1,11 @@
 import pygame
 from typing import List, Optional, Type, Dict, Set
-from .data import DataComponent
 from .graphics import DefaultGraphicsComponent
-from ..enum import GameObjectMessageEnum
+from ..enum import GameObjectMessageEnum, StateEnum
 from ..typing import (
     IGameObject,
     IGraphicsComponent,
     INotifiableObject,
-    IDataComponent,
     IWorldMap,
     IBehaviorComponent,
 )
@@ -15,19 +13,24 @@ from ..typing import (
 
 class GameObject(IGameObject):
 
-    @property
-    def data(self) -> IDataComponent:
-        return self._data
+    def get_state(self, key: StateEnum) -> Optional[any]:
+        return self._data.get(key)
+
+    def set_state(self, key: StateEnum, value: any) -> None:
+        self._data[key] = value
+        self.notify(self, GameObjectMessageEnum.STATE_CHANGED, key)
 
     def has_tag(self, tag: str) -> bool:
         return tag in self._tags
 
     def add_tag(self, tag: str) -> None:
         self._tags.add(tag)
+        self.notify(self, GameObjectMessageEnum.ADD_TAG, tag)
 
     def remove_tag(self, tag: str) -> None:
         try:
             self._tags.remove(tag)
+            self.notify(self, GameObjectMessageEnum.REMOVE_TAG, tag)
         except KeyError:
             pass
 
@@ -38,7 +41,7 @@ class GameObject(IGameObject):
     def render(self, gfx: pygame.Surface):
         self._gfx.render(gfx)
 
-    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
+    def notify(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
         for component in self._get_matching_subs(msg_type):
             if component is not sender:
                 component.receive_message(sender, msg_type, value)
@@ -63,10 +66,9 @@ class GameObject(IGameObject):
         tags: List[str],
         behaviors: List[IBehaviorComponent],
         graphics: IGraphicsComponent = None,
-        dat: IDataComponent = None,
     ) -> None:
         self._tags = set(tags)
-        self._data = dat or DataComponent()
+        self._data: Dict[StateEnum, any] = {}
         self._behaviors = behaviors.copy()
         self._subscriptions: Dict[GameObjectMessageEnum, Set[INotifiableObject]] = dict()
         self._gfx = graphics or DefaultGraphicsComponent()

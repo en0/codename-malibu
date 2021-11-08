@@ -3,13 +3,13 @@ from pytmx import TiledMap, TiledTileLayer
 from typing import List, Optional, Dict, Tuple, Union, NamedTuple, Generator, Callable, Iterable, Set
 
 from .quad_tree import QuadTree
-from ..enum import MaterialEnum, GameObjectMessageEnum
+from ..enum import MaterialEnum, StateEnum
 from ..mixins import AudioMixin, ObjectFactoryMixin
-from ..typing import IWorldMap, IGameObject, IGraphicsService, IKeyboardService, IDataComponent
+from ..typing import IWorldMap, IGameObject, IGraphicsService
 
 
 def get_object_sort_value(obj: IGameObject):
-    location = obj.data.location
+    location = obj.get_state(StateEnum.WORLD_LOCATION)
     if location is None:
         return 0
     return location.y
@@ -77,15 +77,12 @@ class TileDescription:
         self._gids: List[int] = []
 
 
-class DummyObjectComponent(NamedTuple):
-    location: Vector2
-
-
 class DummyObject:
 
-    @property
-    def data(self):
-        return self._component
+    def get_state(self, key):
+        if key == StateEnum.WORLD_LOCATION:
+            return self._location
+        return None
 
     def render(self, gfx: IGraphicsService):
         gfx.blit(self._img, self._rect)
@@ -94,7 +91,7 @@ class DummyObject:
         self._img = img
         self._rect = rect
         x, y = self._rect.midbottom
-        self._component = DummyObjectComponent(location=Vector2(x, y + zheight))
+        self._location = Vector2(x, y + zheight)
 
 
 class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
@@ -209,7 +206,7 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
         for map_object in self._tiled_map.objects:
             game_object = self.object_factory.new(map_object.name)
             location = Vector2(map_object.x, map_object.y)
-            game_object.data.location = location
+            game_object.set_state(StateEnum.WORLD_LOCATION, location)
             self._game_objects.append(game_object)
 
         self._tiles = QuadTree([x for x in all_tiles], bounding_rect=self._map_rect)

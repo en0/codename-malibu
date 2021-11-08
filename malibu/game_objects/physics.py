@@ -2,6 +2,7 @@ import pygame
 
 from ..services import ServiceLocator
 from ..typing import IBehaviorComponent, IWorldMap, IGameObject
+from ..enum import StateEnum
 
 
 class BasicPhysicsComponent(IBehaviorComponent):
@@ -13,28 +14,26 @@ class BasicPhysicsComponent(IBehaviorComponent):
 
     def update(self, frame_delta: float, world: IWorldMap):
 
-        moving = False
-        rect = self.parent.data.footprint.copy()
-        new_location = self.parent.data.transform * self.move_speed * frame_delta + self.parent.data.location
-        rect.center = new_location
-        if world.is_walkable(rect):
-            self._set_location(new_location)
-            moving = self.parent.data.transform != (0, 0)
+        vector: pygame.Vector2 = self.parent.get_state(StateEnum.TARGET_VECTOR)
+        if vector == (0, 0):
+            return
 
-        material = world.get_material(rect)
+        new_fp: pygame.Rect = self.parent.get_state(StateEnum.FOOTPRINT).copy()
+        new_fp.center = vector * self.move_speed * frame_delta + pygame.Vector2(new_fp.center)
+        new_location = pygame.Vector2(new_fp.center)
+        if world.is_walkable(new_fp):
+            self.parent.set_state(StateEnum.WORLD_LOCATION, new_location)
+
+        material = world.get_material(new_fp)
         if material != self.material:
-            self._set_material(material)
+            self.material = material
+            self.parent.set_state(StateEnum.UPON_MATERIAL, material)
 
-        if moving:
-            # TODO: Material?
-            ServiceLocator.get_audio().enqueue("grass-footsteps", self.parent.data.location)
+        # TODO: Material?
+        ServiceLocator.get_audio().enqueue("grass-footsteps", new_location)
 
     def set_parent(self, game_object: IGameObject):
         self.parent = game_object
 
     def _set_location(self, location: pygame.Vector2):
-        self.parent.data.location = pygame.Vector2(location)
-
-    def _set_material(self, material: str):
-        self.material = material
-        print(f"I'm walking on {material}")
+        self.parent.set_state(StateEnum.WORLD_LOCATION, location)

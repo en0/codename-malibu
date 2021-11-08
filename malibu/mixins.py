@@ -1,14 +1,19 @@
-from pygame import Surface
+from typing import List, Dict, Callable
 from logging import Logger
+from .enum import GameObjectMessageEnum
 from .services.locator import ServiceLocator
 from .typing import (
     IAssetService,
-    IKeyboardService,
     IAudioService,
-    IObjectFactory,
+    IGameObject,
     IGameService,
     IGraphicsService,
+    IKeyboardService,
+    INotifiableObject,
+    IObjectFactory,
 )
+
+_SubMap_T = Dict[GameObjectMessageEnum, Callable[[object, any], None]]
 
 
 class AssetMixin:
@@ -57,3 +62,18 @@ class ObjectFactoryMixin:
     @property
     def object_factory(self) -> IObjectFactory:
         return ServiceLocator.get_object_factory()
+
+
+class NotifiableMixin(INotifiableObject):
+
+    _sub_map: _SubMap_T = None
+
+    def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any):
+        self._sub_map[msg_type](sender, value)
+
+    def subscribe(self, container: IGameObject, subs: List[GameObjectMessageEnum]):
+        self._sub_map = {}
+        for sub in subs:
+            container.subscribe(sub, self)
+            fn_name = f"on_{sub.name.lower()}"
+            self._sub_map[sub] = getattr(self, fn_name)
