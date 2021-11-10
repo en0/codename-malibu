@@ -15,22 +15,30 @@ behavior-components:
         bounding-box: 48,6,48,90
         frames:
           - index: 9
+          - index: 10
           - index: 11
+          - index: 10
       - name: WALK_SOUTH
         bounding-box: 48,6,48,90
         frames:
           - index: 0
+          - index: 1
           - index: 2
+          - index: 1
       - name: WALK_EAST
         bounding-box: 25,33,90,54
         frames:
           - index: 3
+          - index: 4
           - index: 5
+          - index: 4
       - name: WALK_WEST
         bounding-box: 25,33,90,54
         frames:
           - index: 6
+          - index: 7
           - index: 8
+          - index: 7
       - name: IDLE_NORTH
         bounding-box: 48,6,48,90
         frames:
@@ -49,7 +57,7 @@ behavior-components:
           - index: 7
     kwargs:
       sprite-sheet: brown-cow
-      frame-delay: 200
+      frame-delay: 130
       footprint: 50,60,44,30
       repeat: -1
 
