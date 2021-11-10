@@ -12,7 +12,7 @@ def get_object_sort_value(obj: IGameObject):
     location = obj.get_state(StateEnum.WORLD_LOCATION)
     if location is None:
         return 0
-    return location.y
+    return location[1]
 
 
 class AnimationFrame(NamedTuple):
@@ -141,6 +141,8 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
             obj.render(gfx)
 
     def update(self, frame_delta: float) -> None:
+        for obj in self._game_objects:
+            obj.process_input(frame_delta, self)
         for name, point in self._tile_sounds:
             self.audio.enqueue(name, point)
         for desc in self._animation_map.values():

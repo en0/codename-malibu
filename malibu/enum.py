@@ -14,6 +14,13 @@ class GameObjectMessageEnum(Enum):
     ADD_TAG = auto()
     REMOVE_TAG = auto()
 
+    MOVE_UP = auto()
+    MOVE_DOWN = auto()
+    MOVE_LEFT = auto()
+    MOVE_RIGHT = auto()
+
+    SET_ANIMATION = auto()
+
 
 class StateEnum(Enum):
     WORLD_LOCATION = auto()
@@ -23,6 +30,9 @@ class StateEnum(Enum):
     FOOTPRINT = auto()
     TARGET_VECTOR = auto()
     UPON_MATERIAL = auto()
+    HEADING = auto()
+    VELOCITY = auto()
+
 
 class SceneEnum(Enum):
     SPLASH = auto()

@@ -1,6 +1,5 @@
 import pygame
 from typing import List, Optional, Type, Dict, Set
-from .graphics import DefaultGraphicsComponent
 from ..enum import GameObjectMessageEnum, StateEnum
 from ..typing import (
     IGameObject,
@@ -8,6 +7,7 @@ from ..typing import (
     INotifiableObject,
     IWorldMap,
     IBehaviorComponent,
+    IInputComponent,
 )
 
 
@@ -33,6 +33,9 @@ class GameObject(IGameObject):
             self.notify(self, GameObjectMessageEnum.REMOVE_TAG, tag)
         except KeyError:
             pass
+
+    def process_input(self, frame_delta: float, world: IWorldMap):
+        self._input.update(frame_delta, world)
 
     def update(self, frame_delta: float, world: IWorldMap):
         for c in self._behaviors:
@@ -64,14 +67,18 @@ class GameObject(IGameObject):
     def __init__(
         self,
         tags: List[str],
-        behaviors: List[IBehaviorComponent],
-        graphics: IGraphicsComponent = None,
+        input_component: IInputComponent,
+        graphics_component: IGraphicsComponent,
+        behavior_components: List[IBehaviorComponent],
     ) -> None:
         self._tags = set(tags)
         self._data: Dict[StateEnum, any] = {}
-        self._behaviors = behaviors.copy()
         self._subscriptions: Dict[GameObjectMessageEnum, Set[INotifiableObject]] = dict()
-        self._gfx = graphics or DefaultGraphicsComponent()
+        self._input = input_component
+        self._gfx = graphics_component
+        self._behaviors = behavior_components.copy()
+
+        self._input.set_parent(self)
         self._gfx.set_parent(self)
         for behavior in self._behaviors:
             behavior.set_parent(self)

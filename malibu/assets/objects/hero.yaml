@@ -1,8 +1,62 @@
-Tags:
+tags:
   - player
 
-Components:
-  StaticSpriteComponent: null
-  SimpleKBInputComponent: null
-  BasicPhysicsComponent: null
-  CameraComponent: null
+input-component:
+  # This could take args to set up the keymap.
+  # It could be done such that the map defined
+  # the events and state changes.
+  class: KBInput
+
+behavior-components:
+  - class: BufferedMovement
+  - class: AnimatedSprite
+    args:
+      - name: WALK_NORTH
+        bounding-box: 48,6,48,90
+        frames:
+          - index: 9
+          - index: 11
+      - name: WALK_SOUTH
+        bounding-box: 48,6,48,90
+        frames:
+          - index: 0
+          - index: 2
+      - name: WALK_EAST
+        bounding-box: 25,33,90,54
+        frames:
+          - index: 3
+          - index: 5
+      - name: WALK_WEST
+        bounding-box: 25,33,90,54
+        frames:
+          - index: 6
+          - index: 8
+      - name: IDLE_NORTH
+        bounding-box: 48,6,48,90
+        frames:
+          - index: 10
+      - name: IDLE_SOUTH
+        bounding-box: 48,6,48,90
+        frames:
+          - index: 1
+      - name: IDLE_EAST
+        bounding-box: 25,33,90,54
+        frames:
+          - index: 4
+      - name: IDLE_WEST
+        bounding-box: 25,33,90,54
+        frames:
+          - index: 7
+    kwargs:
+      sprite-sheet: brown-cow
+      frame-delay: 200
+      footprint: 50,60,44,30
+      repeat: -1
+
+  - class: WalkingPhysics
+  - class: AttachedCamera
+
+graphics-component:
+  class: RenderSprite
+  kwargs:
+    debug: True

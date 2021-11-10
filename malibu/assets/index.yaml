@@ -1,55 +1,3 @@
-sprite-sheets:
-  - name: base-boi-walk
-    path: assets/sprites/sheets/base-boi.png
-    tile-width: 32
-    tile-height: 32
-  - name: campfire
-    path: assets/sprites/sheets/campfire.png
-    color-key: 255, 0, 255
-    tile-width: 16
-    tile-height: 32
-  - name: fire
-    path: assets/sprites/sheets/fire.png
-    color-key: 255, 0, 255
-    tile-width: 16
-    tile-height: 32
-  - name: chest
-    path: assets/sprites/sheets/chest.png
-    color-key: 255, 0, 255
-    tile-width: 16
-    tile-height: 32
-  - name: barrel
-    path: assets/sprites/sheets/barrel.png
-    color-key: 255, 0, 255
-    tile-width: 16
-    tile-height: 32
-  - name: lantern
-    path: assets/sprites/sheets/lantern.png
-    color-key: 255, 0, 255
-    tile-width: 16
-    tile-height: 32
-  - name: door
-    path: assets/sprites/sheets/door.png
-    color-key: 255, 0, 255
-    tile-width: 16
-    tile-height: 32
-
-sprite-specs:
-  - name: base-boi
-    path: assets/sprites/base-boi.yaml
-  - name: campfire
-    path: assets/sprites/campfire.yaml
-  - name: fire
-    path: assets/sprites/fire.yaml
-  - name: chest
-    path: assets/sprites/chest.yaml
-  - name: barrel
-    path: assets/sprites/barrel.yaml
-  - name: lantern
-    path: assets/sprites/lantern.yaml
-  - name: door
-    path: assets/sprites/door.yaml
-
 world-map:
   - name: demo
     music: lost_in_the_meadows
@@ -58,6 +6,11 @@ world-map:
 objects:
   - name: hero
     path: assets/objects/hero.yaml
+
+sprite-sheets:
+  - name: brown-cow
+    path: assets/objects/sheets/cow.png
+    tile-size: 144,96
 
 audio:
   - name: step
