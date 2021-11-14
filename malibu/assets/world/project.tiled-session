@@ -8,11 +8,11 @@
     ],
     "fileStates": {
         "demo.tmx": {
-            "scale": 0.3421,
-            "selectedLayer": 1,
+            "scale": 1.4794,
+            "selectedLayer": 8,
             "viewCenter": {
-                "x": 78.92429114294066,
-                "y": 353.6977491961415
+                "x": 454.91415438691365,
+                "y": 500.8787346221442
             }
         },
         "forest.tsx": {

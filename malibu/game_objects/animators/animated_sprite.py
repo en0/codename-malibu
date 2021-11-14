@@ -1,33 +1,24 @@
-from pygame import Vector2
-
-from .component_base import ComponentBase
-from ..lib import RepeatingAnimation, NullAnimation
-from ..enum import StateEnum, GameObjectMessageEnum
-from ..typing import IBehaviorComponent, IWorldMap
-from ..models import AnimationSpec
-from ..mixins import AssetMixin
+from ..component_base import ComponentBase
+from ...lib import RepeatingAnimation, NullAnimation
+from ...enum import StateEnum
+from ...typing import IWorldMap, IAnimationHandler, IBehaviorComponent
+from ...models import AnimationSpec
+from ...mixins import AssetMixin
 
 
-class AnimatedSprite(ComponentBase, AssetMixin, IBehaviorComponent):
+class AnimatedSprite(ComponentBase, AssetMixin, IBehaviorComponent, IAnimationHandler):
 
-    subscriptions = [
-        GameObjectMessageEnum.STATE_CHANGED,
-        GameObjectMessageEnum.SET_ANIMATION
-    ]
+    def set_animation(self, value: str):
+        if self.animation.name != value:
+            self.animation = RepeatingAnimation(self._animation_specs[value], self._sprite_sheets)
+
+    def push_animation(self, value: str):
+        raise NotImplementedError()
 
     def update(self, frame_delta: float, world: IWorldMap) -> None:
         self.animation.update(frame_delta)
         self.set_state(StateEnum.SPRITE, self.animation.sprite)
-        self._run_tasks()
-
-    def on_set_animation(self, sender: object, value: str):
-        if self.animation.name != value:
-            self._set_animation(value)
-
-    def on_state_changed(self, sender: object, key: StateEnum):
-        if key != StateEnum.WORLD_LOCATION:
-            return
-        self._defer_task(self._adjust_location)
+        self._adjust_location()
 
     def _adjust_location(self):
 
@@ -57,19 +48,6 @@ class AnimatedSprite(ComponentBase, AssetMixin, IBehaviorComponent):
         self.parent.set_state(StateEnum.FOOTPRINT, footprint)
         self.parent.set_state(StateEnum.BOUNDING_BOX, bounding_box)
         self.parent.set_state(StateEnum.SPRITE_LOCATION, sprite_location)
-
-    def _defer_task(self, task):
-        self._tasks.add(task)
-
-    def _run_tasks(self):
-        for task in self._tasks:
-            task()
-        self._tasks = set()
-
-    def _set_animation(self, value):
-        # TODO: This needs to select the correct animation type (repeating or not-repeating)
-        self.animation = RepeatingAnimation(self._animation_specs[value], self._sprite_sheets)
-        self._defer_task(self._adjust_location)
 
     def __init__(self, *animation_map, **defaults):
         self._animation_specs = {}

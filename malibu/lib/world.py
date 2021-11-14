@@ -113,7 +113,6 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
 
     def render(self, gfx: IGraphicsService) -> None:
 
-
         # We need to pull out the "foreground" tiles. These need to be
         # Sorted into the game object list so the world is layered correctly
         # This will put the player behind or infront of things like trees and bushes
@@ -212,6 +211,9 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
             self._game_objects.append(game_object)
 
         self._tiles = QuadTree([x for x in all_tiles], bounding_rect=self._map_rect)
+
+        for obj in self._game_objects:
+            obj.startup(self)
 
     def _as_rect(self, x: int, y: int) -> Rect:
         return Rect(

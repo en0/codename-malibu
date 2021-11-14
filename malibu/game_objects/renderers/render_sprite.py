@@ -1,8 +1,8 @@
-from pygame import Surface, draw
+from pygame import draw
 
-from .component_base import ComponentBase
-from ..typing import IGraphicsComponent, IGraphicsService
-from ..enum import StateEnum
+from ..component_base import ComponentBase
+from ...typing import IGraphicsComponent, IGraphicsService
+from ...enum import StateEnum
 
 
 class RenderSprite(ComponentBase, IGraphicsComponent):

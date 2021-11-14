@@ -1,7 +1,7 @@
-from .component_base import ComponentBase
-from ..typing import IWorldMap, IBehaviorComponent
-from ..mixins import GraphicMixin, AudioMixin
-from ..enum import StateEnum
+from ..component_base import ComponentBase
+from ...typing import IWorldMap, IBehaviorComponent
+from ...mixins import GraphicMixin, AudioMixin
+from ...enum import StateEnum
 
 
 class AttachedCamera(ComponentBase, GraphicMixin, AudioMixin, IBehaviorComponent):

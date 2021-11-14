@@ -28,11 +28,12 @@ class ObjectFactory(AssetMixin, IObjectFactory):
         gfx = self._component_factory.new(dat.graphics_component)
         ai = self._component_factory.new(dat.input_component)
         behavior = [self._component_factory.new(spec) for spec in dat.behavior_components]
-        return GameObject(
+        obj = GameObject(
             tags=dat.tags,
             input_component=ai,
             graphics_component=gfx,
             behavior_components=behavior)
+        return obj
 
     def __init__(self):
         self._component_factory = ComponentFactory()

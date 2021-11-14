@@ -1,6 +1,6 @@
-from typing import List, Any, Optional
+from typing import List, Any, Optional, Type
 
-from ..typing import IGameObject
+from ..typing import IGameObject, T_GameComponent, IWorldMap
 from ..enum import GameObjectMessageEnum, StateEnum
 from ..mixins import NotifiableMixin
 
@@ -29,3 +29,9 @@ class ComponentBase(NotifiableMixin):
         self._parent = game_object
         if self.subscriptions:
             self.subscribe(game_object, self.subscriptions)
+
+    def get_component(self, component_type: Type[T_GameComponent]) -> T_GameComponent:
+        return self._parent.get_component(component_type)
+
+    def startup(self, world: "IWorldMap") -> None:
+        pass

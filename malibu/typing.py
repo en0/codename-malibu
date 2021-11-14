@@ -87,12 +87,19 @@ class INotifiableObject(ABC):
     def receive_message(self, sender: object, msg_type: GameObjectMessageEnum, value: any): ...
 
 
+class IControllerCommand(ABC):
+    @abstractmethod
+    def execute(self, actor) -> None: ...
+
+
 class IGameComponent(ABC):
     @abstractmethod
     def set_parent(self, game_object: "IGameObject") -> None: ...
+    @abstractmethod
+    def startup(self, world: "IWorldMap") -> None: ...
 
 
-class IInputComponent(IGameComponent):
+class IControllerComponent(IGameComponent):
     @abstractmethod
     def update(self, frame_delta: float, world: "IWorldMap") -> None: ...
 
@@ -102,12 +109,40 @@ class IBehaviorComponent(IGameComponent):
     def update(self, frame_delta: float, world: "IWorldMap") -> None: ...
 
 
+class IInputHandler(ABC):
+    @abstractmethod
+    def move(self, direction: DirectionEnum) -> None: ...
+
+
+class IPhysicsHandler(ABC):
+    @abstractmethod
+    def set_vector(self, heading: DirectionEnum, velocity: float): ...
+    @abstractmethod
+    def get_vector(self) -> Tuple[DirectionEnum, float]: ...
+
+
+class IAnimationHandler(ABC):
+    @abstractmethod
+    def set_animation(self, value: str): ...
+    @abstractmethod
+    def push_animation(self, value: str): ...
+
+
+class IControllerSource(ABC):
+    @abstractmethod
+    def get_input(self) -> IControllerCommand: ...
+
+
 class IGraphicsComponent(IGameComponent):
     @abstractmethod
     def render(self, gfx: "IGraphicsService"): ...
 
 
 class IGameObject(ABC):
+    @abstractmethod
+    def startup(self, world: "IWorldMap") -> None: ...
+    @abstractmethod
+    def get_component(self, component_type: Type[T_GameComponent]) -> T_GameComponent:...
     @abstractmethod
     def get_state(self, key: StateEnum) -> Optional[any]: ...
     @abstractmethod

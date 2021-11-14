@@ -1,11 +1,8 @@
 tags:
-  - player
+  - follower
 
 input-component:
-  # This could take args to set up the keymap.
-  # It could be done such that the map defined
-  # the events and state changes.
-  class: BufferedKeyboardController
+  class: FollowerController
 
 behavior-components:
   - class: BasicInputHandler
@@ -60,9 +57,7 @@ behavior-components:
       frame-delay: 130
       footprint: 50,60,44,30
       repeat: -1
-
   - class: WalkingPhysics
-  - class: AttachedCamera
 
 graphics-component:
   class: RenderSprite

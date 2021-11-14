@@ -2,16 +2,33 @@ import pygame
 from typing import List, Optional, Type, Dict, Set
 from ..enum import GameObjectMessageEnum, StateEnum
 from ..typing import (
+    IBehaviorComponent,
+    IControllerComponent,
     IGameObject,
     IGraphicsComponent,
     INotifiableObject,
     IWorldMap,
-    IBehaviorComponent,
-    IInputComponent,
+    T_GameComponent,
 )
 
 
 class GameObject(IGameObject):
+
+    def startup(self, world: IWorldMap) -> None:
+        self._input.startup(world)
+        for comp in self._behaviors:
+            comp.startup(world)
+        self._gfx.startup(world)
+
+    def get_component(self, component_type: Type[T_GameComponent]) -> T_GameComponent:
+        if isinstance(self._input, component_type):
+            return self._input
+        if isinstance(self._gfx, component_type):
+            return self._gfx
+        for comp in self._behaviors:
+            if isinstance(comp, component_type):
+                return comp
+        raise ValueError("Component Not Found! %s", component_type)
 
     def get_state(self, key: StateEnum) -> Optional[any]:
         return self._data.get(key)
@@ -67,7 +84,7 @@ class GameObject(IGameObject):
     def __init__(
         self,
         tags: List[str],
-        input_component: IInputComponent,
+        input_component: IControllerComponent,
         graphics_component: IGraphicsComponent,
         behavior_components: List[IBehaviorComponent],
     ) -> None:

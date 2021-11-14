@@ -6,6 +6,8 @@ world-map:
 objects:
   - name: hero
     path: assets/objects/hero.yaml
+  - name: follower
+    path: assets/objects/follower.yaml
 
 sprite-sheets:
   - name: brown-cow
