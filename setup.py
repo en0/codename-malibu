@@ -23,10 +23,10 @@ setup(
     include_package_data=True,
     package_data={'malibu': ['assets/*']},
     entry_points={
-    #    'console_scripts': [
-    #        'malibu-tools=malibu_utils.entry.main',
-    #        'malibu=malibu.entry.main'
-    #    ],
+        'console_scripts': [
+            'malibu-tools=malibu_tools',
+            'malibu=malibu'
+        ],
     },
     classifiers=[
         "Programming Language :: Python :: 3.5",

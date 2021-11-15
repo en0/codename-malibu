@@ -145,6 +145,7 @@ class SpriteSheetSpec:
     name: str
     path: str
     tile_size: Tuple[int, int]
+    color_key: Optional[Tuple[int, int, int]] = None
 
     def __repr__(self):
         return f"<SpriteSheetSpec({self.name}:{self.path}>)"
@@ -155,4 +156,5 @@ class SpriteSheetSpec:
         return SpriteSheetSpec(
             name=dat["name"],
             path=dat["path"],
+            color_key=tuple(map(int, dat["color-key"].split(","))) if "color-key" in dat else None,
             tile_size=(int(w), int(h)))

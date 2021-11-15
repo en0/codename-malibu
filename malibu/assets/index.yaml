@@ -8,11 +8,26 @@ objects:
     path: assets/objects/hero.yaml
   - name: follower
     path: assets/objects/follower.yaml
+  - name: chest
+    path: assets/objects/chest.yaml
 
 sprite-sheets:
   - name: brown-cow
     path: assets/objects/sheets/cow.png
     tile-size: 144,96
+  - name: chest
+    path: assets/objects/sheets/chest.png
+    color-key: 255,0,255
+    tile-size: 64,128
+  - name: village
+    path: assets/world/sheets/village.png
+    tile-size: 64,64
+  - name: farm
+    path: assets/world/sheets/farm.png
+    tile-size: 64,64
+  - name: forest
+    path: assets/world/sheets/forest.png
+    tile-size: 64,64
 
 audio:
   - name: step

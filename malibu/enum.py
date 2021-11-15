@@ -22,6 +22,7 @@ class StateEnum(Enum):
     BOUNDING_BOX = auto()
     FOOTPRINT = auto()
     UPON_MATERIAL = auto()
+    MAP_OBJECT = auto()
 
 
 class SceneEnum(Enum):

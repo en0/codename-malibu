@@ -8,11 +8,11 @@
     ],
     "fileStates": {
         "demo.tmx": {
-            "scale": 1.4794,
+            "scale": 0.9594,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 454.91415438691365,
-                "y": 500.8787346221442
+                "x": 358.55743172816346,
+                "y": 249.1140296018345
             }
         },
         "forest.tsx": {
@@ -20,6 +20,7 @@
             "scaleInEditor": 1
         }
     },
+    "frame.defaultDuration": 1000,
     "last.imagePath": "/Users/ilaird/Projects/Personal/codename-malibu/malibu/assets/world/sheets",
     "map.lastUsedFormat": "tmx",
     "map.layerDataFormat": null,

@@ -1,0 +1,1 @@
+from .extractory import SpriteExtractor

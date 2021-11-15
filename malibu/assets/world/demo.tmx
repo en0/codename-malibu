@@ -28,7 +28,7 @@
  </layer>
  <layer id="17" name="props" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2slu00Acx/F/ES2gSly4IiiolAq4si/pAbiyc+CAuLKDxBtQdl6BfXkFdngGdjjxDCwXbvxGmb88ndhOEbg5+PuRfpoktpOR/xl77KRjZuPKqBUWKAuVPcpeZV+ybDi2m5TNyhZlnvW3XtmgbMxeX6GsnMX2bTFi3XpMKxPxNd9Hx5UTysmSbfYrB5SDylJlfp/PKastyt1Sbit3/mKbU8pp5cws1g1jqqq26PVEeao8s2Kc+FhJj0tuu7IjeT4yB31sk7fKO+W9FeMkHMMW2czjUm7ZP3zmqqxFr3SchHqE/e3HpQfKQ+VRzfbfYrtmyGytsm6oWHYztj5X6MTnHUMq7Hf/jqbjZHm23ivltfKm4n3C/v4dH+9UHXYpu5N6PI6tzxVGDVXS72h+bnCflS/K14r3CPu7rh5lfKygMGW954Gyuet35Yfys2TZWGyXxP1/NLbH+tSDa496XofFJcuOxPZXbM8q55TzTXeqZaasW4e0FpPWW5MLsR2L7TXlunKj2e61zniMP/ZaTA6sR+3m9QhzLL8GzGuxVdmWPB82NCXMO0MtfI6V3jfxY9Yh5XC23ermu9Za6XzXrweDumPWZeWKcrWpTrVUOEaF8RGuO9LrwVx+X+Ouck+532TnWijUI79nEX6r+GQzr0vCOhete7/xkvJceaG8nIM+tomfw8P+9mtz/63C6+HnivS+/AfloxVzMzSn6reK/H7jhFGPQao7vwAAAAAAAACDUPZfEwwO/2sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4v/4A4mFTVA==
+   eJzt2slu00Acx/F/ES2gSly4IiiolAq4shZID8CVnQMHxJUdJN6AAmV5BfblFdjhGdjhxDOwXLjxG2X+8mTiuEXg5ODvR/ppkthORv7H9oyTlpmNK6NWWKQsVvYq+5T91m2LslXZpiwoWZ7bqGxSNmevr1JWz2P7phixdj1mlIn4mu+jE8pJ5VTJNgeUg8ohZbmycI7PqaotOt1Sbit3/mKb08oZ5ew81h223rVFtyfKU+WZFceJHyvpecntUHYmz0f60Mcmeau8U95bcZyEc9gS6zwv5Vb8w2euyVp0S4+TUI+wv/289EB5qDyq2P5bbNcNma1XNgwVy27G1scKrfi8ZUiF/e7f0fQ4WZmt90p5rbzp8T5hf/+Oj3epDruVPUk9HsfWxwqjhl7S72h+bXCflS/K1x7vEfZ3VT3K+LGCwrR1XwfKxq7flR/Kz5JlY7FdFvf/sdgen6MezD2qeR2Wliw7GttfsT2nnFcu1N2phpm2dh3SWkxad00uxnYstteU68qNervXOOMx/thrMTmwHjWb1yOMsXwOmNdiStmePB/uQ7+aKow7Qy18jJXeN/Fz1mHlSLbd2vq71ljpeNfng0HVOeuKclWZratTDRXOUeH4CPOOdD6Yy+9r3FXuKffr7FwDhXrk9yzCbxWfrHNeEta5ZO37jZeV58oL5WUf+tgkfg0P+9vn5v5bhdfDrxXpffkPykcrxmaoT6/fKvL7jRNGPQap6voCAAAAAAAADELZf00wOPyvAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P/6A9XkU08=
   </data>
  </layer>
  <layer id="20" name="props2" width="100" height="100">
@@ -41,7 +41,7 @@
   <object id="4" name="hero" x="550.067" y="653.016">
    <point/>
   </object>
-  <object id="5" name="follower" x="536.028" y="512.37">
+  <object id="5" name="chest" x="536.028" y="512.37">
    <point/>
   </object>
  </objectgroup>

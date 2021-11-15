@@ -208,6 +208,7 @@ class WorldMap(AudioMixin, ObjectFactoryMixin, IWorldMap):
             game_object = self.object_factory.new(map_object.name)
             location = Vector2(map_object.x, map_object.y)
             game_object.set_state(StateEnum.WORLD_LOCATION, location)
+            game_object.set_state(StateEnum.MAP_OBJECT, map_object)
             self._game_objects.append(game_object)
 
         self._tiles = QuadTree([x for x in all_tiles], bounding_rect=self._map_rect)

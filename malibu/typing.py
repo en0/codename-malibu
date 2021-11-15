@@ -3,7 +3,7 @@ from pygame.event import Event
 from abc import ABC, abstractmethod
 from typing import Set, Iterable, Optional, Union, Generator, List, Tuple, Type, TypeVar, Callable
 
-from .models import AudioSpec, MapSpec, ObjectSpec, ObjectData
+from .models import AudioSpec, MapSpec, ObjectSpec, ObjectData, SpriteSheetSpec
 from .enum import (
     AudioEdgeTransitionEnum,
     SceneEnum,
@@ -47,6 +47,8 @@ class IAssetService(ABC):
     def get_object_data(self, name: str) -> ObjectData: ...
     @abstractmethod
     def get_sprite_sheet(self, name: str) -> List[Surface]: ...
+    @abstractmethod
+    def iter_sprite_sheet(self) -> Generator[str, None, None]: ...
 
 
 class ISettingsService(ABC):

@@ -2,7 +2,7 @@ import pkg_resources
 import pygame.image
 from pygame import Surface
 from yaml import safe_load
-from typing import Generator, Dict, Union, List
+from typing import Generator, Dict, Union, List, Iterable
 
 from ..typing import IAssetService
 from ..models import AudioSpec, MapSpec, ObjectSpec, ObjectData, SpriteSheetSpec
@@ -48,8 +48,15 @@ class AssetManager(LoggerMixin, IAssetService):
         for y in range(img_h//h):
             for x in range(img_w//w):
                 rect = pygame.Rect(x*w, y*h, w, h)
-                ret.append(sheet.subsurface(rect))
+                surf = sheet.subsurface(rect)
+                if spec.color_key:
+                    surf.set_colorkey(spec.color_key)
+                ret.append(surf)
         return ret
+
+    def iter_sprite_sheet(self) -> Generator[str, None, None]:
+        for sheet in self._sprite_sheet_specs.values():
+            yield sheet.name
 
     def initialize(self):
         self.log.info("Loading Index: %s:%s", self._pkgname, self._index_file)

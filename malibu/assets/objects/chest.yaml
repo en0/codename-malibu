@@ -1,0 +1,32 @@
+tags:
+  - chest
+
+input-component:
+  class: NullController
+
+behavior-components:
+  - class: Chest
+  - class: AnimatedSprite
+    args:
+      - name: CLOSED
+        frames:
+          - index: 0
+      - name: OPEN
+        frames:
+          - index: 1
+      - name: CLOSING
+        frames:
+          - index: 1
+          - index: 0
+      - name: OPENING
+        frames:
+          - index: 0
+          - index: 1
+    kwargs:
+      sprite-sheet: chest
+      frame-delay: 0
+      footprint: 50,60,44,30
+      repeat: 0
+
+graphics-component:
+  class: RenderSprite
